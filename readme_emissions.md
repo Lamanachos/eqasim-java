@@ -76,4 +76,4 @@ config.network().setInputFile(outputPath+ "./output_network.xml.gz");
 config.plans().setInputFile(outputPath + "./output_plans.xml.gz");
 ```
 ### 3) Run
-With java 11. No need for any special arguments.
+With java 11. No need for any special argument.
