@@ -30,6 +30,13 @@ public class CarUtilityEstimator implements UtilityEstimator {
 		this.personPredictor = personPredictor;
 	}
 
+	@Inject
+	public CarUtilityEstimator(ModeParameters parameters, CarPredictor predictor) {
+		this.parameters = parameters;
+		this.predictor = predictor;
+		this.personPredictor = null;
+	}
+
 	protected double estimateConstantUtility() {
 		return parameters.car.alpha_u;
 	}

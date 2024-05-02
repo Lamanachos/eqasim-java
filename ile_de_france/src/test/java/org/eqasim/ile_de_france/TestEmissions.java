@@ -21,6 +21,7 @@ import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.ControllerConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.network.NetworkUtils;
@@ -67,7 +68,7 @@ public class TestEmissions {
     private void runMelunSimulation() {
         EqasimConfigurator eqasimConfigurator = new EqasimConfigurator();
         Config config = ConfigUtils.loadConfig("melun_test/input/config_emissions.xml", eqasimConfigurator.getConfigGroups());
-        ((ControlerConfigGroup) config.getModules().get(ControlerConfigGroup.GROUP_NAME)).setOutputDirectory("melun_test/output");
+        ((ControllerConfigGroup) config.getModules().get(ControllerConfigGroup.GROUP_NAME)).setOutputDirectory("melun_test/output");
 
         Scenario scenario = ScenarioUtils.createScenario(config);
         eqasimConfigurator.configureScenario(scenario);
@@ -131,7 +132,7 @@ public class TestEmissions {
 
     private void runModifyConfig() {
         Config config = ConfigUtils.loadConfig("melun_test/input/config.xml");
-        config.controler().setOutputDirectory("melun_test/output");
+        config.controller().setOutputDirectory("melun_test/output");
         config.qsim().setVehiclesSource(QSimConfigGroup.VehiclesSource.fromVehiclesData);
         config.vehicles().setVehiclesFile("vehicles.xml");
         ConfigUtils.writeConfig(config, "melun_test/input/config_emissions.xml");
