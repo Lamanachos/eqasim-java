@@ -17,6 +17,7 @@ Should contain at least :
 - replace each filename by the output one in the config file (ex : "ile_de_france_events.xml.gz -> "output_events.xml.gz)
 ## 3) Add some code to RunComputeEmissionsEvents.java
 - Add this line 83 :
+  ```java
   if (NetworkUtils.getType(link).contains("pedestrian")) {
       NetworkUtils.setType(link, "unclassified");
   }
@@ -32,6 +33,7 @@ Should contain at least :
   if (NetworkUtils.getType(link).contains("cycleway")) {
       NetworkUtils.setType(link, "unclassified");
   }
+  ```
 - Line 50, replace "tryDetailedThenTechnologyAverageThenAverageTable" by "directlyTryAverageTable"
 ## 4) Run
 Run RunComputeEmissionsEvents.java with this config, replacing each argument by the localisation of the files :
