@@ -21,6 +21,7 @@ public class IDFConfigurator extends EqasimConfigurator {
                 Id<Vehicle> vehicleId = Id.createVehicleId(person.getId());
                 Map<String, Id<Vehicle>> modeVehicle = new HashMap<>();
                 modeVehicle.put("car", vehicleId);
+                modeVehicle.put("car_passenger", vehicleId);
                 VehicleUtils.insertVehicleIdsIntoAttributes(person, modeVehicle);
             }
         }

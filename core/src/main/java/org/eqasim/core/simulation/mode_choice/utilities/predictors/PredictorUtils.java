@@ -16,4 +16,8 @@ public class PredictorUtils {
 	static public int getAge(Person person) {
 		return (int) (Integer) person.getAttributes().getAttribute("age");
 	}
+
+	static public double getHouseholdIncome(Person person) {
+		return (double) (Double) person.getAttributes().getAttribute("householdIncome");
+}
 }

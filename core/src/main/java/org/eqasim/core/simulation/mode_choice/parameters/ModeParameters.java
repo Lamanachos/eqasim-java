@@ -28,6 +28,7 @@ public class ModeParameters implements ParameterDefinition {
 	public class WalkParameters {
 		public double alpha_u = 0.0;
 		public double betaTravelTime_u_min = 0.0;
+		public double betaAccessEgressTravelTime_u_min = 0.0;
 	}
 
 	public class DrtParameters {
@@ -48,4 +49,7 @@ public class ModeParameters implements ParameterDefinition {
 	public final BikeParameters bike = new BikeParameters();
 	public final WalkParameters walk = new WalkParameters();
 	public final DrtParameters drt = new DrtParameters();
+	public double referenceHouseholdIncome = 0.0;
+	public double lambda_time = 0.0;
+	public double lambda_cost = 0.0;
 }
