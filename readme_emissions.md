@@ -37,10 +37,18 @@ Should contain at least :
 - Line 50, replace "tryDetailedThenTechnologyAverageThenAverageTable" by "directlyTryAverageTable"
 ## 4) Run
 Run RunComputeEmissionsEvents.java with this config, replacing each argument by the localisation of the files :
+
+`
 --config-path
 simulation_output/simout_IdF_egt1pct_rpf2019_it100/emissions_config.xml
+`
+
+`
 --hbefa-cold-avg
 ../../HBEFA/2022_IDF_EFA_ColdStart_Vehcat_Average_OnlyCar_Marjolaine.csv
+`
+`
 --hbefa-hot-avg
 ../../HBEFA/2022_IDF_EFA_HOT_Vehcat_Average_OnlyCar_Marjolaine.csv
+`
 
