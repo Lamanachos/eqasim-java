@@ -2,7 +2,6 @@ package org.eqasim.core.analysis;
 
 import com.google.inject.Singleton;
 import org.eqasim.core.components.ParkRideManager;
-
 import org.eqasim.core.tools.TestCarPtPara;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -14,7 +13,6 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.utils.geometry.CoordUtils;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +194,7 @@ public class CarPtEventHandler implements ActivityStartEventHandler{
         }
 
 
-        final String car_pt_savepath = TestCarPtPara.getCarPtSavePath();
+        /*final String car_pt_savepath = TestCarPtPara.getCarPtSavePath();
         File outputFile = new File( car_pt_savepath +"/intermodalCount" + iteration + ".csv");
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)));
@@ -218,6 +216,7 @@ public class CarPtEventHandler implements ActivityStartEventHandler{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+         */
         //BufferedWriter writer = new BufferedWriter("/home/dialloaziseoumar/AziseThesis/GenerationPopulationSynthetique/mel/output/CarPtInteractionCount.json");
 
         //Initialization

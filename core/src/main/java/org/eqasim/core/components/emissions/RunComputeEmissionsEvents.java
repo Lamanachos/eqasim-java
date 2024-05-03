@@ -47,7 +47,7 @@ public class RunComputeEmissionsEvents {
         EmissionsConfigGroup emissionsConfig = (EmissionsConfigGroup) config.getModules().get("emissions");
         emissionsConfig.setHbefaVehicleDescriptionSource(EmissionsConfigGroup.HbefaVehicleDescriptionSource.asEngineInformationAttributes);
         emissionsConfig.setDetailedVsAverageLookupBehavior(
-                EmissionsConfigGroup.DetailedVsAverageLookupBehavior.directlyTryAverageTable);
+                EmissionsConfigGroup.DetailedVsAverageLookupBehavior.tryDetailedThenTechnologyAverageThenAverageTable);
         emissionsConfig.setNonScenarioVehicles(EmissionsConfigGroup.NonScenarioVehicles.abort);
         emissionsConfig.setHbefaTableConsistencyCheckingLevel(EmissionsConfigGroup.HbefaTableConsistencyCheckingLevel.consistent);
 
@@ -78,21 +78,6 @@ public class RunComputeEmissionsEvents {
             }
             // '_link' types are not defined in the OSM mapping, set t undefined
             if (NetworkUtils.getType(link).contains("_link")) {
-                NetworkUtils.setType(link, "unclassified");
-            }
-            if (NetworkUtils.getType(link).contains("pedestrian")) {
-                NetworkUtils.setType(link, "unclassified");
-            }
-            if (NetworkUtils.getType(link).contains("construction")) {
-                NetworkUtils.setType(link, "unclassified");
-            }
-            if (NetworkUtils.getType(link).contains("busway")) {
-                NetworkUtils.setType(link, "unclassified");
-            }
-            if (NetworkUtils.getType(link).contains("footway")) {
-                NetworkUtils.setType(link, "unclassified");
-            }
-            if (NetworkUtils.getType(link).contains("cycleway")) {
                 NetworkUtils.setType(link, "unclassified");
             }
             if (NetworkUtils.getType(link).equals("living_street")) {

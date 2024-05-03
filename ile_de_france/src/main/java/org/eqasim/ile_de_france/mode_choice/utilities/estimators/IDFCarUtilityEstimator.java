@@ -20,8 +20,8 @@ public class IDFCarUtilityEstimator extends CarUtilityEstimator {
 
 	@Inject
 	public IDFCarUtilityEstimator(IDFModeParameters parameters, IDFSpatialPredictor spatialPredictor,
-			CarPredictor carPredictor) {
-		super(parameters, carPredictor);
+			CarPredictor carPredictor, PersonPredictor personPredictor) {
+		super(parameters, carPredictor, personPredictor);
 
 		this.parameters = parameters;
 		this.spatialPredictor = spatialPredictor;

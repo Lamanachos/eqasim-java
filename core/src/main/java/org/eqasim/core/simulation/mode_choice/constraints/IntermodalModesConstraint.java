@@ -16,6 +16,7 @@ import org.matsim.facilities.Facility;
 
 import java.util.Collection;
 import java.util.List;
+
 /** For eqasimVehicleTourConstraint
  * Attention. This constraint generalizes the existing vehicle tour constraint
  * from the discrete_mode_choice contrib of MATSim. See below for the
