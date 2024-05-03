@@ -31,12 +31,15 @@ public class ModeParameters implements ParameterDefinition {
 		public double betaAccessEgressTravelTime_u_min = 0.0;
 	}
 
-	public class DrtParameters {
+/*	public class BikePtParameters {  // actually this is not used or assigned for utility function.  Biao
 		public double alpha_u = 0.0;
 		public double betaTravelTime_u_min = 0.0;
-		public double betaWaitingTime_u_min = 0.0;
-		public double betaAccessEgressTime_u_min = 0.0;
 	}
+
+	public class PtBikeParameters {  // actually this is not used or assigned for utility function.  Biao
+		public double alpha_u = 0.0;
+		public double betaTravelTime_u_min = 0.0;
+	}*/
 
 
 	public double lambdaCostEuclideanDistance = 0.0;
@@ -48,8 +51,7 @@ public class ModeParameters implements ParameterDefinition {
 	public final PtParameters pt = new PtParameters();
 	public final BikeParameters bike = new BikeParameters();
 	public final WalkParameters walk = new WalkParameters();
-	public final DrtParameters drt = new DrtParameters();
-	public double referenceHouseholdIncome = 0.0;
-	public double lambda_time = 0.0;
-	public double lambda_cost = 0.0;
+
+/*	public final BikePtParameters bike_pt = new BikePtParameters();
+	public final PtBikeParameters pt_bike = new PtBikeParameters();*/
 }

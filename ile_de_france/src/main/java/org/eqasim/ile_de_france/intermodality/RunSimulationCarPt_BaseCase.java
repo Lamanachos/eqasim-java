@@ -37,15 +37,14 @@ import java.util.HashSet;
 import java.util.List;
 
 public class RunSimulationCarPt_BaseCase {
-
+	static String outputPath = "simulation_output/1pc_pr_2";
 	static public void main(String[] args) throws ConfigurationException, IOException {
 		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc/ile_de_france_config.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train.csv";
-
 		//double[] car_pt_constant = {1.50, 1.25, 1.00, 0.75, 0.50, 0.25};
 		double[] car_pt_constant = {0.75};
 		TestCarPtPara tp = new TestCarPtPara();
-
+		tp.setCarPtSavePath(outputPath);
 		for (int i = 0; i < car_pt_constant.length; i++) {
 			tp.setPara(car_pt_constant[i]);
 
@@ -55,10 +54,10 @@ public class RunSimulationCarPt_BaseCase {
 					.build();
 			IDFConfigurator configurator = new IDFConfigurator();
 			Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
-			configurator.addOptionalConfigGroups(config);
+
 			//modify some parameters in config file
 			config.controller().setLastIteration(60);
-			config.controller().setOutputDirectory("simulation_output/1pc_pr");
+			config.controller().setOutputDirectory(outputPath);
 			config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
 			// multistage car trips
@@ -83,7 +82,6 @@ public class RunSimulationCarPt_BaseCase {
 			eqasimConfig.setEstimator("pt_car", "PtCarUtilityEstimator");
 
 			// Scoring config definition to add the mode car_pt parameters
-			//PlanCalcScoreConfigGroup scoringConfig = config.planCalcScore();
 			ScoringConfigGroup scoringConfig = config.scoring();
 			ModeParams carPtParams = new ModeParams("car_pt");
 			ModeParams ptCarParams = new ModeParams("pt_car");
@@ -123,7 +121,7 @@ public class RunSimulationCarPt_BaseCase {
 			Scenario scenario = ScenarioUtils.createScenario(config);
 			configurator.configureScenario(scenario);
 			ScenarioUtils.loadScenario(scenario);
-			configurator.adjustScenario(scenario);
+			//configurator.adjustScenario(scenario);
 			Controler controller = new Controler(scenario);
 			configurator.configureController(controller);
 
@@ -141,6 +139,7 @@ public class RunSimulationCarPt_BaseCase {
 			controller.addOverridingModule(new IDFModeChoiceModuleCarPt(cmd, parkRideCoords, scenario.getNetwork(), scenario.getPopulation().getFactory()));
 			controller.addOverridingModule(new EqasimCarPtModule(parkRideCoords));
 			controller.addOverridingModule(new EqasimPtCarModule(parkRideCoords));
+
 			controller.run();
 		}
 

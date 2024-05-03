@@ -7,6 +7,6 @@ import org.matsim.core.router.RoutingModeMainModeIdentifier;
 public class EqasimComponentsModule extends AbstractModule {
 	@Override
 	public void install() {
-		bind(MainModeIdentifier.class).to(RoutingModeMainModeIdentifier.class);
+		bind(MainModeIdentifier.class).to(EqasimMainModeIdentifier.class);
 	}
 }

@@ -52,11 +52,6 @@ public class IDFModeParameters extends ModeParameters {
 		parameters.walk.betaTravelTime_u_min = -0.15;
 		parameters.walk.betaAccessEgressTravelTime_u_min = -0.35;  //BYIN: calibration
 
-		//DMC with income: BYIN 2023-10
-		parameters.referenceHouseholdIncome = 2000.0;
-		parameters.lambda_time = 0.05;
-		parameters.lambda_cost = -0.30;
-
 		return parameters;
 	}
 }
