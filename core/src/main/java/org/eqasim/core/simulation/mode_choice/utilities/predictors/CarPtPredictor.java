@@ -91,12 +91,12 @@ public class CarPtPredictor extends CachedVariablePredictor<CarPtVariables>{
         PlanElement last_element = carElements.get(carElements.size()-1);
         Activity car_pt = (Activity) last_element;
         DiscreteModeChoiceTrip trip_car = new DiscreteModeChoiceTrip(trip.getOriginActivity(), car_pt, "car",
-                carElements, person.hashCode(), carElements.get(0).hashCode(),1000,null);
+                carElements, person.hashCode(), carElements.get(0).hashCode(),1000, trip.getTripAttributes());
         double cost_MU_car = carCostModel.calculateCost_MU(person, trip_car, carElements);
         double euclideanDistance_km_car = PredictorUtils.calculateEuclideanDistance_km(trip_car);
 
         DiscreteModeChoiceTrip trip_pt = new DiscreteModeChoiceTrip(car_pt, trip.getDestinationActivity(), "pt",
-                ptElements, person.hashCode(), ptElements.get(0).hashCode(), 1000, null);
+                ptElements, person.hashCode(), ptElements.get(0).hashCode(), 1000, trip.getTripAttributes());
 
         int numberOfVehicularTrips = 0;
         boolean isFirstWaitingTime = true;

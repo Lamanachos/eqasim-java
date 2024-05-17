@@ -12,9 +12,9 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
+import org.matsim.core.router.DefaultRoutingRequest;
 import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.RoutingRequest;
-import org.matsim.core.router.DefaultRoutingRequest;
 import org.matsim.facilities.Facility;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 
@@ -28,6 +28,7 @@ import java.util.List;
 public class PtCarRoutingModule implements RoutingModule{
     private final RoutingModule carRoutingModule;
     private final Network network;
+//    private final ModeParameters parameters;
     // Create an object of a ptRoutingModule
     private final RoutingModule ptRoutingModule;
     private final List<Coord> parkRideCoords;
@@ -38,7 +39,6 @@ public class PtCarRoutingModule implements RoutingModule{
         this.ptRoutingModule = ptRoutingModule;
         this.network = network;
         this.parkRideCoords = parkRideCoords;
-
     }
 
     @Override
@@ -52,6 +52,7 @@ public class PtCarRoutingModule implements RoutingModule{
         // Park and ride lot location
 
         ParkingFinder prFinder = new ParkingFinder(parkRideCoords);
+
         Facility prkFacility = prFinder.getParking(person, fromFacility, toFacility, network);
 
         // Creation of a PT trip from the destination point to PR facility

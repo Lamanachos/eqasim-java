@@ -7,3 +7,4 @@ dependency-reduced-pom.xml
 *.idea
 simulation_output
 ile_de_france/scenarios/idf_1pc
+ile_de_france/scenarios/idf_1pc_pr

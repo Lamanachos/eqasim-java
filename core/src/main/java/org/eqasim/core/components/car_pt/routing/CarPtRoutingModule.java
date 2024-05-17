@@ -33,7 +33,6 @@ public class CarPtRoutingModule implements RoutingModule{
     private final RoutingModule ptRoutingModule;
     private final List<Coord> parkRideCoords;
 
-
     @Inject
     public CarPtRoutingModule(RoutingModule roadRoutingModule, RoutingModule ptRoutingModule, Network network, List<Coord> parkRideCoords) {
         this.carRoutingModule = roadRoutingModule;
@@ -49,6 +48,9 @@ public class CarPtRoutingModule implements RoutingModule{
         double departureTime = routingRequest.getDepartureTime();
         Person person = routingRequest.getPerson();
         Attributes attributes = routingRequest.getAttributes();
+
+        // Park and ride lot location
+
         ParkingFinder prFinder = new ParkingFinder(parkRideCoords);
 
         Facility prkFacility = prFinder.getParking(person, fromFacility, toFacility, network);

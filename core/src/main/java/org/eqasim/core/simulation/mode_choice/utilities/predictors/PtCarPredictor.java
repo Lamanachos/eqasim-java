@@ -67,7 +67,7 @@ public class PtCarPredictor extends CachedVariablePredictor<PtCarVariables>{
         PlanElement last_element = ptElements.get(ptElements.size()-1);
         Activity car_pt = (Activity) last_element;
         DiscreteModeChoiceTrip trip_pt = new DiscreteModeChoiceTrip(trip.getOriginActivity(), car_pt, "pt",
-                ptElements, person.hashCode(),ptElements.get(0).hashCode(), 1000, null);
+                ptElements, person.hashCode(),ptElements.get(0).hashCode(), 1000, trip.getTripAttributes());
 
         int numberOfVehicularTrips = 0;
         boolean isFirstWaitingTime = true;
@@ -125,7 +125,7 @@ public class PtCarPredictor extends CachedVariablePredictor<PtCarVariables>{
         double accessEgressTime_min_car = 0.0;
         vehicleTravelTime += timeToAccessCar;
         DiscreteModeChoiceTrip trip_car = new DiscreteModeChoiceTrip(car_pt, trip.getDestinationActivity(), "car",
-                carElements, person.hashCode(), carElements.get(0).hashCode(), 1000, null);
+                carElements, person.hashCode(), carElements.get(0).hashCode(), 1000, trip.getTripAttributes());
 
         for (PlanElement element : carElements) {
             if (element instanceof Leg) {

@@ -10,35 +10,38 @@ import org.eqasim.core.tools.TestCarPtPara;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.eqasim.ile_de_france.mode_choice.IDFModeChoiceModuleCarPt;
 import org.matsim.api.core.v01.Coord;
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
+import org.matsim.api.core.v01.population.Activity;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.contribs.discrete_mode_choice.modules.config.DiscreteModeChoiceConfigGroup;
+import org.matsim.contribs.discrete_mode_choice.modules.config.VehicleTripConstraintConfigGroup;
 import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.CommandLine.ConfigurationException;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
-import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
 import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.core.config.groups.RoutingConfigGroup;
 import org.matsim.core.config.groups.ScoringConfigGroup;
+import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
+import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
-import org.matsim.pt.config.TransitConfigGroup;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-public class RunSimulationCarPt_BaseCase {
+public class RunSimulationCarPt_Dr_NoPrep {
 	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again4_";
 	static public void main(String[] args) throws ConfigurationException, IOException {
-		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/base_case/ile_de_france_config.xml"};
+		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc/ile_de_france_config.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
-
+		String dRZShapeFile = "";
 
 		//double[] car_pt_constant = {1.50, 1.25, 1.00, 0.75, 0.50, 0.25};
 		double[] car_pt_constant = {0.75};
@@ -53,15 +56,16 @@ public class RunSimulationCarPt_BaseCase {
 					.build();
 			IDFConfigurator configurator = new IDFConfigurator();
 			Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
-			configurator.addOptionalConfigGroups(config);
+
 			//modify some parameters in config file
-			config.controller().setLastIteration(5);
+			config.controller().setLastIteration(60);
 			config.controller().setOutputDirectory(outputPath + car_pt_constant[i]);
 			config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
 			// multistage car trips
 			config.routing().setAccessEgressType(RoutingConfigGroup.AccessEgressType.accessEgressModeToLink);
 			config.qsim().setUsingTravelTimeCheckInTeleportation( true );
+
 
 
 			for (ReplanningConfigGroup.StrategySettings ss : config.replanning().getStrategySettings()) {
@@ -72,6 +76,7 @@ public class RunSimulationCarPt_BaseCase {
 					ss.setWeight(0.05);
 				}
 			}
+
 
 			// Eqasim config definition to add the mode car_pt estimation
 			EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
@@ -84,10 +89,6 @@ public class RunSimulationCarPt_BaseCase {
 			ModeParams ptCarParams = new ModeParams("pt_car");
 			scoringConfig.addModeParams(carPtParams);
 			scoringConfig.addModeParams(ptCarParams);
-
-			//transit (UM)
-			TransitConfigGroup transitConfig = config.transit();
-			transitConfig.setBoardingAcceptance(TransitConfigGroup.BoardingAcceptance.checkStopOnly);
 
 			// "car_pt interaction" definition
 			ActivityParams paramscarPtInterAct = new ActivityParams("carPt interaction");
@@ -118,6 +119,16 @@ public class RunSimulationCarPt_BaseCase {
 			tourConstraints.add("IntermodalModesConstraint");
 			dmcConfig.setTourConstraints(tourConstraints);
 
+			//UM
+			Collection<String> tripConstraints = new HashSet<>(dmcConfig.getTripConstraints());
+			tripConstraints.add("ShapeInternalTripConstraint");
+			dmcConfig.setTripConstraints(tripConstraints);
+			
+			//UM
+			Collection<String> tripFilters = new HashSet<>(dmcConfig.getTripFilters());
+			tripFilters.add("AddInternalOrNotFilter");
+			dmcConfig.setTripFilters(tripFilters);
+
 			cmd.applyConfiguration(config);
 			Scenario scenario = ScenarioUtils.createScenario(config);
 			configurator.configureScenario(scenario);
@@ -125,6 +136,16 @@ public class RunSimulationCarPt_BaseCase {
 			configurator.adjustScenario(scenario);
 			Controler controller = new Controler(scenario);
 			configurator.configureController(controller);
+
+			for (Person person : scenario.getPopulation().getPersons().values()) {
+				//option 1 for only Residents
+				Id<Link> homeActAsLink = null;
+				Activity homeActivity = (Activity) person.getPlans().get(0).getPlanElements().get(0); // first activity is from home: attention, the first act may be not home
+				if (homeActivity.getType().equals("home")) {
+					homeActAsLink = homeActivity.getLinkId();
+				}
+				person.getAttributes().putAttribute("HomeLink",homeActAsLink);
+				}
 
 			//set Park and ride lot locations
 			List<Coord> parkRideCoords;
