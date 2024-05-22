@@ -10,6 +10,7 @@ import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -20,17 +21,20 @@ import org.opengis.feature.simple.SimpleFeature;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
 public class LinksInArea {
     private static final Logger LOG = LogManager.getLogger(LinksInArea.class);
     private final static GeometryFactory geometryFactory = new GeometryFactory();
-    public static void main (String[] args) throws IOException {
+    public static void getLinks(String sc_name, String city_name) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
-        String networkInputFile = "ile_de_france/scenarios/idf_1pc_pr/base_case/ile_de_france_network.xml.gz";
-        String linkIDOutputFile = "ile_de_france/scenarios/idf_1pc_pr/driving_restriction/internal_linksID.txt";
-        String areaShapeFile = "ile_de_france/scenarios/paris.shp";
+        String networkInputFile = "ile_de_france/scenarios/"+sc_name+"/ile_de_france_network.xml.gz";
+        String outputDir = "ile_de_france/scenarios/"+sc_name;
+        String linkIDOutputFile = outputDir + "/internal_linksID.txt";
+        String areaShapeFile = "ile_de_france/scenarios/"+city_name+".shp";
 
         // Get network
         Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
@@ -62,6 +66,7 @@ public class LinksInArea {
 //        NetworkWriter writer = new NetworkWriter(scenario.getNetwork());
 //        writer.write(networkOutputFile);
         // Write linkIDs to file
+        Files.createDirectories(Paths.get(outputDir));
         BufferedWriter fileWriter = new BufferedWriter(new FileWriter(linkIDOutputFile));
         Iterator it = retainedLinkIds.iterator();
         while (it.hasNext()) {

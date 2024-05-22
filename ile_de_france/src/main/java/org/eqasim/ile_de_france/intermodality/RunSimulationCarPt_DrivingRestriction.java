@@ -39,7 +39,7 @@ public class RunSimulationCarPt_DrivingRestriction {
 	static String outputPath = "simulation_output/idf_1pc_pr_drz_paris";
 
 	static public void main(String[] args) throws ConfigurationException, IOException {
-		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/driving_restriction/ile_de_france_config.xml"};
+		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/driving_restriction/ile_de_france_config_carInternal.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
 
 		double car_pt_constant = 0.75;
@@ -79,14 +79,14 @@ public class RunSimulationCarPt_DrivingRestriction {
 		analyzedModes.add("carInternal");
 		config.travelTimeCalculator().setAnalyzedModes(analyzedModes);
 
-		for (ReplanningConfigGroup.StrategySettings ss : config.replanning().getStrategySettings()) {
+		/*for (ReplanningConfigGroup.StrategySettings ss : config.replanning().getStrategySettings()) {
 			if (ss.getStrategyName().equals("KeepLastSelected")) {
 				ss.setWeight(0.95);
 			}
 			if (ss.getStrategyName().equals("DiscreteModeChoice")) {
 				ss.setWeight(0.05);
-			}
-		}
+			}*/
+
 		//add parameters of the new mode and related: discrete mode choice in eqasim
 		// Scoring config
 		ScoringConfigGroup scoringConfig = config.scoring();

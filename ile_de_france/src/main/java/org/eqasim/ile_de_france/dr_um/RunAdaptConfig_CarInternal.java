@@ -20,10 +20,11 @@ public class RunAdaptConfig_CarInternal {
     // set input-path and output-path
 	private static final String scenarioID = "idf_1pc_pr";
 
-	static public void main(String[] args) throws ConfigurationException {
-
-		args = new String[] {"--input-path", "ile_de_france\\scenarios\\" + scenarioID + "\\base_case\\ile_de_france_config.xml",
-				"--output-path", "ile_de_france\\scenarios\\" + scenarioID +"\\driving_restriction\\ile_de_france_config_carInternal.xml"};
+	static public void runAdaptConfiguration(String sc_name) throws ConfigurationException {
+		String input_path = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_config.xml";
+		String output_path = "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_config_carInternal.xml";
+		String[] args = new String[] {"--input-path", input_path,
+				"--output-path", output_path};
 		IDFConfigurator configurator = new IDFConfigurator();
 		ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfiguration);
 	}

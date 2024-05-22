@@ -7,6 +7,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.NetworkWriter;
+import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.algorithms.NetworkCleaner;
 import org.matsim.core.network.algorithms.TransportModeNetworkFilter;
@@ -21,12 +22,11 @@ import java.util.*;
 
 public class NetworkModifier {
     private static final Logger LOG = LogManager.getLogger(NetworkModifier.class);
-    private static final String scenarioID = "idf_1pc_pr";
-    public static void main (String[] args) throws IOException {
+    public static void modifyNetwork(String sc_name) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
-        String networkInputFile =  "ile_de_france\\scenarios\\" + scenarioID + "\\base_case\\ile_de_france_network.xml.gz";
-        String networkOutputFile = "ile_de_france\\scenarios\\" + scenarioID + "\\driving_restriction\\ile_de_france_network_carInternal.xml.gz";
-        String InternalStreets = "ile_de_france\\scenarios\\" + scenarioID + "\\driving_restriction\\internal_linksID.txt";
+        String networkInputFile =  "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network.xml.gz";
+        String networkOutputFile = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network_carInternal.xml.gz";
+        String InternalStreets = "ile_de_france\\scenarios\\" + sc_name + "\\internal_linksID.txt";
 
         // InternalStreets
         BufferedReader bfrInternalStreets = new BufferedReader(new FileReader(InternalStreets));

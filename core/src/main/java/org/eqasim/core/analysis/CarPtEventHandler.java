@@ -26,8 +26,8 @@ public class CarPtEventHandler implements ActivityStartEventHandler{
     private List<Id<Person>> personIdListCarPt = new ArrayList<Id<Person>>();
     private List<Id<Person>> personIdListPtCar = new ArrayList<Id<Person>>();
 
-    HashMap<Id<Link>, Integer> prkIdListCarPt = new HashMap<Id<Link>, Integer>();
-    HashMap<Id<Link>, Integer> prkIdListPtCar = new HashMap<Id<Link>, Integer>();
+    HashMap<Id<Link>, List<Integer>> prkIdListCarPt = new HashMap<Id<Link>, List<Integer>>();
+    HashMap<Id<Link>, List<Integer>> prkIdListPtCar = new HashMap<Id<Link>, List<Integer>>();
 //    private List<Id<Link>> prkIdListCarPt = new ArrayList<Id<Link>>();
 //    private List<Id<Link>> prkIdListPtCar = new ArrayList<Id<Link>>();
 
@@ -57,13 +57,21 @@ public class CarPtEventHandler implements ActivityStartEventHandler{
                 /*if(!prkIdListCarPt.contains(event.getLinkId())) {
                     prkIdListCarPt.add(event.getLinkId());
                 }*/
-                Integer carPtCount = prkIdListCarPt.get(event.getLinkId());
-                if(carPtCount !=null) {
-                    prkIdListCarPt.put(event.getLinkId(), carPtCount + 1);
-                } else {
-                    prkIdListCarPt.put(event.getLinkId(), 1);
+                List<Integer> carPtCount = prkIdListCarPt.get(event.getLinkId());
+                if(carPtCount == null){
+                    List<Integer> list_per_hour = new ArrayList<>(30);
+                    for (int i = 0; i < 30; i++) {
+                        list_per_hour.add(0);
+                    }
+                    carPtCount = list_per_hour;
                 }
-
+                double time = event.getTime();
+                int hour = (int) time/3600;
+                if (hour > 29){
+                    hour = 29;
+                }
+                carPtCount.set(hour, carPtCount.get(hour)+1);
+                prkIdListCarPt.put(event.getLinkId(),carPtCount);
             }
 
             if (event.getActType().equals("ptCar interaction")) {
@@ -71,23 +79,27 @@ public class CarPtEventHandler implements ActivityStartEventHandler{
 //                if(!prkIdListPtCar.contains(event.getLinkId())) {
 //                    prkIdListPtCar.add(event.getLinkId());
 //                }
-                Integer ptCarCount = prkIdListPtCar.get(event.getLinkId());
-                if(ptCarCount !=null) {
-                    prkIdListPtCar.put(event.getLinkId(), ptCarCount + 1);
-                } else {
-                    prkIdListPtCar.put(event.getLinkId(), 1);
+                List<Integer> ptCarCount = prkIdListPtCar.get(event.getLinkId());
+                if(ptCarCount == null){
+                    List<Integer> list_per_hour = new ArrayList<>(30);
+                    for (int i = 0; i < 30; i++) {
+                        list_per_hour.add(0);
+                    }
+                    ptCarCount = list_per_hour;
                 }
-
-                if(!personIdListPtCar.contains(event.getPersonId())) {
+                double time = event.getTime();
+                int hour = (int) time/3600;
+                if (hour > 29){
+                    hour = 29;
+                }
+                if(!personIdListPtCar.contains(event.getPersonId()))
+                {
                     personIdListPtCar.add(event.getPersonId());
                 }
+                ptCarCount.set(hour, ptCarCount.get(hour)+1);
+                prkIdListPtCar.put(event.getLinkId(),ptCarCount);
             }
         }
-
-
-
-
-
 
         if (event.getActType().equals("car interaction")) {
             carCount += 1;

@@ -22,14 +22,13 @@ import java.util.List;
 public class PopulationModifier {
 
     private static final Logger LOG = LogManager.getLogger(PopulationModifier.class);
-    private static final String scenarioID = "idf_1pc_pr";
-    public static void main(String[] args) throws IOException {
+    public static void modifyPopulation(String sc_name) throws IOException {
     // Input and output files
 
-        String plansInputFile =  "ile_de_france\\scenarios\\" + scenarioID + "\\base_case\\ile_de_france_population.xml.gz";
-        String plansOutputFile =  "ile_de_france\\scenarios\\" + scenarioID + "\\driving_restriction\\ile_de_france_population_carInternal_residentOnly.xml.gz";
-        String outputFile_ResidentsReader = "ile_de_france\\scenarios\\" + scenarioID + "\\driving_restriction\\personInternalIDsList.txt";
-        String InternalStreets = "ile_de_france\\scenarios\\" + scenarioID + "\\driving_restriction\\internal_linksID.txt";
+        String plansInputFile =  "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_population.xml.gz";
+        String plansOutputFile =  "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_population_carInternal_residentOnly.xml.gz";
+        String outputFile_ResidentsReader = "ile_de_france\\scenarios\\"+sc_name+"\\personInternalIDsList.txt";
+        String InternalStreets = "ile_de_france\\scenarios\\"+sc_name+"\\internal_linksID.txt";
 
         // InternalStreets
         BufferedReader bfrInternalStreets = new BufferedReader(new FileReader(InternalStreets));

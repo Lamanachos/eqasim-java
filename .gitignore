@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 simulation_output
 ile_de_france/scenarios/idf_1pc
 ile_de_france/scenarios/idf_1pc_pr
+ile_de_france/scenarios/sc_test

@@ -34,13 +34,17 @@ public class CarPredictor extends CachedVariablePredictor<CarVariables> {
 		boolean foundCar = false;
 
 		for (Leg leg : TripStructureUtils.getLegs(elements)) {
-			if (leg.getMode().equals(TransportMode.car)) {
-				Verify.verify(!foundCar);
-				carTravelTime_min += leg.getTravelTime().seconds() / 60.0;
-			} else if (leg.getMode().equals(TransportMode.walk)) {
-				accessEgressTime_min += leg.getTravelTime().seconds() / 60.0;
-			} else {
-				throw new IllegalStateException("Unexpected mode in car chain: " + leg.getMode());
+			switch (leg.getMode()) {
+				case TransportMode.walk :
+					accessEgressTime_min += leg.getTravelTime().seconds() / 60.0;
+					break;
+				case "carInternal" :
+				case TransportMode.car :
+					Verify.verify(!foundCar);
+					carTravelTime_min += leg.getTravelTime().seconds() / 60.0;
+					break;
+				default :
+					throw new IllegalStateException("Unexpected mode in car chain: " + leg.getMode());
 			}
 		}
 

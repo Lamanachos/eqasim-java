@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class RunSimulationCarPt_BaseCase {
-	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again4_";
+	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again5_";
 	static public void main(String[] args) throws ConfigurationException, IOException {
 		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/base_case/ile_de_france_config.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
