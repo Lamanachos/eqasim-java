@@ -17,9 +17,7 @@ import org.matsim.core.config.groups.ScoringConfigGroup;
 import java.util.Arrays;
 
 public class RunAdaptConfig_CarInternal {
-    // set input-path and output-path
-	private static final String scenarioID = "idf_1pc_pr";
-
+	String sc_name;
 	static public void runAdaptConfiguration(String sc_name) throws ConfigurationException {
 		String input_path = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_config.xml";
 		String output_path = "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_config_carInternal.xml";
@@ -39,8 +37,9 @@ public class RunAdaptConfig_CarInternal {
 		eqasimConfig.setEstimator(TransportMode.car, IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
 		eqasimConfig.setEstimator(TransportMode.bike, IDFModeChoiceModule.BIKE_ESTIMATOR_NAME);
 
-
-        //BYIN:
+		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
+		config.plans().setInputFile("ile_de_france_population_carInternal_residentOnly.xml.gz");
+		//BYIN:
 		// Routing config
 		RoutingConfigGroup routingConfig = config.routing();
 		routingConfig.setNetworkModes(Arrays.asList("car", "car_passenger", "truck", "carInternal"));

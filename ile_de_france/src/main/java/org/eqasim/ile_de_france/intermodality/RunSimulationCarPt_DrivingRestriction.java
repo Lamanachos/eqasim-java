@@ -36,29 +36,22 @@ import java.io.IOException;
 import java.util.*;
 
 public class RunSimulationCarPt_DrivingRestriction {
-	static String outputPath = "simulation_output/idf_1pc_pr_drz_paris";
 
 	static public void main(String[] args) throws ConfigurationException, IOException {
-		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/driving_restriction/ile_de_france_config_carInternal.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
-
 		double car_pt_constant = 0.75;
-		TestCarPtPara tp = new TestCarPtPara();
-		tp.setPara(car_pt_constant);
-		tp.setCarPtSavePath(outputPath + car_pt_constant);
+
 		CommandLine cmd = new CommandLine.Builder(args) //
 				.requireOptions("config-path") //
 				.allowPrefixes("mode-choice-parameter", "cost-parameter") //
 				.build();
+
+		//Get config
 		IDFConfigurator configurator = new IDFConfigurator();
 		Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
+		configurator.addOptionalConfigGroups(config);
 
 		//modify some parameters in config file
-		config.controller().setLastIteration(60);
-		/*config.controler().setFirstIteration(60);
-		config.controler().setLastIteration(100);*/
-
-		config.controller().setOutputDirectory(outputPath +  car_pt_constant);
 		config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
 
 		// multi-stage car trips
@@ -66,8 +59,8 @@ public class RunSimulationCarPt_DrivingRestriction {
 		config.qsim().setUsingTravelTimeCheckInTeleportation( true );
 
 		//1) driving restriction setting
-		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
-		config.plans().setInputFile("ile_de_france_population_carInternal_residentOnly.xml.gz");  //ile_de_france_population_carInternal_residentOnly.xml.gz
+		//UM : config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
+		//UM : config.plans().setInputFile("ile_de_france_population_carInternal_residentOnly.xml.gz");  //ile_de_france_population_carInternal_residentOnly.xml.gz
 		//config.vehicles().setVehiclesFile("ile_de_france_vehicles.xml.gz");
 		//config.qsim().setVehiclesSource(QSimConfigGroup.VehiclesSource.modeVehicleTypesFromVehiclesData);  //original value is defaultVehicle
 		//config.qsim().setVehiclesSource(QSimConfigGroup.VehiclesSource.defaultVehicle);  //UM
@@ -162,6 +155,10 @@ public class RunSimulationCarPt_DrivingRestriction {
 		controller.addOverridingModule(new EqasimCarPtModule(parkRideCoords));
 		controller.addOverridingModule(new EqasimPtCarModule(parkRideCoords));
 
+		TestCarPtPara tp = new TestCarPtPara();
+		tp.setPara(car_pt_constant);
+		String outputPath = controller.getConfig().controller().getOutputDirectory();
+		tp.setCarPtSavePath(outputPath);
 		controller.run();
 	}
 
