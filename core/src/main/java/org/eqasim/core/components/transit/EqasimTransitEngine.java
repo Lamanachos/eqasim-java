@@ -1,8 +1,6 @@
 package org.eqasim.core.components.transit;
 
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 import org.eqasim.core.components.transit.departure.DepartureFinder;
 import org.eqasim.core.components.transit.departure.DepartureFinder.NoDepartureFoundException;
@@ -23,6 +21,7 @@ import org.matsim.core.mobsim.qsim.interfaces.MobsimEngine;
 import org.matsim.pt.routes.TransitPassengerRoute;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
+import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 
 import com.google.inject.Singleton;
@@ -88,6 +87,31 @@ public class EqasimTransitEngine implements DepartureHandler, MobsimEngine {
 			Leg leg = (Leg) ((PlanAgent) agent).getCurrentPlanElement();
 			TransitPassengerRoute route = (TransitPassengerRoute) leg.getRoute();
 
+			TransitRoute eRoute = (TransitRoute) leg.getRoute();
+			Map<Id<TransitLine>, TransitLine> transitLines = transitSchedule.getTransitLines();
+			List<TransitLine> validTransitLines = new ArrayList<>();
+			for (Id<TransitLine> id : transitLines.keySet()){
+				TransitLine tempTransitLine = transitLines.get(id);
+				Collection<TransitRoute> tempTransitRoutes = tempTransitLine.getRoutes().values();
+				boolean valid = false;
+				for (TransitRoute transitRoute : tempTransitRoutes){
+					boolean ok = true;
+					for (TransitRouteStop stop : eRoute.getStops()){
+						if (transitRoute.getStops().contains(stop)){
+						}
+						else {
+							ok = false;
+						}
+					}
+					if (ok){
+						valid = true;
+					}
+				}
+				if (valid){
+					validTransitLines.add(tempTransitLine);
+				}
+			}
+
 			TransitLine transitLine = transitSchedule.getTransitLines().get(route.getLineId());
 			TransitRoute transitRoute = transitLine.getRoutes().get(route.getRouteId());
 
@@ -117,8 +141,43 @@ public class EqasimTransitEngine implements DepartureHandler, MobsimEngine {
 				departures.add(new AgentDeparture(agent, vehicleDepartureTime, departureLinkId));
 				arrivals.add(new AgentArrival(agent, arrivalTime, arrivalLinkId, transitEvent));
 			} catch (NoDepartureFoundException e) {
-				eventsManager.processEvent(new PersonStuckEvent(now, agent.getId(), agent.getCurrentLinkId(), "pt"));
-				agentCounter.decLiving();
+				int max_i = validTransitLines.size();
+				int i = 0;
+				while (i < max_i){
+					try {
+						transitLine = validTransitLines.get(i);
+						transitRoute = transitLine.getRoutes().get(route.getRouteId());
+						StopDeparture stopDeparture = departureFinder.findNextDeparture(transitRoute, route.getAccessStopId(),
+								route.getEgressStopId(), now);
+
+						double vehicleDepartureTime = stopDeparture.departure.getDepartureTime()
+								+ stopDeparture.stop.getDepartureOffset().seconds();
+
+						double waitingTime = route.getBoardingTime().seconds() - leg.getDepartureTime().seconds();
+						double inVehicleTime = leg.getTravelTime().seconds() - waitingTime;
+
+						double arrivalTime = vehicleDepartureTime + inVehicleTime;
+
+						if (Math.abs(arrivalTime - now) < 1.0) {
+							arrivalTime = now + 1.0;
+						}
+
+						Id<Link> arrivalLinkId = transitSchedule.getFacilities().get(route.getEgressStopId()).getLinkId();
+
+						PublicTransitEvent transitEvent = new PublicTransitEvent(arrivalTime, agent.getId(),
+								transitLine.getId(), transitRoute.getId(), route.getAccessStopId(), route.getEgressStopId(),
+								vehicleDepartureTime, route.getDistance());
+
+						internalInterface.registerAdditionalAgentOnLink(agent);
+						departures.add(new AgentDeparture(agent, vehicleDepartureTime, departureLinkId));
+						arrivals.add(new AgentArrival(agent, arrivalTime, arrivalLinkId, transitEvent));
+						i = max_i;
+					} catch (NoDepartureFoundException f) {
+						i += 1;
+					}
+					eventsManager.processEvent(new PersonStuckEvent(now, agent.getId(), agent.getCurrentLinkId(), "pt"));
+					agentCounter.decLiving();
+				}
 			}
 
 			return true;
