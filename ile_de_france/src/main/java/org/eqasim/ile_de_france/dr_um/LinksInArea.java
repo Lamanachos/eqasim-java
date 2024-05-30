@@ -34,7 +34,7 @@ public class LinksInArea {
         String networkInputFile = "ile_de_france/scenarios/"+sc_name+"/ile_de_france_network.xml.gz";
         String outputDir = "ile_de_france/scenarios/"+sc_name;
         String linkIDOutputFile = outputDir + "/internal_linksID.txt";
-        String areaShapeFile = "ile_de_france/scenarios/"+city_name;
+        String areaShapeFile = city_name;
         // Get network
         Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
         MatsimNetworkReader reader = new MatsimNetworkReader(scenario.getNetwork());

@@ -88,9 +88,9 @@ public class CarPtRoutingModule implements RoutingModule{
             }
         }
         // Given the request time, we can calculate the waiting time
-        double timeToAccessPt = 300; // We take 5 min to park the car and access to PT
-
-        double ptDepartureTime = departureTime + vehicleTravelTime + timeToAccessPt;
+        double bufferTime = 600; // We take 5 min to park the car and access to PT //UL = 0
+        double timeToAccessPt = 0;
+        double ptDepartureTime = departureTime + vehicleTravelTime + bufferTime;
 
         // Creation of a PT trip from the PR facility to the destination
         RoutingRequest toDestRoutingrequest = DefaultRoutingRequest.of(prkFacility, toFacility, ptDepartureTime,person,attributes);

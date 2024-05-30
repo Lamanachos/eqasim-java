@@ -6,6 +6,7 @@ import org.eqasim.core.components.ParkRideManager;
 import org.eqasim.core.simulation.mode_choice.cost.CostModel;
 import org.eqasim.core.simulation.mode_choice.parameters.ModeParameters;
 import org.eqasim.core.simulation.mode_choice.utilities.variables.CarPtVariables;
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.*;
@@ -13,8 +14,10 @@ import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 import org.matsim.core.router.RoutingModule;
 import org.matsim.pt.routes.TransitPassengerRoute;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class CarPtPredictor extends CachedVariablePredictor<CarPtVariables>{
     private final RoutingModule carRoutingModule;
@@ -45,11 +48,68 @@ public class CarPtPredictor extends CachedVariablePredictor<CarPtVariables>{
     @Override
     public CarPtVariables predict(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
    // elements include the new carpt trip, so no need to recalculate carelements and ptelements
+        List<String> list_stuck = new ArrayList<>();
+        list_stuck.add("11223040");
+        list_stuck.add("11399053");
+        list_stuck.add("9445770");
+        list_stuck.add("10628436");
+        list_stuck.add("8670465");
+        list_stuck.add("452764");
+        list_stuck.add("4816736");
+        list_stuck.add("9196646");
+        list_stuck.add("7760364");
+        list_stuck.add("8207851");
+        list_stuck.add("291890");
+        list_stuck.add("7839402");
+        list_stuck.add("1575215");
+        list_stuck.add("10947292");
+        list_stuck.add("12166086");
+        list_stuck.add("7969941");
+        list_stuck.add("11369978");
+        list_stuck.add("11060248");
+        list_stuck.add("8360722");
+        list_stuck.add("9606725");
+        list_stuck.add("8634267");
+        list_stuck.add("4732458");
+        list_stuck.add("9054604");
+        list_stuck.add("10033073");
+        list_stuck.add("9672046");
+        list_stuck.add("11879941");
+        list_stuck.add("8860321");
+        list_stuck.add("9756490");
+        list_stuck.add("11755775");
+        list_stuck.add("4805323");
+        list_stuck.add("7074388");
+        list_stuck.add("3188250");
+        list_stuck.add("8961135");
+        list_stuck.add("4691722");
+        list_stuck.add("10465457");
+        list_stuck.add("9834608");
+        list_stuck.add("43781");
+        list_stuck.add("39467");
+        list_stuck.add("11718768");
+        list_stuck.add("11375209");
+        list_stuck.add("1800432");
+        list_stuck.add("3725072");
+        list_stuck.add("8098558");
+        list_stuck.add("6606557");
+        list_stuck.add("1371105");
+        list_stuck.add("4724231");
+        list_stuck.add("4497685");
+        list_stuck.add("3512067");
+        list_stuck.add("2798646");
+        list_stuck.add("4181992");
 
         List<PlanElement> carElements = new LinkedList<>();
         List<PlanElement> ptElements = new LinkedList<>();
+        if (list_stuck.contains(person.getId().toString())) {
+            System.out.println("--------------------HI !!!!-----------------");
+        }
         boolean flag = true;
         for (PlanElement element : elements) {
+            if (list_stuck.contains(person.getId().toString())) {
+                System.out.println(element.getAttributes());
+            }
             if (flag == true) {
                 carElements.add(element);
             } else {
@@ -62,7 +122,6 @@ public class CarPtPredictor extends CachedVariablePredictor<CarPtVariables>{
                     flag = false;
                 }
             }
-
         }
 
         double vehicleTravelTime = 0.0;

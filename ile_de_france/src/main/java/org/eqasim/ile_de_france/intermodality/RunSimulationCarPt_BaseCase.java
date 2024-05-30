@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class RunSimulationCarPt_BaseCase {
-	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again5_";
+	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again14_";
 	static public void main(String[] args) throws ConfigurationException, IOException {
 		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/base_case/ile_de_france_config.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
@@ -55,14 +55,21 @@ public class RunSimulationCarPt_BaseCase {
 			Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
 			configurator.addOptionalConfigGroups(config);
 			//modify some parameters in config file
-			config.controller().setLastIteration(5);
+			Integer nb_iterations = 1;
+			config.controller().setLastIteration(nb_iterations);
+			if (nb_iterations < 60){
+				System.out.println("--------------------WARNING : nb_iterations < 60------------------\n");
+				System.out.println(nb_iterations);
+			}
 			config.controller().setOutputDirectory(outputPath + car_pt_constant[i]);
 			config.controller().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-
 			// multistage car trips
 			config.routing().setAccessEgressType(RoutingConfigGroup.AccessEgressType.accessEgressModeToLink);
 			config.qsim().setUsingTravelTimeCheckInTeleportation( true );
 
+			config.plans().setInputFile("C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\simulation_output\\1pc_pr_test\\PTCar_BaseCase_rer_train_again13_0.75\\output_plans.xml.gz");
+			config.controller().setWritePlansInterval(1);
+			config.controller().setWriteEventsInterval(1);
 
 			for (ReplanningConfigGroup.StrategySettings ss : config.replanning().getStrategySettings()) {
 				if (ss.getStrategyName().equals("KeepLastSelected")) {
@@ -140,10 +147,12 @@ public class RunSimulationCarPt_BaseCase {
 			controller.addOverridingModule(new IDFModeChoiceModuleCarPt(cmd, parkRideCoords, scenario.getNetwork(), scenario.getPopulation().getFactory()));
 			controller.addOverridingModule(new EqasimCarPtModule(parkRideCoords));
 			controller.addOverridingModule(new EqasimPtCarModule(parkRideCoords));
-
+			long startTime = System.nanoTime();
 			controller.run();
+			long endTime = System.nanoTime();
+			long duration = (endTime - startTime);
+			System.out.println("------------------Total time taken :--------------------\n");
+			System.out.println(duration);
 		}
-
 	}
-
 }
