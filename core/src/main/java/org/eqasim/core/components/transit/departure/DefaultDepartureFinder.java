@@ -28,7 +28,7 @@ public class DefaultDepartureFinder implements DepartureFinder {
 		int lastEgressStopIndex = stopIds.lastIndexOf(egressStopId);
 
 		if (firstAccessStopIndex == -1) {
-			throw new IllegalStateException("Access stop not found no route");
+			throw new IllegalStateException("Access stop not found on route");
 		}
 
 		if (lastEgressStopIndex == -1) {

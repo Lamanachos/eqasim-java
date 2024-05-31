@@ -55,7 +55,7 @@ public class RunSimulationCarPt_BaseCase {
 			Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
 			configurator.addOptionalConfigGroups(config);
 			//modify some parameters in config file
-			Integer nb_iterations = 1;
+			Integer nb_iterations = 5;
 			config.controller().setLastIteration(nb_iterations);
 			if (nb_iterations < 60){
 				System.out.println("--------------------WARNING : nb_iterations < 60------------------\n");
