@@ -88,8 +88,8 @@ public class CarPtRoutingModule implements RoutingModule{
             }
         }
         // Given the request time, we can calculate the waiting time
-        double bufferTime = 600; // We take 5 min to park the car and access to PT //UL = 0
-        double timeToAccessPt = 0;
+        double bufferTime = 300; // We take 5 min to park the car and access to PT //UL = 0
+        double timeToAccessPt = 300;
         double ptDepartureTime = departureTime + vehicleTravelTime + bufferTime;
 
         // Creation of a PT trip from the PR facility to the destination

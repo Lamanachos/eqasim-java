@@ -29,6 +29,7 @@ import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.pt.config.TransitConfigGroup;
 import org.matsim.vehicles.VehicleType;
 import org.matsim.vehicles.VehiclesFactory;
 
@@ -57,6 +58,11 @@ public class RunSimulationCarPt_DrivingRestriction {
 		// multi-stage car trips
 		config.routing().setAccessEgressType(RoutingConfigGroup.AccessEgressType.accessEgressModeToLink);
 		config.qsim().setUsingTravelTimeCheckInTeleportation( true );
+
+		//transit (UM)
+		//TransitConfigGroup transitConfig = config.transit();
+		//transitConfig.setBoardingAcceptance(TransitConfigGroup.BoardingAcceptance.checkStopOnly);
+
 
 		//1) driving restriction setting
 		//UM : config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");

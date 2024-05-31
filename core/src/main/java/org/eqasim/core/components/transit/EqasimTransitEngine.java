@@ -18,11 +18,13 @@ import org.matsim.core.api.experimental.events.TeleportationArrivalEvent;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.InternalInterface;
+import org.matsim.core.mobsim.qsim.agents.TransitAgent;
 import org.matsim.core.mobsim.qsim.interfaces.AgentCounter;
 import org.matsim.core.mobsim.qsim.interfaces.DepartureHandler;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimEngine;
 import org.matsim.core.router.DefaultRoutingRequest;
 import org.matsim.core.router.RoutingRequest;
+import org.matsim.facilities.Facility;
 import org.matsim.pt.routes.TransitPassengerRoute;
 import org.matsim.pt.transitSchedule.api.*;
 
@@ -30,6 +32,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class EqasimTransitEngine implements DepartureHandler, MobsimEngine {
+	final static boolean letPeopleStuck = true; //UM if false, people stuck because they can't take their transit will find another one (but not the optimal just one that get there
 	final private TransitSchedule transitSchedule;
 	final private DepartureFinder departureFinder;
 	private InternalInterface internalInterface;
@@ -89,6 +92,7 @@ public class EqasimTransitEngine implements DepartureHandler, MobsimEngine {
 			Leg leg = (Leg) ((PlanAgent) agent).getCurrentPlanElement();
 			TransitPassengerRoute route = (TransitPassengerRoute) leg.getRoute();
 
+			//Somethin I started thinking stopIds are not universal
 //			TransitRoute eRoute = (TransitRoute) leg.getRoute();
 //			Map<Id<TransitLine>, TransitLine> transitLines = transitSchedule.getTransitLines();
 //			List<TransitLine> validTransitLines = new ArrayList<>();
@@ -146,50 +150,70 @@ public class EqasimTransitEngine implements DepartureHandler, MobsimEngine {
 				foundTransit = true;
 
 			} catch (NoDepartureFoundException e) {
-				List<TransitLine> transitLines = transitSchedule.getTransitLines().values().stream().toList();
-				int max_i = transitLines.size();
-				int i = 0;
-				while (i < max_i){
-					transitLine = transitLines.get(i);
-					List<TransitRoute> transitRoutes = transitLine.getRoutes().values().stream().toList();
-					int max_j = transitRoutes.size();
-					int j = 0;
-					while (j < max_j) {
-						transitRoute = transitRoutes.get(j);
-						try {
-							StopDeparture stopDeparture = departureFinder.findNextDeparture(transitRoute, route.getAccessStopId(),
-									route.getEgressStopId(), now);
+				//Get optimal (not working yet)
+//				List<TransitRouteStop> stops = transitRoute.getStops();
+//				TransitStopFacility access = null;
+//				TransitStopFacility egress = null;
+//				for (TransitRouteStop stop : stops){
+//					TransitStopFacility stopFacility = stop.getStopFacility();
+//					if (stopFacility.getId() == route.getAccessStopId()){
+//						access = stopFacility;
+//					}
+//					if (stopFacility.getId() == route.getEgressStopId()){
+//						egress = stopFacility;
+//					}
+//				}
+//				TransitAgent agentTr = (TransitAgent) agent;
+//
+//				RoutingRequest routingRequest = DefaultRoutingRequest.of(access, egress, now,agentTr.getPerson(), null);
+//				List<? extends PlanElement> ptElements = ptRoutingModule.calcRoute(routingRequest);
 
-							double vehicleDepartureTime = stopDeparture.departure.getDepartureTime()
-									+ stopDeparture.stop.getDepartureOffset().seconds();
+				if (!letPeopleStuck) {
+					List<TransitLine> transitLines = transitSchedule.getTransitLines().values().stream().toList();
+					int max_i = transitLines.size();
+					int i = 0;
+					while (i < max_i) {
+						transitLine = transitLines.get(i);
+						List<TransitRoute> transitRoutes = transitLine.getRoutes().values().stream().toList();
+						int max_j = transitRoutes.size();
+						int j = 0;
+						while (j < max_j) {
+							transitRoute = transitRoutes.get(j);
+							try {
+								StopDeparture stopDeparture = departureFinder.findNextDeparture(transitRoute, route.getAccessStopId(),
+										route.getEgressStopId(), now);
 
-							double waitingTime = route.getBoardingTime().seconds() - leg.getDepartureTime().seconds();
-							double inVehicleTime = leg.getTravelTime().seconds() - waitingTime;
+								double vehicleDepartureTime = stopDeparture.departure.getDepartureTime()
+										+ stopDeparture.stop.getDepartureOffset().seconds();
 
-							double arrivalTime = vehicleDepartureTime + inVehicleTime;
+								double waitingTime = route.getBoardingTime().seconds() - leg.getDepartureTime().seconds();
+								double inVehicleTime = leg.getTravelTime().seconds() - waitingTime;
 
-							if (Math.abs(arrivalTime - now) < 1.0) {
-								arrivalTime = now + 1.0;
+								double arrivalTime = vehicleDepartureTime + inVehicleTime;
+
+								if (Math.abs(arrivalTime - now) < 1.0) {
+									arrivalTime = now + 1.0;
+								}
+
+								Id<Link> arrivalLinkId = transitSchedule.getFacilities().get(route.getEgressStopId()).getLinkId();
+
+								PublicTransitEvent transitEvent = new PublicTransitEvent(arrivalTime, agent.getId(),
+										transitLine.getId(), transitRoute.getId(), route.getAccessStopId(), route.getEgressStopId(),
+										vehicleDepartureTime, route.getDistance());
+
+								internalInterface.registerAdditionalAgentOnLink(agent);
+								departures.add(new AgentDeparture(agent, vehicleDepartureTime, departureLinkId));
+								arrivals.add(new AgentArrival(agent, arrivalTime, arrivalLinkId, transitEvent));
+								i = max_i;
+								j = max_j;
+								foundTransit = true;
 							}
-
-							Id<Link> arrivalLinkId = transitSchedule.getFacilities().get(route.getEgressStopId()).getLinkId();
-
-							PublicTransitEvent transitEvent = new PublicTransitEvent(arrivalTime, agent.getId(),
-									transitLine.getId(), transitRoute.getId(), route.getAccessStopId(), route.getEgressStopId(),
-									vehicleDepartureTime, route.getDistance());
-
-							internalInterface.registerAdditionalAgentOnLink(agent);
-							departures.add(new AgentDeparture(agent, vehicleDepartureTime, departureLinkId));
-							arrivals.add(new AgentArrival(agent, arrivalTime, arrivalLinkId, transitEvent));
-							i = max_i;
-							j = max_j;
-							foundTransit = true;
+							catch (NoDepartureFoundException | IllegalStateException f) {
+								j += 1;
+							}
 						}
-						catch (NoDepartureFoundException|IllegalStateException f){
-							j += 1;
-						}
+						i += 1;
 					}
-					i += 1;
 				}
 			}
 			if (!foundTransit){

@@ -50,7 +50,7 @@ public class PtCarRoutingModule implements RoutingModule{
         Attributes attributes = routingRequest.getAttributes();
 
         // Park and ride lot location
-        double bufferTime = 600;
+        double bufferTime = 0;
         ParkingFinder prFinder = new ParkingFinder(parkRideCoords);
 
         Facility prkFacility = prFinder.getParking(person, fromFacility, toFacility, network);
@@ -87,7 +87,7 @@ public class PtCarRoutingModule implements RoutingModule{
 
 
         // Given the request time, we can calculate the waiting time
-        double timeToAccessCar = 0; // We take 5 min to park the car and access to PT //UL = 0
+        double timeToAccessCar = 300; // We take 5 min to park the car and access to PT
 
         double carDepartureTime = departureTime + vehicleTravelTime + timeToAccessCar;
 

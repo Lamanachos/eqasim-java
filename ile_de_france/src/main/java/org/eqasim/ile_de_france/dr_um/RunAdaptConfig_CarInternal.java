@@ -9,12 +9,15 @@ import org.matsim.contribs.discrete_mode_choice.modules.DiscreteModeChoiceModule
 import org.matsim.contribs.discrete_mode_choice.modules.config.DiscreteModeChoiceConfigGroup;
 import org.matsim.core.config.CommandLine.ConfigurationException;
 import org.matsim.core.config.Config;
+import org.matsim.core.config.groups.PlansConfigGroup;
 import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.core.config.groups.ReplanningConfigGroup.StrategySettings;
 import org.matsim.core.config.groups.RoutingConfigGroup;
 import org.matsim.core.config.groups.ScoringConfigGroup;
 
 import java.util.Arrays;
+
+import static org.matsim.core.config.groups.PlansConfigGroup.TripDurationHandling.shiftActivityEndTimes;
 
 public class RunAdaptConfig_CarInternal {
 	String sc_name;
@@ -44,6 +47,8 @@ public class RunAdaptConfig_CarInternal {
 		RoutingConfigGroup routingConfig = config.routing();
 		routingConfig.setNetworkModes(Arrays.asList("car", "car_passenger", "truck", "carInternal"));
 
+		PlansConfigGroup plansConfigGroup = config.plans();
+		plansConfigGroup.setTripDurationHandling(shiftActivityEndTimes);
 
         //BYIN: strategy settings:
 		//Replace default strategy settings in eqasim considering DRZ
