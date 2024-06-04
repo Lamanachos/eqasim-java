@@ -27,14 +27,18 @@ import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.pt.config.TransitConfigGroup;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.lang.Integer.max;
+
 public class RunSimulationCarPt_BaseCase {
-	static String outputPath = "simulation_output/1pc_pr_test/PTCar_BaseCase_rer_train_again14_";
+	static String outputPath = "simulation_output/test_time";
 	static public void main(String[] args) throws ConfigurationException, IOException {
 		args = new String[] {"--config-path", "ile_de_france/scenarios/idf_1pc_pr/base_case/ile_de_france_config.xml"};
 		String locationFile = "ile_de_france/scenarios/parcs-relais-idf_rer_train_outside_paris.csv";
@@ -55,7 +59,7 @@ public class RunSimulationCarPt_BaseCase {
 			Config config = ConfigUtils.loadConfig(cmd.getOptionStrict("config-path"), configurator.getConfigGroups());
 			configurator.addOptionalConfigGroups(config);
 			//modify some parameters in config file
-			Integer nb_iterations = 5;
+			Integer nb_iterations = 0;
 			config.controller().setLastIteration(nb_iterations);
 			if (nb_iterations < 60){
 				System.out.println("--------------------WARNING : nb_iterations < 60------------------\n");
@@ -67,7 +71,7 @@ public class RunSimulationCarPt_BaseCase {
 			config.routing().setAccessEgressType(RoutingConfigGroup.AccessEgressType.accessEgressModeToLink);
 			config.qsim().setUsingTravelTimeCheckInTeleportation( true );
 
-			config.plans().setInputFile("C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\simulation_output\\1pc_pr_test\\PTCar_BaseCase_rer_train_again13_0.75\\output_plans.xml.gz");
+			//config.plans().setInputFile("C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\simulation_output\\1pc_pr_test\\PTCar_BaseCase_rer_train_again13_0.75\\output_plans.xml.gz");
 			config.controller().setWritePlansInterval(1);
 			config.controller().setWriteEventsInterval(1);
 
@@ -151,8 +155,12 @@ public class RunSimulationCarPt_BaseCase {
 			controller.run();
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
-			System.out.println("------------------Total time taken :--------------------\n");
-			System.out.println(duration);
+			nb_iterations += 1;
+			FileWriter fileWriter = new FileWriter(outputPath + "0.75/time_exec.txt");
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			printWriter.printf("Time taken to execute the sim was %d s\n", duration/1000000000);
+			printWriter.printf("Which means an average of %d s per iteration\n", duration/(nb_iterations*1000000000));
+			printWriter.close();
 		}
 	}
 }

@@ -24,11 +24,15 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.vehicles.VehicleType;
 import org.matsim.vehicles.VehiclesFactory;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.lang.Integer.max;
 
 public class RunSimulation_DrivingRestriction {
 	static public void main(String[] args) throws ConfigurationException, IOException {
@@ -160,7 +164,18 @@ public class RunSimulation_DrivingRestriction {
 			}
 		} ) ;
 */
+		long startTime = System.nanoTime();
 		controller.run();
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);
+		String outputPath = config.controller().getOutputDirectory();
+		long nb_iterations = config.controller().getLastIteration() - config.controller().getFirstIteration();
+		nb_iterations += 1;
+		FileWriter fileWriter = new FileWriter(outputPath + "/exec_time.txt");
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+		printWriter.printf("Time taken to execute the sim was %d s\n", duration/1000000000);
+		printWriter.printf("Which means an average of %d s per iteration\n", duration/(nb_iterations*1000000000));
+		printWriter.close();
 	}
 
 	private static Scenario prepareScenario(Config config, IDFConfigurator configurator) {
