@@ -43,9 +43,11 @@ public class RunSimulationCarPt_DrivingRestriction {
 		double car_pt_constant = 0.75;
 
 		CommandLine cmd = new CommandLine.Builder(args) //
-				.requireOptions("config-path") //
+				.requireOptions("config-path","residents") //
 				.allowPrefixes("mode-choice-parameter", "cost-parameter") //
 				.build();
+		//Get res or not
+		String residents = cmd.getOptionStrict("residents");
 
 		//Get config
 		IDFConfigurator configurator = new IDFConfigurator();
@@ -71,13 +73,17 @@ public class RunSimulationCarPt_DrivingRestriction {
 		//config.qsim().setVehiclesSource(QSimConfigGroup.VehiclesSource.modeVehicleTypesFromVehiclesData);  //original value is defaultVehicle
 		//config.qsim().setVehiclesSource(QSimConfigGroup.VehiclesSource.defaultVehicle);  //UM
 		//BYIN: qsim visulasation (can be shown in via) : can also put this setting in RunAdaptConfig_CarInternal.java
-		config.qsim().setMainModes(Arrays.asList("car","carInternal"));//attention: car_passenger is excluded, corresponding adds in emissionRunner
 
-		// add carInternal to traveltimeCalculator
-		Set<String> analyzedModes = new HashSet<> (config.travelTimeCalculator().getAnalyzedModes());
-		analyzedModes.add("carInternal");
-		config.travelTimeCalculator().setAnalyzedModes(analyzedModes);
+		//Get configs
+		ScoringConfigGroup scoringConfig = config.scoring();
+		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
 
+		if (residents.equals("yes")) {
+			config.qsim().setMainModes(Arrays.asList("car", "carInternal"));//attention: car_passenger is excluded, corresponding adds in emissionRunner
+			// add carInternal to traveltimeCalculator
+			Set<String> analyzedModes = new HashSet<>(config.travelTimeCalculator().getAnalyzedModes());
+			analyzedModes.add("carInternal");
+			config.travelTimeCalculator().setAnalyzedModes(analyzedModes);
 		/*for (ReplanningConfigGroup.StrategySettings ss : config.replanning().getStrategySettings()) {
 			if (ss.getStrategyName().equals("KeepLastSelected")) {
 				ss.setWeight(0.95);
@@ -86,18 +92,16 @@ public class RunSimulationCarPt_DrivingRestriction {
 				ss.setWeight(0.05);
 			}*/
 
-		//add parameters of the new mode and related: discrete mode choice in eqasim
-		// Scoring config
-		ScoringConfigGroup scoringConfig = config.scoring();
-		ModeParams carInternalParams = new ModeParams("carInternal");
-		carInternalParams.setMarginalUtilityOfTraveling(-1.0);
-		scoringConfig.addModeParams(carInternalParams);
+			//add parameters of the new mode and related: discrete mode choice in eqasim
+			// Scoring config
+			ModeParams carInternalParams = new ModeParams("carInternal");
+			carInternalParams.setMarginalUtilityOfTraveling(-1.0);
+			scoringConfig.addModeParams(carInternalParams);
+			// consider carInternal as a special car, using the same parameters of car and the same others
 
-		// consider carInternal as a special car, using the same parameters of car and the same others
-		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
-		eqasimConfig.setCostModel("carInternal", IDFModeChoiceModule.CAR_COST_MODEL_NAME);
-		eqasimConfig.setEstimator("carInternal", IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
-
+			eqasimConfig.setCostModel("carInternal", IDFModeChoiceModule.CAR_COST_MODEL_NAME);
+			eqasimConfig.setEstimator("carInternal", IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
+		}
 		// Eqasim config definition to add the mode car_pt estimation
 		eqasimConfig.setEstimator("car_pt", "CarPtUtilityEstimator");
 		eqasimConfig.setEstimator("pt_car", "PtCarUtilityEstimator");
@@ -130,7 +134,9 @@ public class RunSimulationCarPt_DrivingRestriction {
 		Collection<String> cachedModes = new HashSet<>(dmcConfig.getCachedModes());
 		cachedModes.add("car_pt");
 		cachedModes.add("pt_car");
-		cachedModes.add("carInternal");
+		if (residents.equals("yes")) {
+			cachedModes.add("carInternal");
+		}
 		dmcConfig.setCachedModes(cachedModes);
 
 		// Activation of constraint intermodal modes Using
@@ -138,10 +144,15 @@ public class RunSimulationCarPt_DrivingRestriction {
 		tourConstraints.add("IntermodalModesConstraint");
 		dmcConfig.setTourConstraints(tourConstraints);
 
-		dmcConfig.getVehicleTourConstraintConfig().setRestrictedModes(Arrays.asList("car", "carInternal", "bike"));
+		if (residents.equals("yes")) {
+			dmcConfig.getVehicleTourConstraintConfig().setRestrictedModes(Arrays.asList("car", "carInternal", "bike"));
+		}
+		else {
+			dmcConfig.getVehicleTourConstraintConfig().setRestrictedModes(Arrays.asList("car", "bike"));
 
+		}
 		cmd.applyConfiguration(config);
-		Scenario scenario = prepareScenario( config, configurator );
+		Scenario scenario = prepareScenario( config, configurator, residents);
 		Controler controller = new Controler(scenario);
 		configurator.configureController(controller);
 
@@ -168,13 +179,15 @@ public class RunSimulationCarPt_DrivingRestriction {
 		controller.run();
 	}
 
-	private static Scenario prepareScenario(Config config, IDFConfigurator configurator) {
+	private static Scenario prepareScenario(Config config, IDFConfigurator configurator, String residents) {
 		final Scenario scenario = ScenarioUtils.createScenario( config );
 
-		// Add carInternal vehicle type
-		VehiclesFactory vehiclesFactory = scenario.getVehicles().getFactory();
-		VehicleType carInternalVehicleType = vehiclesFactory.createVehicleType(Id.create("carInternal", VehicleType.class));
-		scenario.getVehicles().addVehicleType(carInternalVehicleType);
+		if (residents.equals("yes")) {
+			// Add carInternal vehicle type
+			VehiclesFactory vehiclesFactory = scenario.getVehicles().getFactory();
+			VehicleType carInternalVehicleType = vehiclesFactory.createVehicleType(Id.create("carInternal", VehicleType.class));
+			scenario.getVehicles().addVehicleType(carInternalVehicleType);
+		}
 
 		configurator.configureScenario(scenario);
 		ScenarioUtils.loadScenario(scenario);

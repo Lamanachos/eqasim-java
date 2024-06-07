@@ -22,7 +22,7 @@ import java.util.*;
 
 public class NetworkModifier {
     private static final Logger LOG = LogManager.getLogger(NetworkModifier.class);
-    public static void modifyNetwork(String sc_name) throws IOException, CommandLine.ConfigurationException {
+    public static void modifyNetwork(String sc_name, String residents) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
         String networkInputFile =  "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network.xml.gz";
         String networkOutputFile = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network_carInternal.xml.gz";
@@ -66,7 +66,9 @@ public class NetworkModifier {
             Set<String> allowedModesAfter = new HashSet<>();
             for (String mode : allowedModesBefore) {
                 if (mode.equals(TransportMode.car)) {
-                    allowedModesAfter.add("carInternal");
+                    if (residents.equals("yes")) {
+                        allowedModesAfter.add("carInternal");
+                    }
                     if (!notCarModeList.contains(link.getId().toString())) {
                         allowedModesAfter.add(TransportMode.car);
                     }
@@ -96,19 +98,21 @@ public class NetworkModifier {
             remainingCarlinksAfterCleaning.add(link.getId());
         }
 
-        //3.3 Get carInternal subnetwork
-        Scenario carInternalScenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
-        TransportModeNetworkFilter transportModeNetworkFilterCarInternal = new TransportModeNetworkFilter(scenario.getNetwork());
-        transportModeNetworkFilterCarInternal.filter(carInternalScenario.getNetwork(), new HashSet<>(Arrays.asList("carInternal")));
-        LOG.info("number of carInternal network links before clearning");
-        System.out.println(carInternalScenario.getNetwork().getLinks().size());
-        //3.4: clean car subnetwork
-        (new NetworkCleaner()).run(carInternalScenario.getNetwork());
-        LOG.info("Finished creating and clearning carInternal subnetwork; the nb of carInternal links is:");
-        System.out.println(carInternalScenario.getNetwork().getLinks().size());
         Set<Id<Link>> remainingCarInternallinksAfterCleaning = new HashSet<>();
-        for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
-            remainingCarInternallinksAfterCleaning.add(link.getId());
+        if (residents.equals("yes")) {
+            //3.3 Get carInternal subnetwork
+            Scenario carInternalScenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+            TransportModeNetworkFilter transportModeNetworkFilterCarInternal = new TransportModeNetworkFilter(scenario.getNetwork());
+            transportModeNetworkFilterCarInternal.filter(carInternalScenario.getNetwork(), new HashSet<>(Arrays.asList("carInternal")));
+            LOG.info("number of carInternal network links before clearning");
+            System.out.println(carInternalScenario.getNetwork().getLinks().size());
+            //3.4: clean car subnetwork
+            (new NetworkCleaner()).run(carInternalScenario.getNetwork());
+            LOG.info("Finished creating and clearning carInternal subnetwork; the nb of carInternal links is:");
+            System.out.println(carInternalScenario.getNetwork().getLinks().size());
+            for (Link link : carInternalScenario.getNetwork().getLinks().values()) {
+                remainingCarInternallinksAfterCleaning.add(link.getId());
+            }
         }
 
         // step 4, update the network with cleaned subnetworks (attention, do not remove any links but the modes in the link, unless unique mode in that link)
@@ -126,17 +130,18 @@ public class NetworkModifier {
                 }
                 count++;
             }
-            if (!remainingCarInternallinksAfterCleaning.contains(link.getId()) && allowedModes.contains("carInternal")) {
-                if (allowedModes.size() == 1) {
-                    scenario.getNetwork().removeLink(link.getId());
-                } else {
-                    Set<String> allowedModesAfter = new HashSet<String>();
-                    allowedModesAfter.addAll(allowedModes);
-                    allowedModesAfter.remove("carInternal");
-                    link.setAllowedModes(allowedModesAfter);
+            if (residents.equals("yes")) {
+                if (!remainingCarInternallinksAfterCleaning.contains(link.getId()) && allowedModes.contains("carInternal")) {
+                    if (allowedModes.size() == 1) {
+                        scenario.getNetwork().removeLink(link.getId());
+                    } else {
+                        Set<String> allowedModesAfter = new HashSet<String>();
+                        allowedModesAfter.addAll(allowedModes);
+                        allowedModesAfter.remove("carInternal");
+                        link.setAllowedModes(allowedModesAfter);
+                    }
                 }
             }
-
         }
         LOG.info("the nb of links with removed car mode for updating the network: ");
         System.out.println(count);
