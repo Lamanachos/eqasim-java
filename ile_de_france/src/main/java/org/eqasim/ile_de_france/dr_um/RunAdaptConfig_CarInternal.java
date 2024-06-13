@@ -21,56 +21,16 @@ import static org.matsim.core.config.groups.PlansConfigGroup.TripDurationHandlin
 
 public class RunAdaptConfig_CarInternal {
 	String sc_name;
-	static public void runAdaptConfiguration(String sc_name, String residents) throws ConfigurationException {
+	static public void runAdaptConfiguration(String sc_name) throws ConfigurationException {
 		String input_path = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_config.xml";
 		String output_path = "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_config_carInternal.xml";
 		String[] args = new String[] {"--input-path", input_path,
 				"--output-path", output_path};
 		IDFConfigurator configurator = new IDFConfigurator();
-		if (residents.equals("yes")) {
-			ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfigurationRes);
-		}
-		else {
-			ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfigurationNoRes);
-		}
+		ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfiguration);
 	}
 
-	static public void adaptConfigurationNoRes(Config config) {
-		// Adjust eqasim config
-		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
-
-		eqasimConfig.setCostModel(TransportMode.car, IDFModeChoiceModule.CAR_COST_MODEL_NAME);
-		eqasimConfig.setCostModel(TransportMode.pt, IDFModeChoiceModule.PT_COST_MODEL_NAME);
-
-		eqasimConfig.setEstimator(TransportMode.car, IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
-		eqasimConfig.setEstimator(TransportMode.bike, IDFModeChoiceModule.BIKE_ESTIMATOR_NAME);
-
-		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
-		//BYIN:
-		// Routing config
-		RoutingConfigGroup routingConfig = config.routing();
-		PlansConfigGroup plansConfigGroup = config.plans();
-		plansConfigGroup.setTripDurationHandling(shiftActivityEndTimes);
-		//and others
-		//strategyConfig.setFractionOfIterationsToDisableInnovation(0.8);
-
-		DiscreteModeChoiceConfigGroup dmcConfig = (DiscreteModeChoiceConfigGroup) config.getModules()
-				.get(DiscreteModeChoiceConfigGroup.GROUP_NAME);
-		dmcConfig.setModeAvailability(IDFModeChoiceModule.MODE_AVAILABILITY_NAME);
-
-		//BYIN: we consider mode choice strategy without sizeofMemories = 1
-//		dmcConfig.setEnforceSinglePlan(false);
-		ScoringConfigGroup scoringConfig = config.scoring();
-		scoringConfig.setMarginalUtlOfWaitingPt_utils_hr(-1.0);
-
-		// Calibration results for 5%
-		if (eqasimConfig.getSampleSize() == 0.05) {
-			// Adjust flow and storage capacity
-			config.qsim().setFlowCapFactor(0.045);
-			config.qsim().setStorageCapFactor(0.045);
-		}
-	}
-	static public void adaptConfigurationRes(Config config) {
+	static public void adaptConfiguration(Config config) {
 		// Adjust eqasim config
 		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
 
@@ -90,7 +50,7 @@ public class RunAdaptConfig_CarInternal {
 		PlansConfigGroup plansConfigGroup = config.plans();
 		plansConfigGroup.setTripDurationHandling(shiftActivityEndTimes);
 
-		//BYIN: strategy settings:
+        //BYIN: strategy settings:
 		//Replace default strategy settings in eqasim considering DRZ
 		for (StrategySettings ss : config.replanning().getStrategySettings()) {
 			if (ss.getStrategyName().equals(DiscreteModeChoiceModule.STRATEGY_NAME)) {
