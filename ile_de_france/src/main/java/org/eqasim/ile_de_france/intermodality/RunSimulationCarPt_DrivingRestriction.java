@@ -43,7 +43,7 @@ public class RunSimulationCarPt_DrivingRestriction {
 		double car_pt_constant = 0.75;
 
 		CommandLine cmd = new CommandLine.Builder(args) //
-				.requireOptions("config-path", "residents") //
+				.requireOptions("config-path","residents") //
 				.allowPrefixes("mode-choice-parameter", "cost-parameter") //
 				.build();
 		//Get res or not
@@ -59,7 +59,7 @@ public class RunSimulationCarPt_DrivingRestriction {
 
 		// multi-stage car trips
 		config.routing().setAccessEgressType(RoutingConfigGroup.AccessEgressType.accessEgressModeToLink);
-		config.qsim().setUsingTravelTimeCheckInTeleportation(true);
+		config.qsim().setUsingTravelTimeCheckInTeleportation( true );
 
 		//transit (UM)
 		//TransitConfigGroup transitConfig = config.transit();
@@ -75,9 +75,10 @@ public class RunSimulationCarPt_DrivingRestriction {
 		//BYIN: qsim visulasation (can be shown in via) : can also put this setting in RunAdaptConfig_CarInternal.java
 
 		//Get configs
+		ScoringConfigGroup scoringConfig = config.scoring();
+		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
 
 		if (residents.equals("yes")) {
-
 			config.qsim().setMainModes(Arrays.asList("car", "carInternal"));//attention: car_passenger is excluded, corresponding adds in emissionRunner
 			// add carInternal to traveltimeCalculator
 			Set<String> analyzedModes = new HashSet<>(config.travelTimeCalculator().getAnalyzedModes());
@@ -95,10 +96,9 @@ public class RunSimulationCarPt_DrivingRestriction {
 			// Scoring config
 			ModeParams carInternalParams = new ModeParams("carInternal");
 			carInternalParams.setMarginalUtilityOfTraveling(-1.0);
-		}
-		// consider carInternal as a special car, using the same parameters of car and the same others
-		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
-		if (residents.equals("yes")) {
+			scoringConfig.addModeParams(carInternalParams);
+			// consider carInternal as a special car, using the same parameters of car and the same others
+
 			eqasimConfig.setCostModel("carInternal", IDFModeChoiceModule.CAR_COST_MODEL_NAME);
 			eqasimConfig.setEstimator("carInternal", IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
 		}
@@ -108,14 +108,8 @@ public class RunSimulationCarPt_DrivingRestriction {
 
 		// Scoring config definition to add the mode car_pt parameters
 		//PlanCalcScoreConfigGroup scoringConfig = config.planCalcScore();
-		ScoringConfigGroup scoringConfig = config.scoring();
 		ModeParams carPtParams = new ModeParams("car_pt");
 		ModeParams ptCarParams = new ModeParams("pt_car");
-		if (residents.equals("yes")) {
-			ModeParams carInternalParams = new ModeParams("carInternal");
-			carInternalParams.setMarginalUtilityOfTraveling(-1.0);
-			scoringConfig.addModeParams(carInternalParams);
-		}
 		scoringConfig.addModeParams(carPtParams);
 		scoringConfig.addModeParams(ptCarParams);
 
