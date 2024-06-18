@@ -22,7 +22,7 @@ import java.util.*;
 
 public class NetworkModifier {
     private static final Logger LOG = LogManager.getLogger(NetworkModifier.class);
-    public static void modifyNetwork(String sc_name) throws IOException, CommandLine.ConfigurationException {
+    public static void modifyNetwork(String sc_name, String res) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
         String networkInputFile =  "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network.xml.gz";
         String networkOutputFile = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network_carInternal.xml.gz";
@@ -66,7 +66,9 @@ public class NetworkModifier {
             Set<String> allowedModesAfter = new HashSet<>();
             for (String mode : allowedModesBefore) {
                 if (mode.equals(TransportMode.car)) {
-                    allowedModesAfter.add("carInternal");
+                    if (res.equals("yes")) {
+                        allowedModesAfter.add("carInternal");
+                    }
                     if (!notCarModeList.contains(link.getId().toString())) {
                         allowedModesAfter.add(TransportMode.car);
                     }

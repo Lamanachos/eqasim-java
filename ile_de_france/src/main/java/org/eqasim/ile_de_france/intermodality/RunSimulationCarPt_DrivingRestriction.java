@@ -20,12 +20,9 @@ import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.CommandLine.ConfigurationException;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.ReplanningConfigGroup;
-import org.matsim.core.config.groups.RoutingConfigGroup;
-import org.matsim.core.config.groups.ScoringConfigGroup;
+import org.matsim.core.config.groups.*;
 import org.matsim.core.config.groups.ScoringConfigGroup.ActivityParams;
 import org.matsim.core.config.groups.ScoringConfigGroup.ModeParams;
-import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -35,6 +32,8 @@ import org.matsim.vehicles.VehiclesFactory;
 
 import java.io.IOException;
 import java.util.*;
+
+import static org.matsim.core.config.groups.PlansConfigGroup.TripDurationHandling.shiftActivityEndTimes;
 
 public class RunSimulationCarPt_DrivingRestriction {
 
@@ -92,6 +91,10 @@ public class RunSimulationCarPt_DrivingRestriction {
 		ModeParams carInternalParams = new ModeParams("carInternal");
 		carInternalParams.setMarginalUtilityOfTraveling(-1.0);
 		scoringConfig.addModeParams(carInternalParams);
+
+		//As tarek would have wanted
+		PlansConfigGroup plansConfigGroup = config.plans();
+		plansConfigGroup.setTripDurationHandling(shiftActivityEndTimes);
 
 		// consider carInternal as a special car, using the same parameters of car and the same others
 		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);

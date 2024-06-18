@@ -21,15 +21,30 @@ import static org.matsim.core.config.groups.PlansConfigGroup.TripDurationHandlin
 
 public class RunAdaptConfig_CarInternal {
 	String sc_name;
-	static public void runAdaptConfiguration(String sc_name) throws ConfigurationException {
+	static public void runAdaptConfiguration(String sc_name, String res) throws ConfigurationException {
 		String input_path = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_config.xml";
 		String output_path = "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_config_carInternal.xml";
 		String[] args = new String[] {"--input-path", input_path,
 				"--output-path", output_path};
 		IDFConfigurator configurator = new IDFConfigurator();
-		ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfiguration);
+		if (res.equals("yes")) {
+			ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfiguration);
+		}
+		else {
+			ConfigAdapter.run(args, configurator.getConfigGroups(), RunAdaptConfig_CarInternal::adaptConfigurationNoRes);
+		}
 	}
+	static public void adaptConfigurationNoRes(Config config) {
+		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
 
+		eqasimConfig.setCostModel(TransportMode.car, IDFModeChoiceModule.CAR_COST_MODEL_NAME);
+		eqasimConfig.setCostModel(TransportMode.pt, IDFModeChoiceModule.PT_COST_MODEL_NAME);
+
+		eqasimConfig.setEstimator(TransportMode.car, IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
+		eqasimConfig.setEstimator(TransportMode.bike, IDFModeChoiceModule.BIKE_ESTIMATOR_NAME);
+
+		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
+	}
 	static public void adaptConfiguration(Config config) {
 		// Adjust eqasim config
 		EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
@@ -46,9 +61,6 @@ public class RunAdaptConfig_CarInternal {
 		// Routing config
 		RoutingConfigGroup routingConfig = config.routing();
 		routingConfig.setNetworkModes(Arrays.asList("car", "car_passenger", "truck", "carInternal"));
-
-		PlansConfigGroup plansConfigGroup = config.plans();
-		plansConfigGroup.setTripDurationHandling(shiftActivityEndTimes);
 
         //BYIN: strategy settings:
 		//Replace default strategy settings in eqasim considering DRZ
