@@ -22,11 +22,11 @@ def main(argv):
     attrib.build_attributes(False,sc_name,ins)
     os.system("python split_network.py")
     os.system("python split_emissions.py")
-    os.system("python convert_espg.py")
+    os.system("python convert_espg.py "+str(ins))
     os.system("python get_links_per_commune.py")
     os.system("python calculate_emissions.py")
     os.system("python MS_ATT.py")
-    if basecase_on : 
+    if basecase_on :
         attrib.build_attributes(True,sc_name,ins)
         os.system("python calculate_emissions.py")
         os.system("python MS_ATT.py")

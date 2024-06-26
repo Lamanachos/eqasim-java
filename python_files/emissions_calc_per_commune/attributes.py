@@ -39,21 +39,18 @@ def build_attributes(basecase,sc_name=None,insee_par=None):
     size_heure = (30*3600)//nb_bins_heure
     size_dist = 1000//nb_bins_dist
     #calculate_emissions
+    emissions_results_folder = "..\\..\\emissions_results"
     liste_communes_in_paris = [75101,75102,75103,75104,75105,75106,75107,75108,75109,75110,75111,75112,75113,75114,75115,75116,75117,75118,75119,75120]
     nodes_commune_file = "..\\..\\simulation_output\\"+scenario_name+"\\nodes_commune.json"
-    if basecase :
-        communes_co2_file = "..\\..\\emissions_results\\bs_"+str(insee)+"\\c_co2.json"
-        communes_hdist_file = "..\\..\\emissions_results\\bs_"+str(insee)+"\\c_hdist.json"
-        communes_hheure_file = "..\\..\\emissions_results\\bs_"+str(insee)+"\\c_hheure.json"
-    else :
-        communes_co2_file = "..\\..\\emissions_results\\"+scenario_name+"\\c_co2.json"
-        communes_hdist_file = "..\\..\\emissions_results\\"+scenario_name+"\\c_hdist.json"
-        communes_hheure_file = "..\\..\\emissions_results\\"+scenario_name+"\\c_hheure.json"
+    communes_co2_file = results_dir+"\\c_co2.json"
+    communes_hdist_file = results_dir+"\\c_hdist.json"
+    communes_hheure_file = results_dir+"\\c_hheure.json"
     new_shapefilename = "shapefiles_co2\\"+scenario_name
     #MS_ATT
     att_file = "..\\..\\MS_&_ATT\\ATT\\"
     ms_file = "..\\..\\MS_&_ATT\\MS\\"
-    #get_links_per_commune
+    shapefile_communes = "..\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
+#get_links_per_commune
     shapefile_communes_for_links = "..\\..\\gis\\"+str(insee)+"_buffered\\"+str(insee)+"_buffered.shp"
     precise_links = True
     #links_commune_file = "links_commune\\links_communes_prec.json"

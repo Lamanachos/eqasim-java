@@ -4,15 +4,16 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
 import attributes as attrib
+import os
 
 commune = attrib.insee
 shapefile_communes = attrib.shapefile_communes
 shapefile_paris = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\gis\\paris.shp"
 shapefile_paris = gpd.read_file(shapefile_paris)
 if attrib.basecase :
-    trips_file_path = "simulation_output\\"+attrib.basecase_scenario+"\\eqasim_trips.csv"
+    trips_file_path = "..\\..\\simulation_output\\"+attrib.basecase_scenario+"\\eqasim_trips.csv"
 else :
-    trips_file_path = "simulation_output\\"+attrib.scenario_name+"\\eqasim_trips.csv"
+    trips_file_path = "..\\..\\simulation_output\\"+attrib.scenario_name+"\\eqasim_trips.csv"
 shape_communes = gpd.read_file(shapefile_communes)
 shape = shape_communes[(shape_communes["insee"] == commune)]
 shape = shape.to_crs(shapefile_paris.crs)
@@ -108,6 +109,10 @@ for mode in ms["inout"]["nb"].keys():
 #to file  
 file_l = attrib.att_file
 file_m = attrib.ms_file
+if not os.path.exists(file_l):
+        os.makedirs(file_l)
+if not os.path.exists(file_m):
+        os.makedirs(file_m)
 if attrib.basecase :
     file_l += str(attrib.insee)+"_bs"
     file_m += str(attrib.insee)+"_bs"

@@ -119,9 +119,10 @@ if __name__ == "__main__" :
     print("Number of links :",len(links_commune.keys()))
     print("Done in ",t.time()-start," seconds")
 
+    folder_c = attrib.links_commune_folder
+    if not os.path.exists(folder_c):
+        os.makedirs(folder_c)
     file_c = attrib.links_commune_file
-    if not os.path.exists(file_c):
-        os.makedirs(file_c)
     with open(file_c, "w") as outfile: 
         json.dump(links_commune, outfile)
     file_l = attrib.links_len_file
