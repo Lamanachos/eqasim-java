@@ -4,6 +4,7 @@ import pandas as pd
 import convert_espg
 import sys
 
+#args : insee codes of municipalities you want to fuse separated by spaces, ex : 75105 93048
 def main(argv):
     shapefile_communes = "..\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
     dest = "..\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"

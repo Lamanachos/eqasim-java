@@ -15,7 +15,7 @@ def main(argv):
     for opt, arg in opts:
         if opt in ("-b", "--basecase_or_not"):
             basecase_on = bool(arg)
-        if opt in ("-s", "--scenario_name"):
+        if opt in ("-o", "--output_name"):
             sc_name = arg
         if opt in ("-i", "--insee"):
             ins = int(arg)

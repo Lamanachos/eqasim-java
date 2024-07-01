@@ -1,0 +1,8 @@
+{
+    "sampling_rate": 0.01,
+    "hts": "egt",
+    "random_seed": 1234,
+    "created": "2024-04-11T13:24:44.543562+00:00",
+    "version": "v1.2.0",
+    "commit": "43af03e312ef46c887fddc428b62b0063bb9bfd0"
+}
