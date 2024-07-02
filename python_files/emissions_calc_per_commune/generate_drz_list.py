@@ -114,7 +114,8 @@ def create_shapefiles(number_per_number,force_disjoint = False):
                     new_insee.main(new_temp_d)
                 else :
                     temp_j = get_list_comms(i+1,departement,True)
-                    convert_espg.main(temp_j[0])
+                    print(temp_j)
+                    convert_espg.main([str(int(temp_j[0]))])
         temp_j = get_list_comms(0,departement,True,True)
         new_temp_j = []
         for j in temp_j : 
@@ -122,7 +123,7 @@ def create_shapefiles(number_per_number,force_disjoint = False):
         new_insee.main(new_temp_j)
 
 
-create_shapefiles([0,2,2,2,2,2,2,2,2,2],True)
+create_shapefiles([5,2,2,2,2,2,2,2,2,2],True)
                 
 
             
