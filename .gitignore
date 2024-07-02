@@ -13,3 +13,5 @@ ile_de_france/scenarios/75005
 ile_de_france/scenarios/test
 python_files/emissions_calc_per_commune/emissions
 python_files/emissions_calc_per_commune/__pycache__
+gis
+python_files/communes-dile-de-france-au-01-janvier
