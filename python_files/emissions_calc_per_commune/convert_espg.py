@@ -5,8 +5,8 @@ import pandas as pd
 import sys
 
 def main(argv):
-    shapefile_communes = "..\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
-    shapefile_paris = "..\\..\\gis\\paris.shp"
+    shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
+    shapefile_paris = "gis\\paris.shp"
     shape_communes = gpd.read_file(shapefile_communes)
     shapefile_paris = gpd.read_file(shapefile_paris)
     liste_communes = []
@@ -15,7 +15,7 @@ def main(argv):
     for i in liste_communes:
         a_shape = shape_communes[(shape_communes["insee"] == i)]
         shape = a_shape.to_crs(shapefile_paris.crs)
-        shape.to_file("..\\..\\gis\\"+str(int(i)))
+        shape.to_file("gis\\"+str(int(i)))
         insee = shape["insee"][shape.index[0]]
         df = pd.DataFrame()
         df["insee"] = [insee,insee,insee]
@@ -32,7 +32,7 @@ def main(argv):
         twenty_k = twenty_k.difference(ten_k)
         df["geometry"] = [temp_shape[temp_shape.index[0]],ten_k[ten_k.index[0]],twenty_k[twenty_k.index[0]]]
         gdf = gpd.GeoDataFrame(df,crs = shapefile_paris.crs)
-        gdf.to_file("..\\..\\gis\\"+str(int(i))+"_buffered")
+        gdf.to_file("gis\\"+str(int(i))+"_buffered")
 
 if __name__ == "__main__":
    main(sys.argv[1:])
