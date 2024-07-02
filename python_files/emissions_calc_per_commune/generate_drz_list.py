@@ -34,7 +34,6 @@ for i in departements :
     dict_comms[i] = liste_comms
 
 def get_list_comms(number, departement, joint_or_not = True, max = False):
-    print("n : ",number,"d : ",departement,"j : ",joint_or_not)
     number = int(number)
     liste_comms = []
     liste_dep = dict_comms[departement]
