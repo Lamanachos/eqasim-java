@@ -16,9 +16,11 @@ def main(argv):
         liste_communes.append(int(com))
     liste_shapes = []
     for i in liste_communes:
-        shape = shape_communes[(shape_communes["insee"] == str(i))]
+        shape = shape_communes[(shape_communes["insee"] == int(i))]
         liste_shapes.append(shape)
     union_shape = liste_shapes[0]
+    if len(liste_shapes) == 1 :
+        union_shape = union_shape["geometry"]
     for i in range(1,len(liste_shapes)):
         union_shape = union_shape.union(liste_shapes[i],align=False)
     all_insee= ""
@@ -30,11 +32,11 @@ def main(argv):
     f.close()
     f = open(list_file,"a")
     if lines != []:
-        new_insee = str(int(lines[-2])+1)
+        new_insee = int(lines[-2])+1
     else : 
-        new_insee = "100000"
+        new_insee = 100000
     print(new_insee)
-    f.write(new_insee +"\n")
+    f.write(str(new_insee) +"\n")
     f.write(all_insee +"\n")
     f.close()
     df = pd.DataFrame()
@@ -47,6 +49,10 @@ def main(argv):
         elif key == "objectid" :
             temp.append(max(temp)+1)
         elif key == "geometry" :
+            """ print(union_shape)
+            print(union_shape.index)
+            print(union_shape.index[0])
+            print(union_shape[union_shape.index[0]]) """
             temp.append(union_shape[union_shape.index[0]])
         else :
             temp.append(None)

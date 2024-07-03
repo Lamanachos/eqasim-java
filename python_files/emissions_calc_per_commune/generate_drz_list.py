@@ -24,7 +24,7 @@ for i in range(len(liste_communes)) :
         if liste_shapes[i].touches(liste_shapes[j]) :
             mat[liste_communes[i]].append(liste_communes[j])
 
-departements = ["94",]
+departements = ["92","93","94","75"]
 dict_comms = {}
 for i in departements :
     shape_comms = gpd.read_file(folder_p + i +".shp")
@@ -110,7 +110,8 @@ def create_shapefiles(number_per_number,force_disjoint = False, disjoint_random 
                         while (len(number_of_parts(temp_d)) == 1) and (c<100):
                             temp_d = get_list_comms(i+1,departement,False,full_random=disjoint_random)
                             c += 1
-                    print("nb_parts :",len(number_of_parts(temp_d)))
+                    t = len(number_of_parts(temp_d))
+                    print("nb_parts :",t)
                     new_temp_d = []
                     for k in temp_d :
                         new_temp_d.append(str(int(k)))
@@ -118,7 +119,9 @@ def create_shapefiles(number_per_number,force_disjoint = False, disjoint_random 
                 else :
                     temp_j = get_list_comms(i+1,departement,True)
                     print(temp_j)
-                    convert_espg.main([str(int(temp_j[0]))])
+                    list_file = "python_files\\communes-dile-de-france-au-01-janvier\\existing-insees.txt"
+                    new_insee.main([str(int(temp_j[0]))])
+                    #convert_espg.main([str(int(temp_j[0]))])
         if full_dep :
             temp_j = get_list_comms(0,departement,True,True)
             new_temp_j = []
@@ -127,7 +130,7 @@ def create_shapefiles(number_per_number,force_disjoint = False, disjoint_random 
             new_insee.main(new_temp_j)
 
 
-create_shapefiles([0,2],True,disjoint_random=True)
+create_shapefiles([5,2,2,2,2,2,2,2,2,2],force_disjoint=True,disjoint_random=True,full_dep=True)
                 
 
             

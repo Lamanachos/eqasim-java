@@ -13,7 +13,7 @@ def main(argv):
     for com in argv :
         liste_communes.append(com)
     for i in liste_communes:
-        a_shape = shape_communes[(shape_communes["insee"] == str(i))]
+        a_shape = shape_communes[(shape_communes["insee"] == int(i))]
         shape = a_shape.to_crs(shapefile_paris.crs)
         shape.to_file("gis\\"+str(int(i)))
         insee = shape["insee"][shape.index[0]]
