@@ -11,9 +11,9 @@ def main(argv):
     shapefile_paris = gpd.read_file(shapefile_paris)
     liste_communes = []
     for com in argv :
-        liste_communes.append(int(com))
+        liste_communes.append(com)
     for i in liste_communes:
-        a_shape = shape_communes[(shape_communes["insee"] == i)]
+        a_shape = shape_communes[(shape_communes["insee"] == str(i))]
         shape = a_shape.to_crs(shapefile_paris.crs)
         shape.to_file("gis\\"+str(int(i)))
         insee = shape["insee"][shape.index[0]]

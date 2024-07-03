@@ -24,7 +24,7 @@ for i in range(len(liste_communes)) :
         if liste_shapes[i].touches(liste_shapes[j]) :
             mat[liste_communes[i]].append(liste_communes[j])
 
-departements = ["92","93","94","75"]
+departements = ["94",]
 dict_comms = {}
 for i in departements :
     shape_comms = gpd.read_file(folder_p + i +".shp")
@@ -33,12 +33,14 @@ for i in departements :
         liste_comms.append(j)
     dict_comms[i] = liste_comms
 
-def get_list_comms(number, departement, joint_or_not = True, max = False):
+def get_list_comms(number, departement, joint_or_not = True, max = False, full_random = False):
     number = int(number)
     liste_comms = []
     liste_dep = dict_comms[departement]
     if max :
         return liste_dep
+    if full_random :
+        return r.sample(liste_dep, number)
     liste_comms.append(r.choice(liste_dep))
     for i in range(number-1):
         touching_comms = []
@@ -92,7 +94,7 @@ def number_of_parts(drz):
     list_parts.append(current)
     return list_parts
 
-def create_shapefiles(number_per_number,force_disjoint = False):
+def create_shapefiles(number_per_number,force_disjoint = False, disjoint_random = False, full_dep = False):
     for departement in departements :
         for i in range(len(number_per_number)) :
             for j in range(number_per_number[i]) :
@@ -102,12 +104,13 @@ def create_shapefiles(number_per_number,force_disjoint = False):
                     for k in temp_j : 
                         new_temp_j.append(str(int(k)))
                     new_insee.main(new_temp_j)
-                    temp_d = get_list_comms(i+1,departement,False)
+                    temp_d = get_list_comms(i+1,departement,False,full_random=disjoint_random)
                     if force_disjoint :
                         c = 0
                         while (len(number_of_parts(temp_d)) == 1) and (c<100):
-                            temp_d = get_list_comms(i+1,departement,False)
+                            temp_d = get_list_comms(i+1,departement,False,full_random=disjoint_random)
                             c += 1
+                    print("nb_parts :",len(number_of_parts(temp_d)))
                     new_temp_d = []
                     for k in temp_d :
                         new_temp_d.append(str(int(k)))
@@ -116,14 +119,15 @@ def create_shapefiles(number_per_number,force_disjoint = False):
                     temp_j = get_list_comms(i+1,departement,True)
                     print(temp_j)
                     convert_espg.main([str(int(temp_j[0]))])
-        temp_j = get_list_comms(0,departement,True,True)
-        new_temp_j = []
-        for j in temp_j : 
-            new_temp_j.append(str(int(j)))
-        new_insee.main(new_temp_j)
+        if full_dep :
+            temp_j = get_list_comms(0,departement,True,True)
+            new_temp_j = []
+            for j in temp_j : 
+                new_temp_j.append(str(int(j)))
+            new_insee.main(new_temp_j)
 
 
-create_shapefiles([5,2,2,2,2,2,2,2,2,2],True)
+create_shapefiles([0,2],True,disjoint_random=True)
                 
 
             
