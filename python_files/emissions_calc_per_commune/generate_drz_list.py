@@ -130,7 +130,7 @@ def create_shapefiles(number_per_number,force_disjoint = False, disjoint_random 
             new_insee.main(new_temp_j)
 
 
-create_shapefiles([5,2,2,2,2,2,2,2,2,2],force_disjoint=True,disjoint_random=True,full_dep=True)
+create_shapefiles([5,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True,full_dep=True)
                 
 
             

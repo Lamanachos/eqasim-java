@@ -4,10 +4,13 @@ import org.eqasim.core.components.ParkRideManager;
 import org.eqasim.core.components.car_pt.routing.EqasimCarPtModule;
 import org.eqasim.core.components.car_pt.routing.EqasimPtCarModule;
 import org.eqasim.core.components.config.EqasimConfigGroup;
+import org.eqasim.core.components.emissions.RunComputeEmissionsEvents;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModuleCarPt;
 import org.eqasim.core.tools.TestCarPtPara;
 import org.eqasim.ile_de_france.IDFConfigurator;
+import org.eqasim.ile_de_france.dr_um.Adapt_config_emissions;
+import org.eqasim.ile_de_france.dr_um.prepareDrz;
 import org.eqasim.ile_de_france.mode_choice.IDFModeChoiceModuleCarPt;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Scenario;
@@ -161,6 +164,10 @@ public class RunSimulationCarPt_BaseCase {
 			printWriter.printf("Time taken to execute the sim was %d s\n", duration/1000000000);
 			printWriter.printf("Which means an average of %d s per iteration\n", duration/(nb_iterations*1000000000));
 			printWriter.close();
+			String[] adapt_config_em = new String[] {"--sc_name",outputPath+"0.75"};
+			String[] em_args = new String[] {"--config-path","simulation_output/"+outputPath+"0.75"+"/output_config_emissions.xml","--hbefa-cold-avg","../../HBEFA/2022_IDF_EFA_ColdStart_Vehcat_Average_OnlyCar_Marjolaine.csv","--hbefa-hot-avg","../../HBEFA/2022_IDF_EFA_HOT_Vehcat_Average_OnlyCar_Marjolaine.csv"};
+			Adapt_config_emissions.main(adapt_config_em);
+			RunComputeEmissionsEvents.main(em_args);
 		}
 	}
 }
