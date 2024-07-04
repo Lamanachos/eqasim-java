@@ -34,8 +34,7 @@ def main(argv):
     if lines != []:
         new_insee = int(lines[-2])+1
     else : 
-        new_insee = 100000
-    print(new_insee)
+        new_insee = 100001
     f.write(str(new_insee) +"\n")
     f.write(all_insee +"\n")
     f.close()
@@ -49,10 +48,6 @@ def main(argv):
         elif key == "objectid" :
             temp.append(max(temp)+1)
         elif key == "geometry" :
-            """ print(union_shape)
-            print(union_shape.index)
-            print(union_shape.index[0])
-            print(union_shape[union_shape.index[0]]) """
             temp.append(union_shape[union_shape.index[0]])
         else :
             temp.append(None)
