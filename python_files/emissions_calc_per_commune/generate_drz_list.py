@@ -149,13 +149,13 @@ def create_shapefiles_again(departements,number_per_number,force_disjoint = Fals
     dep2 = departements[1]
     for i in departements :
         for j in dict_comms[i] :
-            liste_comms.append[j]
-    liste_dep_1 = liste_comms[departements[0]]
-    liste_dep_2 = liste_comms[departements[1]]
+            liste_comms.append(j)
+    liste_dep_1 = dict_comms[departements[0]]
+    liste_dep_2 = dict_comms[departements[1]]
     for i in range(len(number_per_number)):
         for j in range(number_per_number[i]):
             base_list_j = []
-            base_list_j.append(r.choice(frontiers[dep1][dep2].keys()))
+            base_list_j.append(r.choice(list(frontiers[dep1][dep2].keys())))
             base_list_j.append(r.choice(frontiers[dep1][dep2][base_list_j[0]]))
             temp_j = get_list_comms(i+1,liste_comms,True,base_list=base_list_j)
             new_insee.main(temp_j)
