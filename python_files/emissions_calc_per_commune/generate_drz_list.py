@@ -60,6 +60,9 @@ def get_list_comms(number, liste_dep, joint_or_not = True, full_random = False, 
         liste_comms.append(r.choice(liste_dep))
     nb_already = len(liste_comms)
     if full_random :
+        print(number)
+        print(nb_already)
+        print(liste_comms)
         temp_list = r.sample(liste_dep, number-nb_already)
         for i in temp_list :
             liste_comms.append(i)
@@ -149,30 +152,31 @@ def create_shapefiles_again(departements,number_per_number,force_disjoint = Fals
     liste_dep_2 = dict_comms[departements[1]]
     for i in range(len(number_per_number)):
         for j in range(number_per_number[i]):
-            base_list_j = []
-            base_list_j.append(r.choice(list(frontiers[dep1][dep2].keys())))
-            base_list_j.append(r.choice(frontiers[dep1][dep2][base_list_j[0]]))
-            temp_j = get_list_comms(i+1,liste_comms,True,base_list=base_list_j)
-            new_insee.main(temp_j)
-            base_list_dj = []
-            base_list_dj.append(r.choice(liste_dep_1))
-            base_list_dj.append(r.choice(liste_dep_2))
-            temp_d = get_list_comms(i+1,liste_comms,False,full_random=disjoint_random,base_list=base_list_dj)
-            if force_disjoint :
-                c = 0
-                while (len(number_of_parts(temp_d)) == 1) and (c<100):
-                    temp_d = get_list_comms(i+1,liste_comms,False,full_random=disjoint_random,base_list=base_list_dj)
-                    c += 1
-            t = len(number_of_parts(temp_d))
-            print("nb_parts :",t)
-            new_insee.main(temp_d)
+            if i != 0 :
+                base_list_j = []
+                base_list_j.append(r.choice(list(frontiers[dep1][dep2].keys())))
+                base_list_j.append(r.choice(frontiers[dep1][dep2][base_list_j[0]]))
+                temp_j = get_list_comms(i+1,liste_comms,True,base_list=base_list_j)
+                new_insee.main(temp_j)
+                base_list_dj = []
+                base_list_dj.append(r.choice(liste_dep_1))
+                base_list_dj.append(r.choice(liste_dep_2))
+                temp_d = get_list_comms(i+1,liste_comms,False,full_random=disjoint_random,base_list=base_list_dj)
+                if force_disjoint :
+                    c = 0
+                    while (len(number_of_parts(temp_d)) == 1) and (c<100):
+                        temp_d = get_list_comms(i+1,liste_comms,False,full_random=disjoint_random,base_list=base_list_dj)
+                        c += 1
+                t = len(number_of_parts(temp_d))
+                print("nb_parts :",t)
+                new_insee.main(temp_d)
     new_insee.main(liste_comms)
 
-create_shapefiles(departements,[5,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True,full_dep=True)
-create_shapefiles_again(["75","92"],[0,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["75","94"],[0,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["92","93"],[0,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["93","94"],[0,1,1,1,1,1,1,1,1,1],force_disjoint=True,disjoint_random=True)
+create_shapefiles(departements,[5,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True,full_dep=True)
+create_shapefiles_again(["75","92"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
+create_shapefiles_again(["75","94"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
+create_shapefiles_again(["92","93"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
+create_shapefiles_again(["93","94"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
                 
 
             
