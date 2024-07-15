@@ -9,7 +9,7 @@ import java.io.IOException;
 public class RunIntermodalityDrzEmissions {
     public static void main(String[] args) throws CommandLine.ConfigurationException, IOException {
         CommandLine cmd = new CommandLine.Builder(args) //
-                .requireOptions("sc_path","sc_shp","res","output_path","drz_name","last_it") //
+                .requireOptions("sc_path","shp_path","res","output_path","drz_name","last_it") //
                 .build();
         String sc_path = cmd.getOptionStrict("sc_path");
         String shp_path = cmd.getOptionStrict("shp_path");
