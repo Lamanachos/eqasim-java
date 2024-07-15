@@ -24,11 +24,11 @@ public class Adapt_config_emissions {
 	String sc_name;
 	static public void main(String[] args) throws ConfigurationException {
 		CommandLine cmd = new CommandLine.Builder(args) //
-				.requireOptions("sc_name") //
+				.requireOptions("output_path") //
 				.build();
-		String sc_name = cmd.getOptionStrict("sc_name");
-		String input_path = "simulation_output\\" + sc_name + "\\output_config_reduced.xml";
-		String output_path = "simulation_output\\"+sc_name+"\\output_config_emissions.xml";
+		String outputPath = cmd.getOptionStrict("output_path");
+		String input_path = outputPath + "\\output_config_reduced.xml";
+		String output_path = outputPath+"\\output_config_emissions.xml";
 		String[] args_c = new String[] {"--input-path", input_path,
 				"--output-path", output_path};
 		IDFConfigurator configurator = new IDFConfigurator();
