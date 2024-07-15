@@ -22,11 +22,11 @@ import java.util.*;
 
 public class NetworkModifier {
     private static final Logger LOG = LogManager.getLogger(NetworkModifier.class);
-    public static void modifyNetwork(String sc_name, String res) throws IOException, CommandLine.ConfigurationException {
+    public static void modifyNetwork(String sc_path, String res, String drz_name) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
-        String networkInputFile =  "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network.xml.gz";
-        String networkOutputFile = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_network_carInternal.xml.gz";
-        String InternalStreets = "ile_de_france\\scenarios\\" + sc_name + "\\internal_linksID.txt";
+        String networkInputFile =  sc_path + "\\ile_de_france_network.xml.gz";
+        String networkOutputFile = sc_path + "\\ile_de_france_network_"+drz_name+".xml.gz";
+        String InternalStreets = sc_path + "\\internal_linksID.txt";
 
         // InternalStreets
         BufferedReader bfrInternalStreets = new BufferedReader(new FileReader(InternalStreets));

@@ -29,12 +29,12 @@ import java.util.*;
 public class LinksInArea {
     private static final Logger LOG = LogManager.getLogger(LinksInArea.class);
     private final static GeometryFactory geometryFactory = new GeometryFactory();
-    public static void getLinks(String sc_name, String city_name) throws IOException, CommandLine.ConfigurationException {
+    public static void getLinks(String sc_path, String shp_path) throws IOException, CommandLine.ConfigurationException {
         // Input and output files
-        String networkInputFile = "ile_de_france/scenarios/"+sc_name+"/ile_de_france_network.xml.gz";
-        String outputDir = "ile_de_france/scenarios/"+sc_name;
+        String networkInputFile = sc_path+"/ile_de_france_network.xml.gz";
+        String outputDir = sc_path;
         String linkIDOutputFile = outputDir + "/internal_linksID.txt";
-        String areaShapeFile = city_name;
+        String areaShapeFile = shp_path;
         // Get network
         Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
         MatsimNetworkReader reader = new MatsimNetworkReader(scenario.getNetwork());

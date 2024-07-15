@@ -9,22 +9,23 @@ import java.io.IOException;
 public class RunIntermodalityDrzEmissions {
     public static void main(String[] args) throws CommandLine.ConfigurationException, IOException {
         CommandLine cmd = new CommandLine.Builder(args) //
-                .requireOptions("sc_name","sc_shp","res","output_name","last_it") //
+                .requireOptions("sc_path","sc_shp","res","output_path","drz_name","last_it") //
                 .build();
-        String sc_name = cmd.getOptionStrict("sc_name");
-        String sc_shp = cmd.getOptionStrict("sc_shp");
+        String sc_path = cmd.getOptionStrict("sc_path");
+        String shp_path = cmd.getOptionStrict("shp_path");
         String res = cmd.getOptionStrict("res");
-        String output_name = cmd.getOptionStrict("output_name");
+        String output_path = cmd.getOptionStrict("output_path");
+        String drz_name = cmd.getOptionStrict("drz_name");
         String last_it = cmd.getOptionStrict("last_it");
-        String[] preparedrz_args = new String[] {"--sc_name",sc_name,"--sc_shp","gis/"+sc_shp,"--res",res};
+        String[] preparedrz_args = new String[] {"--sc_path",sc_path,"--shp_path",shp_path,"--res",res,"--drz_name",drz_name};
         String[] runsim_args = new String[] {"--config-path",
-                "ile_de_france/scenarios/"+sc_name+"/ile_de_france_config_carInternal.xml",
-                "--config:controller.outputDirectory=simulation_output/"+output_name,
+                sc_path+"/ile_de_france_config_"+drz_name+".xml",
+                "--config:controller.outputDirectory="+output_path,
                 "--config:eqasim.analysisInterval=10",
                 "--config:controler.firstIteration=0",
                 "--config:controler.lastIteration="+last_it};
-        String[] adapt_config_em = new String[] {"--sc_name",output_name};
-        String[] em_args = new String[] {"--config-path","simulation_output/"+output_name+"/output_config_emissions.xml","--hbefa-cold-avg","../../HBEFA/2022_IDF_EFA_ColdStart_Vehcat_Average_OnlyCar_Marjolaine.csv","--hbefa-hot-avg","../../HBEFA/2022_IDF_EFA_HOT_Vehcat_Average_OnlyCar_Marjolaine.csv"};
+        String[] adapt_config_em = new String[] {"--ouput_path",output_path};
+        String[] em_args = new String[] {"--config-path",output_path+"/output_config_emissions.xml","--hbefa-cold-avg","../../HBEFA/2022_IDF_EFA_ColdStart_Vehcat_Average_OnlyCar_Marjolaine.csv","--hbefa-hot-avg","../../HBEFA/2022_IDF_EFA_HOT_Vehcat_Average_OnlyCar_Marjolaine.csv"};
         prepareDrz.main(preparedrz_args);
         RunSimulationCarPt_DrivingRestriction.main(runsim_args);
         Adapt_config_emissions.main(adapt_config_em);

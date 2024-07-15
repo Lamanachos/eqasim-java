@@ -20,10 +20,11 @@ import java.util.Arrays;
 import static org.matsim.core.config.groups.PlansConfigGroup.TripDurationHandling.shiftActivityEndTimes;
 
 public class RunAdaptConfig_CarInternal {
-	String sc_name;
-	static public void runAdaptConfiguration(String sc_name, String res) throws ConfigurationException {
-		String input_path = "ile_de_france\\scenarios\\" + sc_name + "\\ile_de_france_config.xml";
-		String output_path = "ile_de_france\\scenarios\\"+sc_name+"\\ile_de_france_config_carInternal.xml";
+	static String drz_name_global;
+	static public void runAdaptConfiguration(String sc_path, String res, String drz_name) throws ConfigurationException {
+		String input_path = sc_path + "\\ile_de_france_config.xml";
+		String output_path = sc_path+"\\ile_de_france_config_"+drz_name+".xml";
+		drz_name_global = drz_name;
 		String[] args = new String[] {"--input-path", input_path,
 				"--output-path", output_path};
 		IDFConfigurator configurator = new IDFConfigurator();
@@ -43,7 +44,7 @@ public class RunAdaptConfig_CarInternal {
 		eqasimConfig.setEstimator(TransportMode.car, IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
 		eqasimConfig.setEstimator(TransportMode.bike, IDFModeChoiceModule.BIKE_ESTIMATOR_NAME);
 
-		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
+		config.network().setInputFile("ile_de_france_network_"+drz_name_global+".xml.gz");
 	}
 	static public void adaptConfiguration(Config config) {
 		// Adjust eqasim config
@@ -55,8 +56,8 @@ public class RunAdaptConfig_CarInternal {
 		eqasimConfig.setEstimator(TransportMode.car, IDFModeChoiceModule.CAR_ESTIMATOR_NAME);
 		eqasimConfig.setEstimator(TransportMode.bike, IDFModeChoiceModule.BIKE_ESTIMATOR_NAME);
 
-		config.network().setInputFile("ile_de_france_network_carInternal.xml.gz");
-		config.plans().setInputFile("ile_de_france_population_carInternal_residentOnly.xml.gz");
+		config.network().setInputFile("ile_de_france_network_"+drz_name_global+".xml.gz");
+		config.plans().setInputFile("ile_de_france_population_"+drz_name_global+"_residentOnly.xml.gz");
 		//BYIN:
 		// Routing config
 		RoutingConfigGroup routingConfig = config.routing();

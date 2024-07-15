@@ -7,16 +7,17 @@ import java.io.IOException;
 public class prepareDrz {
     public static void main(String[] args) throws CommandLine.ConfigurationException, IOException {
         CommandLine cmd = new CommandLine.Builder(args) //
-                .requireOptions("sc_name","sc_shp","res") //
+                .requireOptions("sc_path","shp_path","res","drz_name") //
                 .build();
-        String sc_name = cmd.getOptionStrict("sc_name");
-        String sc_shp = cmd.getOptionStrict("sc_shp");
+        String sc_path = cmd.getOptionStrict("sc_path");
+        String shp_path = cmd.getOptionStrict("shp_path");
         String res = cmd.getOptionStrict("res");
-        LinksInArea.getLinks(sc_name,sc_shp);
-        NetworkModifier.modifyNetwork(sc_name,res);
+        String drz_name = cmd.getOptionStrict("drz_name");
+        LinksInArea.getLinks(sc_path,shp_path);
+        NetworkModifier.modifyNetwork(sc_path,res,drz_name);
         if (res.equals("yes")) {
-            PopulationModifier.modifyPopulation(sc_name);
+            PopulationModifier.modifyPopulation(sc_path,drz_name);
         }
-        RunAdaptConfig_CarInternal.runAdaptConfiguration(sc_name, res);
+        RunAdaptConfig_CarInternal.runAdaptConfiguration(sc_path, res, drz_name);
     }
 }
