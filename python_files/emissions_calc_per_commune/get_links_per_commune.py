@@ -61,10 +61,10 @@ if __name__ == "__main__" :
     true_start = t.time()
     #Getting networks dbs
     print("Putting the network in databases...")
-    links_file = attrib.links_file + ".xml"
+    links_file = attrib.links_file 
     links_db = pd.read_xml(links_file)
     links_db = links_db[["id","from","to","length"]]
-    nodes_file = attrib.nodes_file + ".xml"
+    nodes_file = attrib.nodes_file 
     nodes_db = pd.read_xml(nodes_file)
     nodes_db = nodes_db[["id","x","y"]]
     print("Done in ",t.time()-true_start," seconds")
