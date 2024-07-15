@@ -59,11 +59,22 @@ for child in root :
         dict_data[insee][a2["type"]] = 1
     else : 
         dict_data[insee][a2["type"]] += 1
-    
-print(dict_data[75105])
-""" file_car = "python_files\\get_data\\Menages_semaine.csv"
+
+file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
-print(df)
+persons = {}
+cars = {}
 for i in df.iterrows() :
     insee = i[1].RESCOMM
-    nb_car = i[1].NB_VD """
+    nb_car = i[1].NB_VD
+    nb_person = i[1].MNP
+    if insee not in persons.keys() :
+        persons[insee] = nb_person
+        cars[insee] = nb_car
+    else : 
+        persons[insee] += nb_person
+        cars[insee] += nb_car
+for insee in persons.keys():
+    dict_data[insee]["cars_per_persons"] = cars[insee]/persons[insee]
+
+print(dict_data[75105])
