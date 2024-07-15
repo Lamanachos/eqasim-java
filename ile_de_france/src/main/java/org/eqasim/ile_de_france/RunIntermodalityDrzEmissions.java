@@ -20,11 +20,15 @@ public class RunIntermodalityDrzEmissions {
         String[] preparedrz_args = new String[] {"--sc_path",sc_path,"--shp_path",shp_path,"--res",res,"--drz_name",drz_name};
         String[] runsim_args = new String[] {"--config-path",
                 sc_path+"/ile_de_france_config_"+drz_name+".xml",
-                "--config:controller.outputDirectory="+output_path,
-                "--config:eqasim.analysisInterval=10",
+                "--config:controller.outputDirectory="+output_path+drz_name,
+                "--config:eqasim.analysisInterval="+last_it,
                 "--config:controler.firstIteration=0",
-                "--config:controler.lastIteration="+last_it};
-        String[] adapt_config_em = new String[] {"--ouput_path",output_path};
+                "--config:controler.lastIteration="+last_it,
+                "--config:controler.writeEventsInterval="+0,
+                "--config:controler.writePlansInterval="+0,
+                "--config:controler.writeSnapshotsInterval="+0,
+                "--config:controler.writeTripsInterval="+0};
+        String[] adapt_config_em = new String[] {"--output_path",output_path};
         String[] em_args = new String[] {"--config-path",output_path+"/output_config_emissions.xml","--hbefa-cold-avg","../../HBEFA/2022_IDF_EFA_ColdStart_Vehcat_Average_OnlyCar_Marjolaine.csv","--hbefa-hot-avg","../../HBEFA/2022_IDF_EFA_HOT_Vehcat_Average_OnlyCar_Marjolaine.csv"};
         prepareDrz.main(preparedrz_args);
         RunSimulationCarPt_DrivingRestriction.main(runsim_args);
