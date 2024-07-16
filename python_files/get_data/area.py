@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 import json
 
+keys = []
+
 shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
 gdf = gpd.read_file(shapefile_communes)
 dict_data = {}
@@ -13,6 +15,7 @@ for i in gdf.iterrows():
     if insee not in dict_data.keys() :
         dict_data[insee] = {}
     dict_data[insee]["area"] = area/1000000
+keys.append("area")
 
 file_pop = "python_files\\get_data\\donnees-communales-sur-la-population-dile-de-france.csv"
 df = pd.read_csv(file_pop,sep=";")
@@ -23,6 +26,8 @@ for i in df.iterrows() :
         dict_data[insee] = {}
     dict_data[insee]["pop"] = pop
     dict_data[insee]["density"] = pop/dict_data[insee]["area"]
+keys.append("pop")
+keys.append("density")
 
 file_links_communes = "python_files\\emissions_calc_per_commune\\links_commune\\all_links.json"
 with open(file_links_communes) as json_file:
@@ -44,6 +49,7 @@ for i in df_links.iterrows() :
             dict_data[insee]["nb_pt"] = 1
         else : 
             dict_data[insee]["nb_pt"] += 1
+keys.append("nb_pt")
 
 file_facilities = "python_files\\split_network\\output_facilities.xml"
 tree = ET.parse(file_facilities)
@@ -65,6 +71,8 @@ for child in root :
             dict_data[insee]["other_fac"] = 1
         else : 
             dict_data[insee]["other_fac"] += 1 
+keys.append("work_or_edu_fac")
+keys.append("other_fac")
 
 file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
@@ -84,7 +92,7 @@ for i in df.iterrows() :
         cars[insee] += nb_car
 for insee in persons.keys():
     dict_data[insee]["cars_per_persons"] = cars[insee]/max(persons[insee],1)
-
+keys.append("cars_per_persons")
 
 file_links = "python_files\\split_network\\output_network_links.xml"
 tree = ET.parse(file_links)
@@ -104,6 +112,19 @@ for child in root :
             dict_data[insee]["big_road"] = length
         else :
             dict_data[insee]["big_road"] += length
+keys.append("big_road")
+lists = {}
+for key in keys :
+    lists[key] = []
+lists["insee"] = []
+for insee in dict_data.keys() :
+    lists["insee"].append(insee)
+    for key in keys :
+        if key in dict_data[insee].keys():
+            lists[key].append(dict_data[insee][key])
+        else : 
+            lists[key].append(0)
+df = pd.DataFrame.from_dict(lists)
+df.to_csv("python_files\\insee_chars.csv",index=False,sep=";")
 
-print(dict_data[93048])
     
