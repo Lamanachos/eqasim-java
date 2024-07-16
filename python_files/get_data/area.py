@@ -44,9 +44,9 @@ for i in df_links.iterrows() :
             dict_data[insee]["nb_pt"] = 1
         else : 
             dict_data[insee]["nb_pt"] += 1
+
 file_facilities = "python_files\\split_network\\output_facilities.xml"
 tree = ET.parse(file_facilities)
-
 root = tree.getroot()
 for child in root :
     a1 = child.attrib
@@ -64,8 +64,7 @@ for child in root :
         if "other_fac" not in dict_data[insee].keys() :
             dict_data[insee]["other_fac"] = 1
         else : 
-            dict_data[insee]["other_fac"] += 1
-        
+            dict_data[insee]["other_fac"] += 1 
 
 file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
@@ -86,4 +85,25 @@ for i in df.iterrows() :
 for insee in persons.keys():
     dict_data[insee]["cars_per_persons"] = cars[insee]/max(persons[insee],1)
 
-print(dict_data[75105])
+
+file_links = "python_files\\split_network\\output_network_links.xml"
+tree = ET.parse(file_links)
+root = tree.getroot()
+for child in root :
+    a = child.attrib
+    length = a["length"]
+    id = a["id"]
+    if len(child) != 0 :
+        if len(child[0]) != [] :
+            type = child[0][0].text
+    insee = dict_links[id]
+    if (type == "motorway") or (type == "motorway_link") or (type == "motorway_junction") or (type == "trunk") or (type == "trunk_link"):
+        if insee not in dict_data.keys() :
+            dict_data[insee] = {}
+        if "big_road" not in dict_data[insee].keys():
+            dict_data[insee]["big_road"] = length
+        else :
+            dict_data[insee]["big_road"] += length
+
+print(dict_data[93048])
+    
