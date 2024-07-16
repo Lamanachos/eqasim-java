@@ -58,7 +58,17 @@ public class LinksInArea {
                 scenario.getNetwork().removeLink(link.getId());
             }
             if (areaGeometry.contains(point)) {
-                retainedLinkIds.add(link.getId());
+                Object temp = link.getAttributes().getAttribute("osm:way:highway");
+                if (temp == null){
+                    temp = "null";
+                }
+                if (temp.equals("motorway") || temp.equals("motorway_link") || temp.equals("trunk_link") || temp.equals("motorway_junction") || temp.equals("trunk")) {
+                    System.out.println(temp);
+                    scenario.getNetwork().removeLink(link.getId());
+                }
+                else {
+                    retainedLinkIds.add(link.getId());
+                }
             }
         }
         // Write modified network to file
