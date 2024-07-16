@@ -1,9 +1,9 @@
 import json
 import os.path
-attributes_file = "attributes.txt"
+origin_of_the_project = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\"
+attributes_file = origin_of_the_project + "attributes.txt"
 
 def build_attributes(basecase=False,sc_name=None,insee_par=None,every_commune = False):
-    origin_of_the_project = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\"
     if sc_name == None :
         scenario_name = "no_scenario_name_given"
     else :

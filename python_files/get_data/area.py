@@ -55,10 +55,17 @@ for child in root :
     insee = dict_links[id]
     if insee not in dict_data.keys() :
         dict_data[insee] = {}
-    if a2["type"] not in dict_data[insee].keys() :
-        dict_data[insee][a2["type"]] = 1
+    if a2["type"] in ["work","education"] :
+        if "work_or_edu_fac" not in dict_data[insee].keys() :
+            dict_data[insee]["work_or_edu_fac"] = 1
+        else : 
+            dict_data[insee]["work_or_edu_fac"] += 1
     else : 
-        dict_data[insee][a2["type"]] += 1
+        if "other_fac" not in dict_data[insee].keys() :
+            dict_data[insee]["other_fac"] = 1
+        else : 
+            dict_data[insee]["other_fac"] += 1
+        
 
 file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
@@ -68,6 +75,8 @@ for i in df.iterrows() :
     insee = i[1].RESCOMM
     nb_car = i[1].NB_VD
     nb_person = i[1].MNP
+    if insee not in dict_data.keys() :
+        dict_data[insee] = {}
     if insee not in persons.keys() :
         persons[insee] = nb_person
         cars[insee] = nb_car
@@ -75,6 +84,6 @@ for i in df.iterrows() :
         persons[insee] += nb_person
         cars[insee] += nb_car
 for insee in persons.keys():
-    dict_data[insee]["cars_per_persons"] = cars[insee]/persons[insee]
+    dict_data[insee]["cars_per_persons"] = cars[insee]/max(persons[insee],1)
 
 print(dict_data[75105])
