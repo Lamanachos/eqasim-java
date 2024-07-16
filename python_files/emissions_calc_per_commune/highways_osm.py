@@ -11,5 +11,12 @@ gdf = gdf["osm_id"]
 liste_ids = []
 for i in gdf :
     liste_ids.append(i)
-print(liste_ids)
 path_links = attrib.links_file
+df_links = pd.read_xml(path_links)
+df_links = df_links["id"]
+existing_highway_links = []
+for i in df_links:
+    print(i)
+    if i in liste_ids :
+        existing_highway_links.append(i)
+print(existing_highway_links)
