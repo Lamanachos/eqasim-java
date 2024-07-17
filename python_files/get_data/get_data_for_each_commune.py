@@ -76,10 +76,13 @@ keys.append("other_fac")
 
 file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
+insee_changes_dict = {77028:77433,77166:77316,77299:77316,77399:77504,77491:77316,78251:78551,78524:78158,91182:91228,91222:91390,95259:95040}
 persons = {}
 cars = {}
 for i in df.iterrows() :
     insee = i[1].RESCOMM
+    if insee in insee_changes_dict.keys():
+        insee = insee_changes_dict[insee]
     nb_car = i[1].NB_VD
     nb_person = i[1].MNP
     if insee not in dict_data.keys() :
@@ -91,7 +94,10 @@ for i in df.iterrows() :
         persons[insee] += nb_person
         cars[insee] += nb_car
 for insee in persons.keys():
-    dict_data[insee]["cars_per_persons"] = cars[insee]/max(persons[insee],1)
+    if persons[insee] != 0 :
+        dict_data[insee]["cars_per_persons"] = cars[insee]/persons[insee]
+    else :
+        dict_data[insee]["cars_per_persons"] = "NA" 
 keys.append("cars_per_persons")
 
 file_links = "python_files\\split_network\\output_network_links.xml"
@@ -115,16 +121,18 @@ for child in root :
 keys.append("big_road")
 
 lists = {}
+
 for key in keys :
     lists[key] = []
 lists["insee"] = []
 for insee in dict_data.keys() :
-    lists["insee"].append(insee)
-    for key in keys :
-        if key in dict_data[insee].keys():
-            lists[key].append(dict_data[insee][key])
-        else : 
-            lists[key].append(0)
+    if insee != "outside" :
+        lists["insee"].append(insee)
+        for key in keys :
+            if key in dict_data[insee].keys():
+                lists[key].append(dict_data[insee][key])
+            else : 
+                lists[key].append(0)
 df = pd.DataFrame.from_dict(lists)
 df.to_csv("python_files\\get_data\\data_communes.csv",index=False,sep=";")
 

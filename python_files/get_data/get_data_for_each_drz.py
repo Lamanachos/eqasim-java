@@ -16,7 +16,7 @@ for i in range(0,len(lines),2):
             dict_drz[new_insee][name] = 0
     insees = lines[i+1][:-1].split(" ")
     for insee in insees :
-        temp = df[(df["insee"]==str(float(insee)))]
+        temp = df[(df["insee"]==float(insee))]
         for name in temp.columns :
             if name != "insee":
                 if name in ["density","cars_per_persons"]:
@@ -24,4 +24,18 @@ for i in range(0,len(lines),2):
                 else :
                     dict_drz[new_insee][name] += float(temp.iloc[0][name])
 
-print(dict_drz)
+keys = df.columns
+keys = keys[:-1]
+lists = {}
+for key in keys :
+    lists[key] = []
+lists["insee"] = []
+for insee in dict_drz.keys() :
+    lists["insee"].append(insee)
+    for key in keys :
+        if key in dict_drz[insee].keys():
+            lists[key].append(dict_drz[insee][key])
+        else : 
+            lists[key].append(0)
+df = pd.DataFrame.from_dict(lists)
+df.to_csv("python_files\\get_data\\data_drz.csv",index=False,sep=";")
