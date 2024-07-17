@@ -109,10 +109,11 @@ for child in root :
         if insee not in dict_data.keys() :
             dict_data[insee] = {}
         if "big_road" not in dict_data[insee].keys():
-            dict_data[insee]["big_road"] = length
+            dict_data[insee]["big_road"] = float(length)
         else :
-            dict_data[insee]["big_road"] += length
+            dict_data[insee]["big_road"] += float(length)
 keys.append("big_road")
+
 lists = {}
 for key in keys :
     lists[key] = []
@@ -125,6 +126,6 @@ for insee in dict_data.keys() :
         else : 
             lists[key].append(0)
 df = pd.DataFrame.from_dict(lists)
-df.to_csv("python_files\\insee_chars.csv",index=False,sep=";")
+df.to_csv("python_files\\get_data\\data_communes.csv",index=False,sep=";")
 
     
