@@ -44,11 +44,24 @@ for i in df_links.iterrows() :
         dict_data[insee]["road"] = length
     else : 
         dict_data[insee]["road"] += length
-    if id[:2] == "pt" :
-        if "nb_pt" not in dict_data[insee].keys() :
-            dict_data[insee]["nb_pt"] = 1
-        else : 
-            dict_data[insee]["nb_pt"] += 1
+keys.append("road")
+
+file_links_len = "python_files\\emissions_calc_per_commune\\links_commune\\links_len.json"
+with open(file_links_len) as json_file:
+        links_len = json.load(json_file)
+file_stops = "python_files\\split_network\\output_transitSchedule.xml"
+tree = ET.parse(file_stops)
+root = tree.getroot()
+count = 0
+root = root[1]
+for child in root :
+    id = child.attrib["linkRefId"]
+    l = links_len[id]
+    insee = dict_links[id]
+    if "nb_pt" not in dict_data[insee].keys() :
+        dict_data[insee]["nb_pt"] = 1
+    else : 
+        dict_data[insee]["nb_pt"] += 1
 keys.append("nb_pt")
 
 file_facilities = "python_files\\split_network\\output_facilities.xml"
