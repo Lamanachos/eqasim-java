@@ -8,6 +8,7 @@ import multiprocessing as mp
 import os
 import attributes as attrib
 from math import floor
+import gzip
 
 def init_pEvents(dict_links_commune,dict_len_links,list_communes_in_paris):
     global links_commune
@@ -37,7 +38,8 @@ def treat_file(file):
     #Parsing file
     start = t.time()
     #print(f"Parsing {file}...")
-    tree = ET.parse(file)
+    unzip_file = gzip.open(file)
+    tree = ET.parse(unzip_file)
     #print("Parsing of ",file," done in ",t.time()-start," seconds")
     root = tree.getroot()
     start = t.time()
