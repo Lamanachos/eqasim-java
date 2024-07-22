@@ -5,20 +5,6 @@ import gzip
 import attributes as attrib
 import multiprocessing as mp
 
-def write_file(temp_emissions_file, childs, i):
-    #start = t.time()
-    print(temp_emissions_file)
-    f = open(temp_emissions_file,'wb')
-    f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
-    f.write("<events version='1.0'>\n".encode())
-    for child in childs:
-        print(child)
-        exit()
-        f.write(ET.tostring(child))
-    f.write("</events>".encode())
-    f.close()
-    #print(f"File {i} built in {t.time()-start} seconds")
-
 if __name__ == "__main__":
     true_start = t.time()
     
@@ -38,8 +24,8 @@ if __name__ == "__main__":
     count = 0
     file_count = 0
     childs = []
-    temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml"
-    f = open(temp_emissions_file,'wb')
+    temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml.gz"
+    f = gzip.open(temp_emissions_file,'wb')
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
     f.write("<events version='1.0'>\n".encode())
     for event,elem in tree:
@@ -52,8 +38,10 @@ if __name__ == "__main__":
             f.write("</events>".encode())
             f.close()
             file_count += 1
-            temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml"
-            f = open(temp_emissions_file,'wb')
+            print(f"File {file_count} built in {t.time()-start} seconds")
+            start = t.time()
+            temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml.gz"
+            f = gzip.open(temp_emissions_file,'wb')
             f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
             f.write("<events version='1.0'>\n".encode())
     f.write("</events>".encode())
