@@ -7,12 +7,12 @@ import attributes as attrib
 true_start = t.time()
 print("Parsing network...")
 network_file = attrib.network_file
-tree = ET.parse(gzip.open(network_file + '.xml.gz'))
+tree = ET.parse(gzip.open(network_file))
 #usually takes around 190 seconds
 print("Parsing done in",t.time()-true_start,"seconds")
 root = tree.getroot()
-links_filename = network_file + "_links.xml"
-nodes_filename = network_file + "_nodes.xml"
+links_filename = network_file[:-7] + "_links.xml"
+nodes_filename = network_file[:-7] + "_nodes.xml"
 start = t.time()
 print("Building links and nodes files...")
 lf = open(links_filename,'wb')

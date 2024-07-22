@@ -1,9 +1,9 @@
 import json
 import os.path
 origin_of_the_project = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\"
-attributes_file = origin_of_the_project + "attributes.txt"
+attributes_file = origin_of_the_project +"python_files\\emissions_calc_per_commune\\attributes\\attributes.txt"
 
-def build_attributes(basecase=False,sc_name=None,insee_par=None,every_commune = False):
+def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,every_commune = False):
     if sc_name == None :
         scenario_name = "no_scenario_name_given"
     else :
@@ -12,13 +12,15 @@ def build_attributes(basecase=False,sc_name=None,insee_par=None,every_commune = 
         insee = 123456789
     else :
         insee = insee_par
+    if sc_folder == None :
+        sc_folder = origin_of_the_project + "python_files\\output_5pc"
     basecase = False
-    basecase_scenario = "PTCar_BaseCase_rer_train_again13_0.75"
+    basecase_scenario = origin_of_the_project + "simulation_output\\PTCar_BaseCase_rer_train_again13_0.75"
     #split_network
-    network_file = origin_of_the_project + "simulation_output\\"+scenario_name+"\\output_network"
+    network_file = sc_folder+"\\output_network.xml.gz"
     #split_emissions
     events_to_keep = ["warmEmissionEvent","coldEmissionEvent"]
-    emissions_file = origin_of_the_project + "simulation_output\\"+scenario_name+"\\output_emissions_events"
+    emissions_file = sc_folder +"\\output_emissions_events.xml.gz"
     emissions_split_folder_output = origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\"+scenario_name+"_split"
     nb_break = 300000
     #get_links

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     if not os.path.exists(emissions_split_folder_output):
         os.makedirs(emissions_split_folder_output)
     print("Parsing emissions...")
-    unzip_file = gzip.open(emissions_file + ".xml.gz")
+    unzip_file = gzip.open(emissions_file)
     tree = ET.parse(unzip_file)
     #usually takes around 243 seconds
     print("Parsing done in ",t.time()-true_start," seconds")

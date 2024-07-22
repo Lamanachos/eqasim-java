@@ -20,9 +20,9 @@ def main(argv):
         if opt in ("-i", "--insee"):
             ins = int(arg)
     attrib.build_attributes(False,sc_name,ins)
-    os.system("python split_network.py")
+    #os.system("python split_network.py")
     os.system("python split_emissions.py")
-    os.system("python convert_espg.py "+str(ins))
+    #os.system("python convert_espg.py "+str(ins))
     os.system("python get_links_per_commune.py")
     os.system("python calculate_emissions.py")
     os.system("python MS_ATT.py")
