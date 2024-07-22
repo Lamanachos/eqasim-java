@@ -6,12 +6,14 @@ import attributes as attrib
 import multiprocessing as mp
 
 def write_file(temp_emissions_file, childs, i):
-    events_to_keep = attrib.events_to_keep
     #start = t.time()
+    print(temp_emissions_file)
     f = open(temp_emissions_file,'wb')
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
     f.write("<events version='1.0'>\n".encode())
     for child in childs:
+        print(child)
+        exit()
         f.write(ET.tostring(child))
     f.write("</events>".encode())
     f.close()
@@ -25,38 +27,36 @@ if __name__ == "__main__":
     emissions_split_folder_output = attrib.emissions_split_folder_output
     if not os.path.exists(emissions_split_folder_output):
         os.makedirs(emissions_split_folder_output)
-    print("Parsing emissions...")
+    print("Parsing and writing emissions...")
     unzip_file = gzip.open(emissions_file)
     tree = ET.iterparse(unzip_file)
-    #usually takes around 243 seconds
-    print("Parsing done in ",t.time()-true_start," seconds")
-    root = tree.getroot()
     count = 0
     row_count = 0
     nb_break = attrib.nb_break
-    print("Building emissions files...")
     start = t.time()
-    pool = mp.Pool(mp.cpu_count())
     inputs = []
     count = 0
     file_count = 0
     childs = []
+    temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml"
+    f = open(temp_emissions_file,'wb')
+    f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
+    f.write("<events version='1.0'>\n".encode())
     for event,elem in tree:
         if elem.attrib["type"] in events_to_keep:
             childs.append(elem)
+            f.write(ET.tostring(elem))
             count += 1
         if count == nb_break :
+            count = 0
+            f.write("</events>".encode())
+            f.close()
             file_count += 1
             temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml"
-            inputs.append([temp_emissions_file,childs,file_count])
-            childs = []
-    file_count += 1
-    temp_emissions_file = emissions_split_folder_output + "\\" + str(file_count) + ".xml"
-    inputs.append([temp_emissions_file,childs,file_count])
-    try:
-        pool.starmap(write_file, inputs)
-    finally:
-        pool.close()
-        pool.join()
-    print("Files built in",t.time()-start,"seconds")
+            f = open(temp_emissions_file,'wb')
+            f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
+            f.write("<events version='1.0'>\n".encode())
+    f.write("</events>".encode())
+    f.close()
+    print("Parsing and writing done in ",t.time()-true_start," seconds")
     print(f"Total time : {t.time()-true_start}")

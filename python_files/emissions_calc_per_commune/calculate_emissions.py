@@ -151,3 +151,9 @@ if __name__ == "__main__" :
     with open(file_c, "w") as outfile: 
         json.dump(communes_hist_heure, outfile)
     f.close()
+    if not attrib.basecase :
+        list_dir = os.listdir(emissions_folder)
+        for file in list_dir :
+            os.remove(emissions_folder + "\\" + file)
+        os.rmdir(emissions_folder)
+
