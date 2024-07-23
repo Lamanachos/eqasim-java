@@ -26,11 +26,11 @@ def main(argv):
     os.system("python split_emissions.py")
     #os.system("python convert_espg.py "+str(ins))
     os.system("python get_links_per_commune.py")
-    os.system("python calculate_emissions.py")
+    os.system("python calculate_emissions_only_total.py")
     os.system("python MS_ATT.py")
     if basecase_on :
         attrib.build_attributes(True,sc_name,sc_folder=sc_fold,insee_par=ins)
-        os.system("python calculate_emissions.py")
+        os.system("python calculate_emissions_from_links.py")
         os.system("python MS_ATT.py")
     attrib.build_attributes(False,sc_name,sc_folder=sc_fold,insee_par=ins)
     #os.system("python Traitement_sorties\\emissions_calc_per_commune\\get_evolutions.py")
