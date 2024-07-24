@@ -1,29 +1,25 @@
 import geopandas as gpd
-import pandas as pd
-import sys
-import os
 import random as r
 import new_insee
-import convert_espg
+import json
+import time as t
 
+start = t.time()
+mat_file = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\links_commune\\mat.json"
 folder_p = "python_files\\petite_couronne\\"
 petite_couronne = folder_p + "petite_couronne.shp"
 shape_communes = gpd.read_file(petite_couronne)
+shape_communes = shape_communes.to_crs("EPSG:2154")
 liste_communes = []
 for i in shape_communes["insee"] :
     liste_communes.append(i)
 liste_shapes = []
 for i in shape_communes["geometry"]:
     liste_shapes.append(i)
-mat = {}
-for i in liste_communes :
-    mat[i] = []
-    
-for i in range(len(liste_communes)) :
-    for j in range(len(liste_communes)) :
-        if liste_shapes[i].touches(liste_shapes[j]) :
-            mat[liste_communes[i]].append(liste_communes[j])
-            
+
+with open(mat_file) as json_file:
+    mat = json.load(json_file)
+
 departements = ["92","93","94","75"]
 dict_comms = {}
 for i in departements :
@@ -40,6 +36,7 @@ for i in departements :
         if i != j :
             frontiers[i][j] = {}
 
+#get frontier of departements (used as basis for joint in 2 deps)
 for i in range(len(departements)) :
     for j in range(len(departements)) :
         if i != j :
@@ -63,9 +60,15 @@ def get_list_comms(number, liste_dep, joint_or_not = True, full_random = False, 
         print(number)
         print(nb_already)
         print(liste_comms)
-        temp_list = r.sample(liste_dep, number-nb_already)
-        for i in temp_list :
-            liste_comms.append(i)
+        temp_liste_dep = []
+        for i in liste_dep :
+            if i not in liste_comms :
+                temp_liste_dep.append[i]
+        l = len(temp_liste_dep)
+        for i in range(min(l,number-nb_already)):
+            temp_comm = r.choice(temp_liste_dep)
+            liste_comms.append(temp_comm)
+            temp_liste_dep.remove(temp_comm)
         new_liste_comms = []
         for i in liste_comms :
             new_liste_comms.append(str(int(i)))
