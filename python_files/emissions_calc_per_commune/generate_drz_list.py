@@ -1,6 +1,6 @@
 import geopandas as gpd
 import random as r
-import new_insee
+import new_insee_no_table
 import json
 import time as t
 
@@ -151,7 +151,7 @@ def create_shapefiles(departements,number_per_number,force_disjoint = False, dis
                     while donut_or_not(temp_j) and (c<100):
                         temp_j = get_list_comms(i+1,dict_comms[departement],True)
                         c += 1
-                    new_insee.main(temp_j)
+                    new_insee_no_table.main(temp_j)
                     temp_d = get_list_comms(i+1,dict_comms[departement],False,full_random=disjoint_random)
                     if force_disjoint :
                         c = 0
@@ -160,11 +160,11 @@ def create_shapefiles(departements,number_per_number,force_disjoint = False, dis
                             c += 1
                     t = len(number_of_parts(temp_d))
                     print("nb_parts :",t)
-                    new_insee.main(temp_d)
+                    new_insee_no_table.main(temp_d)
                 else :
                     temp_j = get_list_comms(i+1,dict_comms[departement],True)
-                    new_insee.main([temp_j[0]])
-        new_insee.main(dict_comms[departement])
+                    new_insee_no_table.main([temp_j[0]])
+        new_insee_no_table.main(dict_comms[departement])
 
 def create_shapefiles_again(departements,number_per_number,force_disjoint = False, disjoint_random = False):
     liste_comms = []
@@ -189,7 +189,7 @@ def create_shapefiles_again(departements,number_per_number,force_disjoint = Fals
                     base_list_j.append(r.choice(frontiers[dep1][dep2][base_list_j[0]]))
                     temp_j = get_list_comms(i+1,liste_comms,True,base_list=base_list_j)
                     c += 1
-                new_insee.main(temp_j)
+                new_insee_no_table.main(temp_j)
                 base_list_dj = []
                 base_list_dj.append(r.choice(liste_dep_1))
                 base_list_dj.append(r.choice(liste_dep_2))
@@ -204,8 +204,8 @@ def create_shapefiles_again(departements,number_per_number,force_disjoint = Fals
                         c += 1
                 t = len(number_of_parts(temp_d))
                 print("nb_parts :",t)
-                new_insee.main(temp_d)
-    new_insee.main(liste_comms)
+                new_insee_no_table.main(temp_d)
+    new_insee_no_table.main(liste_comms)
 
 
 create_shapefiles(departements,[5,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True,full_dep=True)

@@ -1,14 +1,12 @@
 import geopandas as gpd
 import json
 
-drz_composition_path = "python_files\\communes-dile-de-france-au-01-janvier\\existing-insees.txt"
+min_insee = 100001
+max_insee = 100092
 gis_path = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\gis"
-f = open(drz_composition_path)
-lines = f.readlines()
-f.close()
 dict_drz = {}
-for i in range(0,len(lines),2):
-    insee = lines[i][:-1]
+for i in range(min_insee,max_insee):
+    insee = i
     gdf = gpd.read_file(gis_path+f"\\{insee}\\{insee}.shp")
     gdf = gdf["geometry"]
     conv_pol = gdf.convex_hull
