@@ -1,7 +1,7 @@
-import attributes as attrib
+
 import geopandas as gpd
 import pandas as pd
-import build_buffer
+import get_buffer
 import os
 
 #args : insee codes of municipalities you want to fuse separated by spaces, the last one being the new insee, ex : 75105 93048 100001
@@ -51,7 +51,7 @@ def main(argv):
     dest = f"{dest_folder}\\{new_insee}"
     gdf.to_file(dest)
     print("new_insee :",new_insee)
-    build_buffer.main([str(new_insee)])
+    get_buffer.main([str(new_insee)])
     
 if __name__ == "__main__":
    #main(sys.argv[1:])
