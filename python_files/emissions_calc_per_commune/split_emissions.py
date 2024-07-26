@@ -29,10 +29,11 @@ if __name__ == "__main__":
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".encode())
     f.write("<events version='1.0'>\n".encode())
     for event,elem in tree:
-        if elem.attrib["type"] in events_to_keep:
-            childs.append(elem)
-            f.write(ET.tostring(elem))
-            count += 1
+        if "type" in elem.attrib.keys():
+            if elem.attrib["type"] in events_to_keep:
+                childs.append(elem)
+                f.write(ET.tostring(elem))
+                count += 1
         if count == nb_break :
             count = 0
             f.write("</events>".encode())

@@ -1,5 +1,3 @@
-import json
-import attributes as attrib
 import geopandas as gpd
 import pandas as pd
 import sys

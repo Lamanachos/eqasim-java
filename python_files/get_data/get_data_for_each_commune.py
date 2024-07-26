@@ -1,6 +1,5 @@
 import geopandas as gpd
 import pandas as pd
-import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 import json
 
