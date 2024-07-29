@@ -86,7 +86,7 @@ if __name__ == "__main__" :
     print("Getting position of each node...")
     inputs = nodes_db.iterrows()
     count = 0
-    pNodes = mp.Pool(mp.cpu_count(),initializer=init_pNodes, initargs=(shapedict,))
+    pNodes = mp.Pool(min(10,mp.cpu_count()),initializer=init_pNodes, initargs=(shapedict,))
     try:
         liste_nodes_c = pNodes.map(node_get_c, inputs)
     finally:
@@ -105,7 +105,7 @@ if __name__ == "__main__" :
     print("Getting in what commune is each link...")
     inputs = links_db.iterrows()
     count = 0
-    pLinks = mp.Pool(mp.cpu_count(),initializer=init_pLinks, initargs=(nodes_c, shapedict,))
+    pLinks = mp.Pool(min(10,mp.cpu_count()),initializer=init_pLinks, initargs=(nodes_c, shapedict,))
     try:
         liste_inout = pLinks.map(link_in_which_commune, inputs)
     finally:

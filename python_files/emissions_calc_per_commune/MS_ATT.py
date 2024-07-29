@@ -7,18 +7,19 @@ import attributes as attrib
 import os
 
 commune = attrib.insee
-shapefile_communes = attrib.shapefile_communes
-shapefile_paris = attrib.origin_of_the_project +"gis\\paris.shp"
-shapefile_paris = gpd.read_file(shapefile_paris)
+shapefile_commune = attrib.shapefile_commune_for_ms_and_att
+ #shapefile_paris = attrib.origin_of_the_project +"gis\\paris.shp"
+#shapefile_paris = gpd.read_file(shapefile_paris)
 if attrib.basecase :
-    trips_file_path = attrib.origin_of_the_project + "simulation_output\\" + attrib.basecase_scenario + "\\eqasim_trips.csv"
+    trips_file_path = attrib.basecase_scenario + "\\eqasim_trips.csv"
 else :
-    trips_file_path = attrib.origin_of_the_project + "simulation_output\\" + attrib.scenario_name + "\\eqasim_trips.csv"
-shape_communes = gpd.read_file(shapefile_communes)
-shape = shape_communes[(shape_communes["insee"] == commune)]
-shape = shape.to_crs(shapefile_paris.crs)
-shape = shape.geometry
-shape =shape[shape.index[0]]
+    trips_file_path = attrib.sc_folder + "\\eqasim_trips.csv"
+shape_commune = gpd.read_file(shapefile_commune)
+# shape = shape_communes[(shape_communes["insee"] == commune)]
+# shape = shape.to_crs(shapefile_paris.crs)
+shape = shape_commune.geometry
+shape = shape[0]
+# shape =shape[shape.index[0]]
 
 trips_df = pd.read_csv(trips_file_path, sep=";")
 

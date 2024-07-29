@@ -14,8 +14,7 @@ def treat_file(file):
     #Setup variables
     links_co2 = {}
     #Parsing file
-    #unzip_file = gzip.open(file)
-    unzip_file = file
+    unzip_file = gzip.open(file)
     tree = ET.parse(unzip_file)
     root = tree.getroot()
     start = t.time()
@@ -36,9 +35,9 @@ if __name__ == "__main__" :
     true_start = t.time()
 
     #Multiprocessing
-    p = mp.Pool(mp.cpu_count())
+    p = mp.Pool(14) #(mp.cpu_count())
     #emissions_folder = attrib.emissions_folder
-    emissions_folder = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\emissions\\drz_75105_nores_split"
+    emissions_folder = attrib.origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\basecase_split"
     t_files = os.listdir(emissions_folder)
     files = []
     for i in t_files:
@@ -49,11 +48,11 @@ if __name__ == "__main__" :
         p.close()
         p.join()
     #results_dir = attrib.results_dir
-    results_dir = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\emissions\\test_dir"
+    results_dir = attrib.origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\bc_emissions_per_link"
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
     #results_file = attrib.results_file
-    results_file = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\emissions\\test_dir\\test_file.json"
+    results_file = attrib.origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\bc_emissions_per_link\\bc_emissions_per_link.json"
     if attrib.clean :
         f = open(results_file, "w")
     else :
@@ -69,11 +68,11 @@ if __name__ == "__main__" :
     with open(results_file, "w") as outfile: 
         json.dump(aggreg_links_co2, outfile)
         
-    if not attrib.basecase :
-        list_dir = os.listdir(emissions_folder)
-        for file in list_dir :
-            os.remove(emissions_folder + "\\" + file)
-        os.rmdir(emissions_folder)
+    # if not attrib.basecase :
+    #     list_dir = os.listdir(emissions_folder)
+    #     for file in list_dir :
+    #         os.remove(emissions_folder + "\\" + file)
+    #     os.rmdir(emissions_folder)
 
 
 

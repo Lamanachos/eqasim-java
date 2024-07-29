@@ -11,8 +11,10 @@ tree = ET.parse(gzip.open(network_file))
 #usually takes around 190 seconds
 print("Parsing done in",t.time()-true_start,"seconds")
 root = tree.getroot()
-links_filename = network_file[:-7] + "_links.xml"
-nodes_filename = network_file[:-7] + "_nodes.xml"
+# links_filename = network_file[:-7] + "_links.xml"
+# nodes_filename = network_file[:-7] + "_nodes.xml"
+links_filename = attrib.links_file
+nodes_filename = attrib.nodes_file
 start = t.time()
 print("Building links and nodes files...")
 lf = open(links_filename,'wb')

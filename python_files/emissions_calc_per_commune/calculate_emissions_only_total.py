@@ -49,7 +49,7 @@ if __name__ == "__main__" :
         links_commune = json.load(json_file)
 
     #Multiprocessing
-    p = mp.Pool(mp.cpu_count(),initializer=init_pEvents, initargs=(links_commune,))
+    p = mp.Pool(min(10,mp.cpu_count()),initializer=init_pEvents, initargs=(links_commune,))
     emissions_folder = attrib.emissions_folder
     t_files = os.listdir(emissions_folder)
     files = []
@@ -73,7 +73,7 @@ if __name__ == "__main__" :
         #get total co2
         co2_all += float(i[0])
         for commune in i[1].keys() :
-            communes_co2[commune] += float(i[0][2][commune])
+            communes_co2[commune] += float(i[1][commune])
 
     file_c = attrib.communes_co2_file
     communes_co2["IDF"] = co2_all

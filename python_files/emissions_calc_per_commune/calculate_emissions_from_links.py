@@ -14,7 +14,7 @@ true_start = t.time()
 #Get links commune and links len
 with open(attrib.links_commune_file) as json_file:
     links_commune = json.load(json_file)
-with open(attrib.co2_per_links_file) as json_file:
+with open(attrib.links_emissions_basecase_file) as json_file:
     co2_per_links = json.load(json_file)
 
 results_dir = attrib.results_dir
