@@ -1,11 +1,11 @@
 import json
 import os.path
-origin_of_the_project = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\"
+origin_of_the_project = "C:\\lvmt_TS\\eqasim-java-drz_ai\\"
 attributes_file = origin_of_the_project +"python_files\\emissions_calc_per_commune\\attributes\\attributes.txt"
 
 def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,every_commune = False):
     if sc_name == None :
-        scenario_name = "no_scenario_name_given"
+        scenario_name = "basecase"
     else :
         scenario_name = sc_name
     if insee_par == None :
@@ -13,16 +13,19 @@ def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,e
     else :
         insee = insee_par
     if sc_folder == None :
-        sc_folder = origin_of_the_project + "python_files\\output_5pc"
+        # sc_folder = origin_of_the_project + "python_files\\output_5pc"
+        sc_folder = r"E:\lvmt_TS_sim\sim_IdF_egt5pct_DRZ0.75"
     basecase = False
-    basecase_scenario = origin_of_the_project + "simulation_output\\PTCar_BaseCase_rer_train_again13_0.75"
+    # basecase_scenario = origin_of_the_project + "simulation_output\\PTCar_BaseCase_rer_train_again13_0.75"
+    basecase_name = "basecase"
+    basecase_scenario = r"E:\lvmt_TS_sim\sim_IdF_egt5pct_DRZ0.75"
     #split_network
     network_file = sc_folder+"\\output_network.xml.gz"
     #split_emissions
     events_to_keep = ["warmEmissionEvent","coldEmissionEvent"]
     emissions_file = sc_folder +"\\output_emissions_events.xml.gz"
     emissions_split_folder_output = origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\"+scenario_name+"_split"
-    nb_break = 300000
+    nb_break = 100000
     #get_links
     paris_shapefile = "Paris_shape\\Paris.shp"
     if basecase :
@@ -31,7 +34,7 @@ def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,e
         results_dir = origin_of_the_project + "emissions_results\\"+scenario_name
     results_file = results_dir +"\\results.txt"
     if basecase :
-        emissions_folder = origin_of_the_project + "emissions\\"+ basecase_scenario +"_split"
+        emissions_folder = origin_of_the_project + "emissions\\"+ basecase_name +"_split"
     else :
         emissions_folder = emissions_split_folder_output
     clean = True
@@ -51,12 +54,16 @@ def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,e
     communes_hdist_file = results_dir+"\\c_hdist.json"
     communes_hheure_file = results_dir+"\\c_hheure.json"
     new_shapefilename = origin_of_the_project + "shapefiles_co2\\"+scenario_name
+    #Emissions from links
+    links_emissions_basecase_file = origin_of_the_project + "python_files\\emissions_calc_per_commune\\emissions\\bc_emissions_per_link\\bc_emissions_per_link.json"
     #MS_ATT
     att_file = "MS_&_ATT\\ATT\\"
     ms_file = "MS_&_ATT\\MS\\"
-    shapefile_communes = origin_of_the_project + "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
+    # shapefile_communes = origin_of_the_project + "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
+    shapefile_commune_for_ms_and_att = r"E:\data__IdF\gis\scenarios_DRZ" + "\\" +str(insee)+"\\"+str(insee)+".shp"
 #get_links_per_commune
-    shapefile_communes_for_links = origin_of_the_project + "gis\\"+str(insee)+"_buffered\\"+str(insee)+"_buffered.shp"
+    # shapefile_communes_for_links = origin_of_the_project + "gis\\"+str(insee)+"_buffered\\"+str(insee)+"_buffered.shp"
+    shapefile_communes_for_links = r"E:\data__IdF\gis\scenarios_DRZ" + "\\" +str(insee)+"_buffered\\"+str(insee)+"_buffered.shp"
     precise_links = True
     #links_commune_file = "links_commune\\links_communes_prec.json"
     links_commune_folder = origin_of_the_project + "python_files\\emissions_calc_per_commune\\links_commune"
