@@ -5,7 +5,9 @@ import pandas as pd
 from shapely.geometry import Point
 import attributes as attrib
 import os
+import time as t
 
+start = t.time()
 commune = attrib.insee
 shapefile_commune = attrib.shapefile_commune_for_ms_and_att
  #shapefile_paris = attrib.origin_of_the_project +"gis\\paris.shp"
@@ -126,4 +128,4 @@ with open(file_l, "w") as outfile:
     json.dump(att, outfile)
 with open(file_m, "w") as outfile: 
     json.dump(ms, outfile)
-
+print("MS_&_ATT done in",t.time()-start,"seconds")

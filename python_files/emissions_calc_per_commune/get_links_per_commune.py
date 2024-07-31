@@ -67,7 +67,7 @@ if __name__ == "__main__" :
     nodes_file = attrib.nodes_file 
     nodes_db = pd.read_xml(nodes_file)
     nodes_db = nodes_db[["id","x","y"]]
-    print("Done in ",t.time()-true_start," seconds")
+    print("Network put in databases in ",t.time()-true_start," seconds")
 
     #Getting communes shape dict
     if attrib.just_drz :    
@@ -96,7 +96,7 @@ if __name__ == "__main__" :
     for i in liste_nodes_c :
         nodes_c[i[0]]=i[1]
     print("Number of nodes :",len(nodes_c.keys()))
-    print("Done in ",t.time()-start," seconds")
+    print("Got position of each node in ",t.time()-start," seconds")
     file_nc = attrib.nodes_commune_file
     with open(file_nc, "w") as outfile: 
         json.dump(nodes_c, outfile)
@@ -117,7 +117,7 @@ if __name__ == "__main__" :
         links_commune[i[0]]=i[1]
         links_len[i[0]]=i[2]
     print("Number of links :",len(links_commune.keys()))
-    print("Done in ",t.time()-start," seconds")
+    print("get_links_per_commune done in ",t.time()-start," seconds")
 
     folder_c = attrib.links_commune_folder
     if not os.path.exists(folder_c):

@@ -37,8 +37,7 @@ for link in co2_per_links.keys() :
         communes_co2[link_commune] += temp_co2
     co2_all += temp_co2
     
-print("Emissions calculated in",t.time()-true_start,"seconds")
-
+print("Emissions calculated (from links) in",t.time()-true_start,"seconds")
 file_c = attrib.communes_co2_file
 communes_co2["IDF"] = co2_all
 with open(file_c, "w") as outfile: 

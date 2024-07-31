@@ -47,5 +47,5 @@ if __name__ == "__main__":
             f.write("<events version='1.0'>\n".encode())
     f.write("</events>".encode())
     f.close()
-    print("Parsing and writing done in ",t.time()-true_start," seconds")
+    print("Parsed and wrote emissions in ",t.time()-true_start," seconds")
     print(f"Total time : {t.time()-true_start}")

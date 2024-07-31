@@ -68,7 +68,7 @@ def build_attributes(basecase=False,sc_name=None,sc_folder=None,insee_par=None,e
     #links_commune_file = "links_commune\\links_communes_prec.json"
     links_commune_folder = origin_of_the_project + "python_files\\emissions_calc_per_commune\\links_commune"
     just_drz = not every_commune
-    if just_drz :
+    if not just_drz :
         links_commune_file = links_commune_folder + "\\links_all_communes.json"
         nodes_commune_file = links_commune_folder + "\\nodes_all_communes.json"
     else :
