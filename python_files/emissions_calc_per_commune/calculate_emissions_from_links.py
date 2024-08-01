@@ -31,7 +31,7 @@ for i in links_commune.values():
     communes_co2[i] = 0
 
 for link in co2_per_links.keys() :
-    temp_co2 = float()
+    temp_co2 = float(co2_per_links[link])
     link_commune = links_commune[link]
     if link_commune != None :
         communes_co2[link_commune] += temp_co2
