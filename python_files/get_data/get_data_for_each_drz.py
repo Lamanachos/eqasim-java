@@ -1,7 +1,7 @@
 import pandas as pd
-
+import attributes as attrib
 csv_data_communes_path = "python_files\\get_data\\data_communes.csv"
-drz_composition_path = "python_files\\get_data\\existing-insees.txt"
+drz_composition_path = attrib.drz_composition_path
 
 df = pd.read_csv(csv_data_communes_path,sep=";")
 f = open(drz_composition_path)

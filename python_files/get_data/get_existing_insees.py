@@ -1,8 +1,9 @@
 import os
 import geopandas as gpd
+import attributes as attrib
 
 def main():
-    gis_folder = "gis"
+    gis_folder = attrib.gis_folder
     list_dir = os.listdir(gis_folder)
     list_existing_insees = []
     for i in list_dir :
