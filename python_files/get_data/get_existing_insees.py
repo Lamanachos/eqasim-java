@@ -15,7 +15,12 @@ def main():
     for i in list_existing_insees :
         f.write(str(i)+"\n")
         gdf = gpd.read_file(f"{gis_folder}\\{i}\\{i}.shp")
-        f.write(gdf["fused_ins"][0]+"\n")
+        fused_ins = ""
+        count = 0
+        while "fi"+str(count) in gdf.columns :
+            fused_ins += gdf["fi"+str(count)][0]
+            count += 1
+        f.write(fused_ins+"\n")
     f.close()
 
 if __name__ == "__main__" :

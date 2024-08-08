@@ -1,5 +1,7 @@
 import pandas as pd
 import attributes as attrib
+import os
+import json
 csv_data_communes_path = "python_files\\get_data\\data_communes.csv"
 drz_composition_path = attrib.drz_composition_path
 
@@ -16,14 +18,26 @@ for i in range(0,len(lines),2):
             dict_drz[new_insee][name] = 0
     insees = lines[i+1][:-1].split(" ")
     for insee in insees :
+        print(insee)
         temp = df[(df["insee"]==float(insee))]
         for name in temp.columns :
             if name != "insee":
                 if name in ["density","cars_per_persons"]:
                     dict_drz[new_insee][name] += float(temp.iloc[0][name])/len(insees)
                 else :
-                    dict_drz[new_insee][name] += float(temp.iloc[0][name])
-
+                    try :
+                        dict_drz[new_insee][name] += float(temp.iloc[0][name])
+                    except :
+                        print(new_insee)
+                        print(temp)
+                        exit()
+    er_bs_path = attrib.er_folder+f"\\bs_{new_insee}\\c_co2.json"
+    if os.path.exists(er_bs_path):
+        with open(er_bs_path) as json_file:
+            er_bs = json.load(json_file)
+        dict_drz[new_insee]["er_bs"] = er_bs["0km"]
+    else : 
+        dict_drz[new_insee]["er_bs"] = "NA"
 keys = df.columns
 keys = keys[:-1]
 lists = {}

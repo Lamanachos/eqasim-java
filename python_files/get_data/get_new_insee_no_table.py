@@ -46,7 +46,16 @@ def main(argv):
     for i in liste_communes :
         fused_communes += str(i) + " "
     fused_communes = fused_communes[:-1]
-    df["fused_ins"] = [fused_communes]
+    dict_fused_ins = {}
+    temp = fused_communes
+    count = 0
+    while len(temp) > 252 :
+        dict_fused_ins["fi"+str(count)] = temp[:252]
+        temp = temp[252:]
+        count += 1
+    dict_fused_ins["fi"+str(count)] = temp
+    for key in dict_fused_ins.keys() :
+        df[key] = [dict_fused_ins[key]]
     gdf = gpd.GeoDataFrame(df,crs = shapefile_paris.crs)
     dest = f"{dest_folder}\\{new_insee}"
     gdf.to_file(dest)
