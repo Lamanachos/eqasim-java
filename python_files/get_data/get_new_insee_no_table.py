@@ -44,7 +44,7 @@ def main(argv):
     df["geometry"] = [union_shape[union_shape.index[0]]]
     fused_communes = ""
     for i in liste_communes :
-        fused_communes += str(i) + " "
+        fused_communes += str(i) + ","
     fused_communes = fused_communes[:-1]
     dict_fused_ins = {}
     temp = fused_communes

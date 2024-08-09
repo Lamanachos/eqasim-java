@@ -13,13 +13,15 @@ def main():
     dest_file = "python_files\\get_data\\existing_insees.txt"
     f = open(dest_file,"w")
     for i in list_existing_insees :
-        f.write(str(i)+"\n")
+        f.write(str(i)+";")
         gdf = gpd.read_file(f"{gis_folder}\\{i}\\{i}.shp")
         fused_ins = ""
         count = 0
         while "fi"+str(count) in gdf.columns :
             fused_ins += gdf["fi"+str(count)][0]
             count += 1
+        #fused_ins = fused_ins.replace(" ",",")
+        fused_ins = "["+fused_ins+"]"
         f.write(fused_ins+"\n")
     f.close()
 

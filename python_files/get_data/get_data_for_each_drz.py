@@ -10,15 +10,15 @@ f = open(drz_composition_path)
 lines = f.readlines()
 f.close()
 dict_drz = {}
-for i in range(0,len(lines),2):
-    new_insee = lines[i][:-1]
+for i in range(len(lines)):
+    line = lines[i].split(";")
+    new_insee = line[0]
     dict_drz[new_insee] = {}
     for name in df.columns :
         if name != "insee":
             dict_drz[new_insee][name] = 0
-    insees = lines[i+1][:-1].split(" ")
+    insees = line[1][1:-2].split(",")
     for insee in insees :
-        print(insee)
         temp = df[(df["insee"]==float(insee))]
         for name in temp.columns :
             if name != "insee":
@@ -38,8 +38,17 @@ for i in range(0,len(lines),2):
         dict_drz[new_insee]["er_bs"] = er_bs["0km"]
     else : 
         dict_drz[new_insee]["er_bs"] = "NA"
-keys = df.columns
+    ms_bs_path = attrib.ms_folder+f"\\{new_insee}_bs.json"
+    if os.path.exists(ms_bs_path):
+        with open(ms_bs_path) as json_file:
+            ms_bs = json.load(json_file)
+        dict_drz[new_insee]["ms_walk_bs"] = ms_bs["res"]["nb"]["walk"]
+    else : 
+        dict_drz[new_insee]["ms_walk_bs"] = "NA"
+keys = list(df.columns)
 keys = keys[:-1]
+keys.append("er_bs")
+keys.append("ms_walk_bs")
 lists = {}
 for key in keys :
     lists[key] = []
@@ -50,6 +59,6 @@ for insee in dict_drz.keys() :
         if key in dict_drz[insee].keys():
             lists[key].append(dict_drz[insee][key])
         else : 
-            lists[key].append(0)
+            lists[key].append("NA")
 df = pd.DataFrame.from_dict(lists)
 df.to_csv("python_files\\get_data\\data_drz.csv",index=False,sep=";")
