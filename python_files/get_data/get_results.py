@@ -22,8 +22,8 @@ dict_drz["er_10"] = []
 dict_drz["er_20"] = []
 dict_drz["er_idf"] = []
 
-for i in range(0,len(lines),2):
-    insee = int(lines[i][:-1])
+for i in range(len(lines)):
+    insee = int(lines[i].split(";")[0])
     if os.path.exists(attrib.er_folder+f"\\bs_{insee}\\c_co2.json"):
         with open(attrib.er_folder+f"\\bs_{insee}\\c_co2.json") as json_file:
             er_bs = json.load(json_file)

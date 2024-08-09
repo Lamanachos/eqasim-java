@@ -8,6 +8,7 @@ drz_composition_path = attrib.drz_composition_path
 df = pd.read_csv(csv_data_communes_path,sep=";")
 f = open(drz_composition_path)
 lines = f.readlines()
+list_with_results = []
 f.close()
 dict_drz = {}
 for i in range(len(lines)):
@@ -33,6 +34,7 @@ for i in range(len(lines)):
                         exit()
     er_bs_path = attrib.er_folder+f"\\bs_{new_insee}\\c_co2.json"
     if os.path.exists(er_bs_path):
+        list_with_results.append(new_insee)
         with open(er_bs_path) as json_file:
             er_bs = json.load(json_file)
         dict_drz[new_insee]["er_bs"] = er_bs["0km"]
@@ -54,11 +56,12 @@ for key in keys :
     lists[key] = []
 lists["insee"] = []
 for insee in dict_drz.keys() :
-    lists["insee"].append(insee)
-    for key in keys :
-        if key in dict_drz[insee].keys():
-            lists[key].append(dict_drz[insee][key])
-        else : 
-            lists[key].append("NA")
+    if insee in list_with_results :
+        lists["insee"].append(insee)
+        for key in keys :
+            if key in dict_drz[insee].keys():
+                lists[key].append(dict_drz[insee][key])
+            else : 
+                lists[key].append("NA")
 df = pd.DataFrame.from_dict(lists)
 df.to_csv("python_files\\get_data\\data_drz.csv",index=False,sep=";")
