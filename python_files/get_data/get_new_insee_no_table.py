@@ -22,7 +22,7 @@ def main(argv):
             if len(i) == 6 :
                 list_existing_insee.append(int(i))
     if list_existing_insee == [] :
-        new_insee = "100001"
+        new_insee = "100101"
     else :
         new_insee = str(max(list_existing_insee)+1)
     liste_shapes = []
@@ -50,10 +50,11 @@ def main(argv):
     temp = fused_communes
     count = 0
     while len(temp) > 252 :
-        dict_fused_ins["fi"+str(count)] = temp[:252]
+        temp_replaced = temp.replace(" ",",")
+        dict_fused_ins["fi"+str(count)] = temp_replaced[:252]
         temp = temp[252:]
         count += 1
-    dict_fused_ins["fi"+str(count)] = temp
+    dict_fused_ins["fi"+str(count)] = temp.replace(" ",",")
     for key in dict_fused_ins.keys() :
         df[key] = [dict_fused_ins[key]]
     gdf = gpd.GeoDataFrame(df,crs = shapefile_paris.crs)

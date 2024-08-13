@@ -5,7 +5,7 @@ def main():
     shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
     shapefile_fusions = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier-with-fusions.shp"
     all_insee_files = "python_files\\communes-dile-de-france-au-01-janvier\\existing-insees.txt"
-    gis_folder = "gis_clean"
+    gis_folder = "gis"
 
     f = open(all_insee_files,"w")
     f.close()
