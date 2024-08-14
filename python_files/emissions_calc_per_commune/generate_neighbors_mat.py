@@ -1,6 +1,5 @@
 import geopandas as gpd
 import random as r
-import new_insee
 import json
 import time as t
 

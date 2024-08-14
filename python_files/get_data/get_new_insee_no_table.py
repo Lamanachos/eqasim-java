@@ -22,7 +22,7 @@ def main(argv):
             if len(i) == 6 :
                 list_existing_insee.append(int(i))
     if list_existing_insee == [] :
-        new_insee = "100101"
+        new_insee = "100169"
     else :
         new_insee = str(max(list_existing_insee)+1)
     liste_shapes = []

@@ -156,7 +156,7 @@ def create_shapefiles(departements,number_per_number,force_disjoint = False, dis
                     temp_d = get_list_comms(i+1,dict_comms[departement],False,full_random=disjoint_random)
                     if force_disjoint :
                         c = 0
-                        while ((len(number_of_parts(temp_d)) == 1) or donut_or_not(temp_j)) and (c<100):
+                        while ((len(number_of_parts(temp_d)) == 1) or donut_or_not(temp_d)) and (c<100):
                             temp_d = get_list_comms(i+1,dict_comms[departement],False,full_random=disjoint_random)
                             c += 1
                     t = len(number_of_parts(temp_d))
@@ -165,9 +165,10 @@ def create_shapefiles(departements,number_per_number,force_disjoint = False, dis
                 else :
                     temp_j = get_list_comms(i+1,dict_comms[departement],True)
                     get_new_insee_no_table.main([temp_j[0]])
-        get_new_insee_no_table.main(dict_comms[departement])
+        if full_dep :
+            get_new_insee_no_table.main(dict_comms[departement])
 
-def create_shapefiles_again(departements,number_per_number,force_disjoint = False, disjoint_random = False):
+def create_shapefiles_again(departements,number_per_number,force_disjoint = False, disjoint_random = False, full_deps = False):
     liste_comms = []
     dep1 = departements[0]
     dep2 = departements[1]
@@ -206,12 +207,12 @@ def create_shapefiles_again(departements,number_per_number,force_disjoint = Fals
                 t = len(number_of_parts(temp_d))
                 print("nb_parts :",t)
                 get_new_insee_no_table.main(temp_d)
-    get_new_insee_no_table.main(liste_comms)
+    if full_deps :
+        get_new_insee_no_table.main(liste_comms)
 
-
-create_shapefiles(departements,[5,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True,full_dep=True)
-create_shapefiles_again(["75","92"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["75","94"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["92","93"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)
-create_shapefiles_again(["93","94"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True)              
+#create_shapefiles(departements,[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True,full_dep=True)
+create_shapefiles_again(["75","92"],[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],force_disjoint=True,disjoint_random=True, full_deps = False)
+create_shapefiles_again(["75","94"],[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],force_disjoint=True,disjoint_random=True, full_deps = False)
+#create_shapefiles_again(["92","93"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True, full_deps = True)
+#create_shapefiles_again(["93","94"],[0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],force_disjoint=True,disjoint_random=True, full_deps = True)              
 get_existing_insees.main()
