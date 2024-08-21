@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import attributes as attrib
 import json
-
+import os
 att_files = []
 ms_files = []
 ms_names = []
@@ -9,13 +9,14 @@ ms_names = []
 for i in range(len(attrib.insees)) :
     att_files.append(attrib.att_file + str(attrib.insees[i]) + "_bs.json")
     ms_files.append(attrib.ms_file + str(attrib.insees[i]) + "_bs.json")
-    ms_names.append(str(attrib.insees[i]) + "_bs")
-
-for i in range(len(attrib.scenario_names)) :
-    att_files.append(attrib.att_file + attrib.scenario_names[i] + ".json")
-    ms_files.append(attrib.ms_file + attrib.scenario_names[i] + ".json")
-    ms_names.append(attrib.scenario_names[i])
-
+    ms_names.append(str(attrib.true_insees[i]) + " basecase")
+    att_files.append(attrib.att_file + "drz" + str(attrib.insees[i]) + ".json")
+    ms_files.append(attrib.ms_file + "drz" + str(attrib.insees[i]) + ".json")
+    ms_names.append(str(attrib.true_insees[i]) + " DRZ")
+temp = []
+for i in ms_names :
+    temp.append(i.replace("100001","92032"))
+ms_names = temp
 mss = []
 for ms_file in ms_files:
     with open(ms_file) as json_file:
@@ -73,12 +74,15 @@ for bars in ax.containers:
     ax.bar_label(bars,label_type = "center")
 plt.legend()
 ticks = []
-for type in types :
+for type in attrib.litt_types :
     for ms_name in ms_names :
             ticks.append(ms_name + " " + type)
 plt.xticks(range(len(types)*len(ms_names)),ticks)
-plt.title("MS_"+attrib.nom_graphe)
+plt.title(attrib.nom_graphe)
 #plt.show()
 a = plt.gcf()
 a.set_size_inches(20,10)
-plt.savefig("Traitement_sorties\\Graphes\\MS_"+attrib.nom_graphe,bbox_inches="tight")
+file_l = "graphes\\"
+if not os.path.exists(file_l):
+        os.makedirs(file_l)
+plt.savefig(file_l+attrib.nom_graphe,bbox_inches="tight")
