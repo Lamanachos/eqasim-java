@@ -94,4 +94,4 @@ def build_test_train():
             Y_train.append(i[1].values[1:])
         else :
             Y_test.append(i[1].values[1:])
-    return X_train,Y_train,X_test,Y_test
+    return X_train,X_test,Y_train,Y_test
