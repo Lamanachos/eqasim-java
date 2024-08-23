@@ -17,9 +17,9 @@ def run_random(test_size = 0.3):
     X = df_data.values
     y = df_results.values
     rmse_list = []
-    for i in range(1):
+    for i in range(100):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
-        knn_model = MultiOutputRegressor(KNeighborsRegressor(n_neighbors=4))
+        knn_model = KNeighborsRegressor(n_neighbors=7)
         knn_model.fit(X_train, y_train)
         test_preds = knn_model.predict(X_test)
         #print(test_preds)
@@ -31,13 +31,14 @@ def run_random(test_size = 0.3):
     print(mean(rmse_list))
 
 def run_built():
-    X_train, X_test, y_train, y_test = build_test_train()
-    knn_model = MultiOutputRegressor(KNeighborsRegressor(n_neighbors=4))
+    X_train, X_test, y_train, y_test = build_test_train(norm = True)
+    knn_model = KNeighborsRegressor(n_neighbors=7)
     knn_model.fit(X_train, y_train)
     test_preds = knn_model.predict(X_test)
     mse = mean_squared_error(y_test, test_preds)
     rmse = sqrt(mse)
     print(rmse)
-
+print("Moyenne sur 100 run avec des train/test random :")
 run_random()
+print("Résultats avec le train/test built")
 run_built()

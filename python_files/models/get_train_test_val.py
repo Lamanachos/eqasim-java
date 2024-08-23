@@ -1,5 +1,6 @@
 import attributes as attrib
 import json
+import numpy as np
 import pandas as pd
 #Le but et de construire des corpus train, test et validation qui se ressemble à peu près (pas que le 92 dans un et le 93 dans l'autre)
 
@@ -75,23 +76,52 @@ def build_test_train_insees(info = False):
     else : 
         return(train,test)
 
-def build_test_train(): 
+def build_test_train(normX = False, normY = False): 
     df_data = pd.read_csv(attrib.data_file,sep=";")
     df_results = pd.read_csv(attrib.results_file,sep=";")
     train_insees,test_insees = build_test_train_insees()
-    
+    means = {}
+    stds = {}
+    for i in df_data.columns :
+        means[i] = np.mean(df_data[i])
+        stds[i] = np.std(df_data[i])
+    print(means)
+    print(stds)
     X_train = []
     X_test = []
     Y_train = []
     Y_test = []
     for i in df_data.iterrows():
+        temp = []
+        if normX :
+            for col in df_data.columns :
+                if col != "insee" :
+                    temp.append((i[1][col]-means[col])/stds[col])
         if str(int(i[1].insee)) in train_insees :
-            X_train.append(i[1].values[:-1])
+            if normX :
+                X_train.append(temp)
+            else :
+                X_train.append(i[1].values[:-1])
         else :
-            X_test.append(i[1].values[:-1])
+            if normX :
+                X_test.append(temp)
+            else :
+                X_test.append(i[1].values[:-1])
     for i in df_results.iterrows():
         if str(int(i[1].insee)) in train_insees :
-            Y_train.append(i[1].values[1:])
+            if normY :
+                temp = []
+                for val in i[1].values[1:]:
+                    temp.append((val+100)/200)
+                Y_train.append(np.array(temp))
+            else :
+                Y_train.append(i[1].values[1:])
         else :
-            Y_test.append(i[1].values[1:])
+            if normY :
+                temp = []
+                for val in i[1].values[1:]:
+                    temp.append((val+100)/200)
+                Y_test.append(np.array(temp))
+            else :
+                Y_test.append(i[1].values[1:])
     return X_train,X_test,Y_train,Y_test

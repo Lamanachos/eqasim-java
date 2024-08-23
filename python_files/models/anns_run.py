@@ -7,63 +7,55 @@ import sys
 import tensorflow as tf
 import time
 from datetime import datetime
+from sklearn import preprocessing
+
 
 from tensorflow import keras
-from keras.src.layers import Conv2D, Dense, Dropout, Flatten, LSTM, Reshape, Permute
+from keras.src.models import Model
+from keras.src.layers import Conv2D, Dense, Dropout, Flatten, LSTM, Reshape, Permute, BatchNormalization, Activation,Input
 import keras.src.losses
 from keras.src.models import Sequential
 from sklearn.metrics import confusion_matrix, f1_score
 import attributes as attrib
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from get_train_test_val import build_test_train
+STDOUT = sys.stdout
+#paramètres
+nb_feats = 11
+batch_size = 10
+epochs = 1000
+validation_split = 0.2
+nb_output = 10
 
-df_data = pd.read_csv(attrib.data_file,sep=";")
-df_results = pd.read_csv(attrib.results_file,sep=";")
-df_data.drop(columns=["insee"],inplace=True)
-df_results.drop(columns=["insee"],inplace=True)
-#df_results = df_results["er_idf"]
-X = df_data.values
-y = df_results.values
+X_train, X_temp, y_train, y_temp = build_test_train(normX= True, normY = False)
+X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+X_train = pd.DataFrame(X_train)
+X_test = pd.DataFrame(X_test)
+X_val = pd.DataFrame(X_val)
 
-X_train, y_train, X_test, y_test, X_val, Y_val = load_data(corpus_train,corpus_test,corpus_val,drop_speed = drop_speed)
+def output_form(arr):
+    lists = []
+    for a in arr :
+        for i in range(len(a)):
+            if len(lists)<i+1:
+                lists.append([])
+            lists[i].append(a[i])
+    np_lists = []
+    for i in lists :
+        np_lists.append(np.array(i))
+    return(np_lists)
+
+y_train = output_form(y_train)
+y_test = output_form(y_test)
+y_val = output_form(y_val)
 
 beginning = time.time()
 
 #Setup
 if not os.path.exists(f"outputs/anns"):
     os.makedirs(f"outputs/anns")
-
-#Custom Layers + Functions
-class SliceLayer(tf.keras.layers.Layer):
-  def __init__(self):
-    super(SliceLayer, self).__init__()
-
-  def build(self,input_shapes):
-    self.input_shapes = input_shapes
-
-  def call(self, inputs):
-    #tf.print(inputs)
-    k=0
-    for i in inputs :
-        k+=1 
-    output = tf.TensorArray(tf.float32, size = k)
-    for i in tf.range(k):
-        output = output.write(i,inputs[i][-1])
-    output = output.stack()
-    return output
-  
-class PrintShape(tf.keras.layers.Layer):
-  def __init__(self):
-    super(PrintShape, self).__init__()
-
-  def build(self,input_shapes):
-    self.input_shapes = input_shapes
-    print(input_shapes)
-  def call(self, inputs):
-    print(tf.shape(inputs))
-    return inputs
 
 def ask_for_model_name():
 
@@ -91,8 +83,7 @@ def dummy_model(): # Modèle très simple pour tester le code
 
     model = Sequential(name="dummy")
     
-    model.add(Flatten(input_shape=(nb_obs_per_window, 1, nb_feats)))
-    model.add(Dense(4, activation="softmax"))
+    model.add(Dense(11,input_shape=[nb_feats]))
 
     model.build()
 
@@ -102,8 +93,7 @@ def perceptron_model():
 
     model = Sequential(name="perceptron")
 
-    model.add(Flatten(input_shape=(nb_obs_per_window, 1, nb_feats)))
-    model.add(Dense(512, activation="relu"))
+    model.add(Dense(512, activation="relu",input_shape=[nb_feats]))
     model.add(Dense(256, activation="relu"))
     model.add(Dense(128, activation="relu"))
     model.add(Dense(64, activation="relu"))
@@ -112,102 +102,77 @@ def perceptron_model():
     model.build()
 
     return model
-    
-def conv_model():
 
-    model = Sequential(name="convolutional")
+def ASY_model() :
 
-    model.add(Conv2D(48, (2, 4), activation="relu", input_shape=(nb_obs_per_window, 1, nb_feats)))
-    model.add(Dropout(0.3))
+    input_layer = Input(shape=(nb_feats,))
+    d1 = Dense(50)(input_layer)
+    bn1 = BatchNormalization()(d1)
+    a1 = Activation("tanh")(bn1)
+    d2 = Dense(10)(a1)
+    d3 = Dense(50)(d2)
+    d4 = Dense(50)(d3)
+    d5 = Dense(50)(d4)
+    d6 = Dense(50)(d5)
+    d7 = Dense(50)(d6)
+    bn2 = BatchNormalization()(d7)
+    a2 = Activation("tanh")(bn2)
+    d71 = Dense(50)(a2)
+    d72 = Dense(50)(a2)
+    d73 = Dense(50)(a2)
+    d74 = Dense(50)(a2)
+    d75 = Dense(50)(a2)
+    d76 = Dense(50)(a2)
+    d77 = Dense(50)(a2)
+    d78 = Dense(50)(a2)
+    d79 = Dense(50)(a2)
+    d70 = Dense(50)(a2)
+    y1 = Dense(1, name='y1')(d71)
+    y2 = Dense(1, name='y2')(d72)
+    y3 = Dense(1, name='y3')(d73)
+    y4 = Dense(1, name='y4')(d74)
+    y5 = Dense(1, name='y5')(d75)
+    y6 = Dense(1, name='y6')(d76)
+    y7 = Dense(1, name='y7')(d77)
+    y8 = Dense(1, name='y8')(d78)
+    y9 = Dense(1, name='y9')(d79)
+    y10 = Dense(1, name='y10')(d70)
 
-    model.add(Conv2D(72, (2, 4), activation="relu"))
-    model.add(Dropout(0.55))
-    
-    model.add(Flatten())
-    model.add(Dense(512, activation="relu"))
-    model.add(Dense(512, activation="relu"))
-    model.add(Dense(256, activation="relu"))
-    model.add(Dense(256, activation="relu"))
-    model.add(Dense(128, activation="relu"))
-    model.add(Dropout(0.7))
-
-    model.add(Dense(4, activation="softmax"))
-
-    model.build()
-
+    model = Model(inputs=input_layer, outputs=[y1, y2, y3, y4, y5, y6, y7, y8, y9, y10])
     return model
 
-def ordonez_roggen_model() :
-    model = Sequential(name="ordonez_roggen")
+def base_model(inputs):
+    d1 = Dense(50)(inputs)
+    bn1 = BatchNormalization()(d1)
+    a1 = Activation("tanh")(bn1)
+    d2 = Dense(10)(a1)
+    d3 = Dense(50)(d2)
+    d4 = Dense(50)(d3)
+    d5 = Dense(50)(d4)
+    d6 = Dense(50)(d5)
+    d7 = Dense(50)(d6)
+    bn2 = BatchNormalization()(d7)
+    a2 = Activation("tanh")(bn2)
+    return a2
 
-    model.add(Conv2D(64, (5, 1), activation="relu", input_shape=(nb_obs_per_window, 1,nb_feats)))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-
-    model.add(Permute((1,3,2)))
-    model.add(Reshape((4,64)))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    
-    model.add(Reshape((-1,num_unit_lstm)))
-    model.add(Dense(4, activation="softmax"))
-    model.add(Reshape((4,4)))
-    model.add(SliceLayer())
-    model.build()
-
+def inter_model(inputs):
+    x = base_model(inputs)
+    y1 = Dense(1, name='y1')(x)
+    y2 = Dense(1, name='y2')(x)
+    y3 = Dense(1, name='y3')(x)
+    y4 = Dense(1, name='y4')(x)
+    y5 = Dense(1, name='y5')(x)
+    y6 = Dense(1, name='y6')(x)
+    y7 = Dense(1, name='y7')(x)
+    y8 = Dense(1, name='y8')(x)
+    y9 = Dense(1, name='y9')(x)
+    y10 = Dense(1, name='y10')(x)
+    model = Model(inputs=inputs, outputs = [y1, y2, y3, y4, y5, y6, y7, y8, y9, y10])
     return model
 
-def modified_ordonez_roggen_model() :
-    model = Sequential(name="modified_ordonez_roggen")
-    
-    model.add(Conv2D(64, (5, 1), activation="relu", input_shape=(nb_obs_per_window, 1,nb_feats)))
-    #model.add(Dropout(0.3))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    #model.add(Dropout(0.3))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    #model.add(Dropout(0.3))
-    #model.add(PrintShape())
-
-    model.add(Permute((1,3,2)))
-    model.add(Reshape((size_after_conv,64)))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    
-    #hi mate, how do you do in these troubled times ?
-    model.add(Reshape((-1,num_unit_lstm)))
-    #model.add(Dropout(0.3))
-    model.add(Dense(4, activation="softmax"))
-    model.add(Reshape((size_after_conv,4)))
-    model.add(SliceLayer())
-    model.build()
-
-    return model
-
-def dropout_ordonez_roggen_model() :
-    model = Sequential(name="modified_ordonez_roggen")
-    
-    model.add(Conv2D(64, (5, 1), activation="relu", input_shape=(nb_obs_per_window, 1,nb_feats)))
-    #model.add(Dropout(0.3))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    #model.add(Dropout(0.3))
-    model.add(Conv2D(64, (5, 1), activation="relu"))
-    model.add(Dropout(0.3))
-    #model.add(PrintShape())
-
-    model.add(Permute((1,3,2)))
-    model.add(Reshape((size_after_conv,64)))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    model.add(LSTM(num_unit_lstm,return_sequences=True))
-    
-    #hi mate, how do you do in these troubled times ?
-    model.add(Reshape((-1,num_unit_lstm)))
-    model.add(Dropout(0.3))
-    model.add(Dense(4, activation="softmax"))
-    model.add(Reshape((size_after_conv,4)))
-    model.add(SliceLayer())
-    model.build()
-
+def ASY_model_():
+    inputs = Input(shape=(11,))
+    model = inter_model(inputs)
     return model
 
 def do_multiple_simulations(nb_simulations, type_model):
@@ -223,48 +188,16 @@ def mean_cat_ac(y_true,y_pred):
     temp = temp(y_true,y_pred)
     return tf.math.reduce_mean(temp)
 
-#a metric I found on the web
-class F1Score(tf.keras.metrics.Metric):
-    def __init__(self, name='f1_score', **kwargs):
-        super(F1Score, self).__init__(name=name, **kwargs)
-        self.precision = self.add_weight(name='precision', initializer='zeros')
-        self.recall = self.add_weight(name='recall', initializer='zeros')
-        self.count = self.add_weight(name='count', initializer='zeros')
-
-    def update_state(self, y_true, y_pred, sample_weight=None):
-        true_positives = tf.reduce_sum(tf.round(tf.clip_by_value(y_true * y_pred, 0, 1)), axis=0)
-        predicted_positives = tf.reduce_sum(tf.round(tf.clip_by_value(y_pred, 0, 1)), axis=0)
-        actual_positives = tf.reduce_sum(tf.round(tf.clip_by_value(y_true, 0, 1)), axis=0)
-        
-        precision = tf.math.divide_no_nan(true_positives, predicted_positives)
-        recall = tf.math.divide_no_nan(true_positives, actual_positives)
-        
-        self.precision.assign_add(tf.reduce_sum(precision))
-        self.recall.assign_add(tf.reduce_sum(recall))
-        self.count.assign_add(tf.cast(tf.shape(y_true)[0], self.dtype))
-
-    def result(self):
-        precision = tf.math.divide_no_nan(self.precision, self.count)
-        recall = tf.math.divide_no_nan(self.recall, self.count)
-        f1_score = 2 * tf.math.divide_no_nan(precision * recall, precision + recall)
-        return tf.reduce_mean(f1_score)
-
 def main(type_model,report_name = None):
 
     print(f"Type model : {type_model}")
     
     if type_model == "p":
         model = perceptron_model()
-    elif type_model == "c":
-        model = conv_model()
     elif type_model == "d":
         model = dummy_model()
-    elif type_model == "o":
-        model = ordonez_roggen_model()
-    elif type_model == "mo":
-        model = modified_ordonez_roggen_model()
-    elif type_model == "do":
-        model = dropout_ordonez_roggen_model() 
+    elif type_model == "asy":
+        model = ASY_model()
     else:
         print("Wrong argument :\n'p' for perceptron\n'c' for convolutional (CNN)\n'd' for dummy (tests)\n'o' for ordonez-roggen\n'mo' for modified ordonez-roggen\n'do' for modified ordonez roggen with dropout")
         return
@@ -276,15 +209,20 @@ def main(type_model,report_name = None):
 
     model.compile(
         optimizer="adam",
-        loss = keras.losses.SparseCategoricalCrossentropy(),
-        metrics = ["accuracy"]
+        loss = {'y1': 'binary_crossentropy', 'y2': 'binary_crossentropy', 'y3': 'binary_crossentropy', 'y4': 'binary_crossentropy', 'y5': 'binary_crossentropy', 'y6': 'binary_crossentropy', 'y7': 'binary_crossentropy', 'y8': 'binary_crossentropy','y9': 'binary_crossentropy','y10': 'binary_crossentropy'},
+        metrics = {'y1': keras.metrics.RootMeanSquaredError(),
+                'y2': keras.metrics.RootMeanSquaredError(),
+                'y3': keras.metrics.RootMeanSquaredError(),
+                'y4': keras.metrics.RootMeanSquaredError(),
+                'y5': keras.metrics.RootMeanSquaredError(),
+                'y6': keras.metrics.RootMeanSquaredError(),
+                'y7': keras.metrics.RootMeanSquaredError(),
+                'y8': keras.metrics.RootMeanSquaredError(),
+                'y9': keras.metrics.RootMeanSquaredError(),
+                'y10': keras.metrics.RootMeanSquaredError()}
     )
 
-    if chemin_val != None :
-        val_data = (X_val,Y_val)
-    else :
-        val_data = None
-
+    val_data = (X_val,y_val)
     history = model.fit(
         X_train,
         y_train,
@@ -295,44 +233,31 @@ def main(type_model,report_name = None):
     )
 
     #str_metric = 'custom_f1'
-    str_metric = 'accuracy'
-    print(history.history.keys())
-    acc = history.history[str_metric]
-    val_acc = history.history['val_'+str_metric]
+    str_metric = '_root_mean_squared_error'
+    #print(history.history.keys())
+    acc = []
+    for i in range(epochs):
+        tot = 0
+        for j in range(nb_output) :
+            tot += history.history["y"+str(j+1)+str_metric][i]
+        acc.append(tot/nb_output)
+    val_acc = []
+    for i in range(epochs):
+        tot = 0
+        for j in range(nb_output) :
+            tot += history.history["val_y"+str(j+1)+str_metric][i]
+        val_acc.append(tot/nb_output)
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
-    test_loss, test_acc = model.evaluate(X_test,  y_test, batch_size=batch_size, verbose=2)
+    list_all = model.evaluate(X_test,  y_test, batch_size=batch_size, verbose=2)
+    test_loss = list_all[0]
+    test_acc = np.mean(list_all[11:])
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
     print(f"Time : {time.time() - beginning}")
     
     model.save(f"outputs/anns/{report_name}/models.h5")
     model.save(f"outputs/anns/{report_name}/models.keras")
-
-    # Matrice de confusion
-    predictions = model.predict(X_test)
-    y_pred = np.zeros(len(predictions), dtype="int64")
-
-    for i in range(len(predictions)):
-        y_pred[i] = np.argmax(predictions[i])
-
-    print(f"y_test : {y_test.shape}, {y_test.dtype}")
-    print(f"y_pred : {y_pred.shape}, {y_pred.dtype}")
-    
-    cm = confusion_matrix(y_test, y_pred)
-    cm_sum = cm.sum()
-    print(cm_sum, cm.shape)
-    cm_ratio = cm / cm_sum
-    test_f1 = f1_score(y_test, y_pred, average="weighted")
-    _, ax = plt.subplots()
-    sns.heatmap(cm, annot=True, cmap="Blues", fmt="d", xticklabels=CLASS_NAMES, yticklabels=CLASS_NAMES, ax=ax, square=True, annot_kws={"fontsize": 6.5})
-
-    ax.set_xlabel("Prédictions")
-    ax.set_ylabel("Vraies étiquettes")
-
-    plt.title(f"Modèle {report_name} : matrice de confusion")
-    plt.savefig(f"outputs/anns/{report_name}/matconfs.png", dpi=300, bbox_inches='tight')
-    #plt.show()
 
     # Rapport
 
@@ -343,27 +268,14 @@ def main(type_model,report_name = None):
         file.write(f"Epochs : {epochs}\n")
         file.write(f"Validation split : {validation_split}\n")
         file.write(f"Feats : {nb_feats}\n")
-        file.write(f"Size window : {nb_obs_per_window}\n\n")
 
-        file.write(f"Chemin train : {chemin_train}\n")
-        for dir_train in os.listdir(chemin_train) :
-            file.write(f"{dir_train} : {os.listdir(chemin_train+'/'+dir_train)}\n")
+        """ file.write(f"Train : {chemin_train}\n")
         file.write(f"Chemin val : {chemin_val}\n")
-        if chemin_val != None :
-            for dir_val in os.listdir(chemin_val) :
-                file.write(f"{dir_val} : {os.listdir(chemin_val+'/'+dir_val)}\n")
-        file.write(f"Chemin test : {chemin_test}\n")
-        for dir_test in os.listdir(chemin_test) :
-            file.write(f"{dir_test} : {os.listdir(chemin_test+'/'+dir_test)}\n")
+        file.write(f"Chemin test : {chemin_test}\n") """
         file.write("\n")
 
         file.write(f"Test {str_metric} : {test_acc}\n")
-        file.write(f"Test f1-score : {test_f1}\n")
         file.write(f"Test loss : {test_loss}\n\n")
-        file.write(f"Conf. Mat. :\n{str(cm)}\n\n")
-        scores = mod.scores(cm.T)
-        file.write(f"Scores :\nPrécisions : {str(scores[0])}\nRappels : {str(scores[1])}\nF1-scores : {str(scores[2])}\nAccuracy : {str(scores[3])}\n\n")
-
         file.write(f"Summary :\n\n")
         sys.stdout = file
         model.summary()
@@ -404,10 +316,10 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--multiple", type=int, default=None, help="Multiple simulations")
     args = parser.parse_args()
 
-    if args.multiple != None and args.type in ["p", "c", "d","o","mo","do"]:
+    if args.multiple != None and args.type in ["p", "c", "asy"]:
         print("Multiple simulations")
         do_multiple_simulations(args.multiple, args.type)
-    elif args.type in ["p", "c", "d","o","mo","do"]:
+    elif args.type in ["p", "c", "asy"]:
         print("One simualtion, with graph / report / conf. matrix")
         main(args.type)
     else:
