@@ -14,7 +14,7 @@ df_results.drop(columns=["insee"],inplace=True)
 #df_results = df_results["er_idf"]
 X = df_data.values
 y = df_results.values
-rmse_list = []
+""" rmse_list = []
 for i in range(100):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
     knn_model = MultiOutputRegressor(KNeighborsRegressor(n_neighbors=4))
@@ -26,4 +26,4 @@ for i in range(100):
     rmse = sqrt(mse)
     rmse_list.append(rmse)
 rmse_list.append(rmse)
-print(mean(rmse_list))
+print(mean(rmse_list)) """

@@ -20,7 +20,7 @@ for i in df.iterrows():
                 dict_dep[dep][name] = float(i[1][name])
 
 keys = df.columns
-keys = keys[:-2]
+keys = keys[:-1]
 lists = {}
 for key in keys :
     lists[key] = []
@@ -29,7 +29,7 @@ for dep in dict_dep.keys() :
     lists["dep"].append(dep)
     for key in keys :
         if key in dict_dep[dep].keys():
-            lists[key].append(dict_dep[dep][key]/dict_dep[dep]["count"])
+            lists[key].append(round(dict_dep[dep][key]/dict_dep[dep]["count"],2))
         else : 
             lists[key].append(0)
 df = pd.DataFrame.from_dict(lists)
