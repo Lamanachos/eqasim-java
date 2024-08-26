@@ -76,7 +76,7 @@ def build_test_train_insees(info = False):
     else : 
         return(train,test)
 
-def build_test_train(normX = False, normY = False): 
+def build_test_train(normX = False, normY = False, liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"],liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs"]): 
     df_data = pd.read_csv(attrib.data_file,sep=";")
     df_results = pd.read_csv(attrib.results_file,sep=";")
     train_insees,test_insees = build_test_train_insees()
@@ -93,35 +93,26 @@ def build_test_train(normX = False, normY = False):
     Y_test = []
     for i in df_data.iterrows():
         temp = []
-        if normX :
-            for col in df_data.columns :
-                if col != "insee" :
+        for col in df_data.columns :
+            if col in liste_feats :
+                if normX :
                     temp.append((i[1][col]-means[col])/stds[col])
+                else : 
+                    temp.append(i[1][col])
         if str(int(i[1].insee)) in train_insees :
-            if normX :
-                X_train.append(temp)
-            else :
-                X_train.append(i[1].values[:-1])
+            X_train.append(np.array(temp))
         else :
-            if normX :
-                X_test.append(temp)
-            else :
-                X_test.append(i[1].values[:-1])
+            X_test.append(np.array(temp))
     for i in df_results.iterrows():
+        temp = []
+        for col in df_results.columns :
+            if col in liste_res :
+                if normY :
+                    temp.append((i[1][col]-means[col])/stds[col])
+                else : 
+                    temp.append(i[1][col])
         if str(int(i[1].insee)) in train_insees :
-            if normY :
-                temp = []
-                for val in i[1].values[1:]:
-                    temp.append((val+100)/200)
-                Y_train.append(np.array(temp))
-            else :
-                Y_train.append(i[1].values[1:])
+            Y_train.append(np.array(temp))
         else :
-            if normY :
-                temp = []
-                for val in i[1].values[1:]:
-                    temp.append((val+100)/200)
-                Y_test.append(np.array(temp))
-            else :
-                Y_test.append(i[1].values[1:])
+            Y_test.append(np.array(temp))
     return X_train,X_test,Y_train,Y_test

@@ -24,11 +24,12 @@ STDOUT = sys.stdout
 #paramètres
 nb_feats = 11
 batch_size = 10
-epochs = 1000
+epochs = 10
 validation_split = 0.2
-nb_output = 10
+liste_res = ["er_idf"]
+nb_output = len(liste_res)
 
-X_train, X_temp, y_train, y_temp = build_test_train(normX= True, normY = False)
+X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False, liste_res=liste_res)
 X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
 
 X_train = pd.DataFrame(X_train)
@@ -103,8 +104,7 @@ def perceptron_model():
 
     return model
 
-def ASY_model() :
-
+def mo_ASY_model() :
     input_layer = Input(shape=(nb_feats,))
     d1 = Dense(50)(input_layer)
     bn1 = BatchNormalization()(d1)
@@ -117,62 +117,10 @@ def ASY_model() :
     d7 = Dense(50)(d6)
     bn2 = BatchNormalization()(d7)
     a2 = Activation("tanh")(bn2)
-    d71 = Dense(50)(a2)
-    d72 = Dense(50)(a2)
-    d73 = Dense(50)(a2)
-    d74 = Dense(50)(a2)
-    d75 = Dense(50)(a2)
-    d76 = Dense(50)(a2)
-    d77 = Dense(50)(a2)
-    d78 = Dense(50)(a2)
-    d79 = Dense(50)(a2)
-    d70 = Dense(50)(a2)
-    y1 = Dense(1, name='y1')(d71)
-    y2 = Dense(1, name='y2')(d72)
-    y3 = Dense(1, name='y3')(d73)
-    y4 = Dense(1, name='y4')(d74)
-    y5 = Dense(1, name='y5')(d75)
-    y6 = Dense(1, name='y6')(d76)
-    y7 = Dense(1, name='y7')(d77)
-    y8 = Dense(1, name='y8')(d78)
-    y9 = Dense(1, name='y9')(d79)
-    y10 = Dense(1, name='y10')(d70)
-
-    model = Model(inputs=input_layer, outputs=[y1, y2, y3, y4, y5, y6, y7, y8, y9, y10])
-    return model
-
-def base_model(inputs):
-    d1 = Dense(50)(inputs)
-    bn1 = BatchNormalization()(d1)
-    a1 = Activation("tanh")(bn1)
-    d2 = Dense(10)(a1)
-    d3 = Dense(50)(d2)
-    d4 = Dense(50)(d3)
-    d5 = Dense(50)(d4)
-    d6 = Dense(50)(d5)
-    d7 = Dense(50)(d6)
-    bn2 = BatchNormalization()(d7)
-    a2 = Activation("tanh")(bn2)
-    return a2
-
-def inter_model(inputs):
-    x = base_model(inputs)
-    y1 = Dense(1, name='y1')(x)
-    y2 = Dense(1, name='y2')(x)
-    y3 = Dense(1, name='y3')(x)
-    y4 = Dense(1, name='y4')(x)
-    y5 = Dense(1, name='y5')(x)
-    y6 = Dense(1, name='y6')(x)
-    y7 = Dense(1, name='y7')(x)
-    y8 = Dense(1, name='y8')(x)
-    y9 = Dense(1, name='y9')(x)
-    y10 = Dense(1, name='y10')(x)
-    model = Model(inputs=inputs, outputs = [y1, y2, y3, y4, y5, y6, y7, y8, y9, y10])
-    return model
-
-def ASY_model_():
-    inputs = Input(shape=(11,))
-    model = inter_model(inputs)
+    outputs = []
+    for i in range(nb_output):
+        outputs.append(Dense(1, name=liste_res[i])(Dense(50)(a2)))
+    model = Model(inputs=input_layer, outputs=outputs)
     return model
 
 def do_multiple_simulations(nb_simulations, type_model):
@@ -196,8 +144,8 @@ def main(type_model,report_name = None):
         model = perceptron_model()
     elif type_model == "d":
         model = dummy_model()
-    elif type_model == "asy":
-        model = ASY_model()
+    elif type_model == "mo_asy":
+        model = mo_ASY_model()
     else:
         print("Wrong argument :\n'p' for perceptron\n'c' for convolutional (CNN)\n'd' for dummy (tests)\n'o' for ordonez-roggen\n'mo' for modified ordonez-roggen\n'do' for modified ordonez roggen with dropout")
         return
@@ -206,20 +154,15 @@ def main(type_model,report_name = None):
         report_name = ask_for_model_name()
     
     model.summary()
-
+    loss = {}
+    metrics = {}
+    for i in range(nb_output):
+        loss[liste_res[i]] = "mean_absolute_error"
+        metrics[liste_res[i]] = keras.metrics.RootMeanSquaredError()
     model.compile(
         optimizer="adam",
-        loss = {'y1': 'binary_crossentropy', 'y2': 'binary_crossentropy', 'y3': 'binary_crossentropy', 'y4': 'binary_crossentropy', 'y5': 'binary_crossentropy', 'y6': 'binary_crossentropy', 'y7': 'binary_crossentropy', 'y8': 'binary_crossentropy','y9': 'binary_crossentropy','y10': 'binary_crossentropy'},
-        metrics = {'y1': keras.metrics.RootMeanSquaredError(),
-                'y2': keras.metrics.RootMeanSquaredError(),
-                'y3': keras.metrics.RootMeanSquaredError(),
-                'y4': keras.metrics.RootMeanSquaredError(),
-                'y5': keras.metrics.RootMeanSquaredError(),
-                'y6': keras.metrics.RootMeanSquaredError(),
-                'y7': keras.metrics.RootMeanSquaredError(),
-                'y8': keras.metrics.RootMeanSquaredError(),
-                'y9': keras.metrics.RootMeanSquaredError(),
-                'y10': keras.metrics.RootMeanSquaredError()}
+        loss = loss,
+        metrics = metrics
     )
 
     val_data = (X_val,y_val)
@@ -233,29 +176,37 @@ def main(type_model,report_name = None):
     )
 
     #str_metric = 'custom_f1'
-    str_metric = '_root_mean_squared_error'
+    str_metric = 'root_mean_squared_error'
     #print(history.history.keys())
     acc = []
-    for i in range(epochs):
-        tot = 0
-        for j in range(nb_output) :
-            tot += history.history["y"+str(j+1)+str_metric][i]
-        acc.append(tot/nb_output)
     val_acc = []
-    for i in range(epochs):
-        tot = 0
-        for j in range(nb_output) :
-            tot += history.history["val_y"+str(j+1)+str_metric][i]
-        val_acc.append(tot/nb_output)
+    if nb_output > 1 :
+        for i in range(epochs):
+            tot = 0
+            for j in range(nb_output) :
+                tot += history.history[liste_res[j]+"_"+str_metric][i]
+            acc.append(tot/nb_output)
+        for i in range(epochs):
+            tot = 0
+            for j in range(nb_output) :
+                tot += history.history["val_"+liste_res[j]+"_"+str_metric][i]
+            val_acc.append(tot/nb_output)
+    else :
+        for i in range(epochs):
+            acc.append(history.history[str_metric][i])
+            val_acc.append(history.history["val_"+str_metric][i])
+    
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
     list_all = model.evaluate(X_test,  y_test, batch_size=batch_size, verbose=2)
     test_loss = list_all[0]
-    test_acc = np.mean(list_all[11:])
+    if nb_output >= 1 :
+        test_acc = np.mean(list_all[nb_output+1:])
+    else :
+        test_acc = list_all[nb_output+1:]
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
     print(f"Time : {time.time() - beginning}")
-    
     model.save(f"outputs/anns/{report_name}/models.h5")
     model.save(f"outputs/anns/{report_name}/models.keras")
 
@@ -314,13 +265,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--type", type=str, default="p", help="Model type")
     parser.add_argument("-m", "--multiple", type=int, default=None, help="Multiple simulations")
+    parser.add_argument("-n", "--naming", type=str, default="n", help="y if you want to name")
     args = parser.parse_args()
 
-    if args.multiple != None and args.type in ["p", "c", "asy"]:
+    if args.multiple != None and args.type in ["p", "c", "mo_asy"]:
         print("Multiple simulations")
         do_multiple_simulations(args.multiple, args.type)
-    elif args.type in ["p", "c", "asy"]:
+    elif args.type in ["p", "c", "mo_asy"]:
         print("One simualtion, with graph / report / conf. matrix")
-        main(args.type)
+        if args.naming == "n" :
+            debut = datetime.now()
+            file_name =str(debut)[:-7]
+            file_name = file_name.replace("-",".")
+            file_name = file_name.replace(" ",".")
+            main(args.type,file_name)
+        else :
+            main(args.type)
     else:
         print("Wrong input.")
