@@ -3,6 +3,7 @@ import attributes as attrib
 import os
 import json
 csv_data_communes_path = "python_files\\get_data\\data_communes.csv"
+file_l = "python_files\\get_data\\coeff_join.json"
 drz_composition_path = attrib.drz_composition_path
 
 df = pd.read_csv(csv_data_communes_path,sep=";")
@@ -11,10 +12,16 @@ lines = f.readlines()
 list_with_results = []
 f.close()
 dict_drz = {}
+with open(file_l) as json_file:
+    dict_coeff_join = json.load(json_file)
+for i in dict_coeff_join.keys():
+    dict_drz[i] = {}
+    dict_drz[i]["coeff_join"] = dict_coeff_join[i]
 for i in range(len(lines)):
     line = lines[i].split(";")
     new_insee = line[0]
-    dict_drz[new_insee] = {}
+    if new_insee not in dict_drz.keys():
+        dict_drz[new_insee] = {}
     for name in df.columns :
         if name != "insee":
             dict_drz[new_insee][name] = 0
@@ -51,6 +58,7 @@ keys = list(df.columns)
 keys = keys[:-1]
 keys.append("er_bs")
 keys.append("ms_walk_bs")
+keys.append("coeff_join")
 lists = {}
 for key in keys :
     lists[key] = []
