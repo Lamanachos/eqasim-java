@@ -26,3 +26,14 @@ python_files\get_data\existing_insees.txt
 .gitignore
 python_files/emissions_calc_per_commune/attributes
 python_files/get_data/__pycache__
+gis_clean
+gis_G1
+gis_G3
+ER_clean
+MS_&_ATT_clean
+graphes
+python_files/get_graphes/__pycache__
+python_files/models/__pycache__
+outputs
+outputs
+python_files/get_data/conv_pol
