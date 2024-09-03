@@ -19,18 +19,34 @@ from sklearn.metrics import confusion_matrix, f1_score
 import attributes as attrib
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from get_train_test_val import build_test_train
+from python_files.models.get_train_test_val import build_test_train,df_to_array
 STDOUT = sys.stdout
 #paramètres
-nb_feats = 11
-batch_size = 10
-epochs = 10
+nb_feats = 12
+batch_size = 1000
+epochs = 400
 validation_split = 0.2
 liste_res = ["er_idf"]
+#liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
-X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False, liste_res=liste_res)
+X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = True, liste_res=liste_res)
+#X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False)
 X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
+
+""" df_results = pd.read_csv(attrib.results_file,sep=";")
+df_data = pd.read_csv(attrib.data_file,sep=";")
+df_data.drop(columns=["insee"],inplace=True)
+df_results.drop(columns=["insee"],inplace=True)
+X = df_to_array(df_data, norm=True)
+Y = df_to_array(df_results) 
+
+X_train, X_temp, y_train, y_temp = train_test_split(X, Y, test_size=0.66666,random_state=1)
+X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=2) """
+
+train_size = len(X_train)
+test_size = len(X_test)
+val_size = len(X_val)
 
 X_train = pd.DataFrame(X_train)
 X_test = pd.DataFrame(X_test)
@@ -104,18 +120,18 @@ def perceptron_model():
 
     return model
 
-def mo_ASY_model() :
+def mo_ASY_model_() :
     input_layer = Input(shape=(nb_feats,))
     d1 = Dense(50)(input_layer)
     bn1 = BatchNormalization()(d1)
     a1 = Activation("tanh")(bn1)
     d2 = Dense(10)(a1)
-    d3 = Dense(50)(d2)
+    """ d3 = Dense(50)(d2)
     d4 = Dense(50)(d3)
     d5 = Dense(50)(d4)
     d6 = Dense(50)(d5)
-    d7 = Dense(50)(d6)
-    bn2 = BatchNormalization()(d7)
+    d7 = Dense(50)(d6) """
+    bn2 = BatchNormalization()(a1)
     a2 = Activation("tanh")(bn2)
     outputs = []
     for i in range(nb_output):
@@ -123,12 +139,25 @@ def mo_ASY_model() :
     model = Model(inputs=input_layer, outputs=outputs)
     return model
 
+def mo_ASY_model() :
+    input_layer = Input(shape=(nb_feats,))
+    #x = Dense(512, activation="tanh")(input_layer)
+    x = BatchNormalization()(input_layer)
+    x = Dense(50, activation="tanh")(x)
+    x = Dense(50, activation="tanh")(x)
+    outputs = []
+    for i in range(nb_output):
+        outputs.append(Dense(1, name=liste_res[i])(Dense(50)(x)))
+    model = Model(inputs=input_layer, outputs=outputs)
+    return model
+
 def do_multiple_simulations(nb_simulations, type_model):
     for i in range(nb_simulations):
         debut = datetime.now()
         file_name =str(debut)[:-7]
-        file_name = file_name.replace("-",":")
-        file_name = file_name.replace(" ",":")
+        file_name = file_name.replace(":",".")
+        file_name = file_name.replace("-",".")
+        file_name = file_name.replace(" ",".")
         main(type_model,file_name)
 
 def mean_cat_ac(y_true,y_pred):
@@ -199,13 +228,17 @@ def main(type_model,report_name = None):
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
-    list_all = model.evaluate(X_test,  y_test, batch_size=batch_size, verbose=2)
+    list_all = model.evaluate(X_test,  y_test, verbose=2)
     test_loss = list_all[0]
-    if nb_output >= 1 :
+    print(list_all)
+    print(nb_output +1)
+    if nb_output > 1 :
         test_acc = np.mean(list_all[nb_output+1:])
     else :
-        test_acc = list_all[nb_output+1:]
+        test_acc = list_all[1]
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
+    #if nb_output == 1 :
+        #print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
     print(f"Time : {time.time() - beginning}")
     model.save(f"outputs/anns/{report_name}/models.h5")
     model.save(f"outputs/anns/{report_name}/models.keras")
@@ -219,7 +252,10 @@ def main(type_model,report_name = None):
         file.write(f"Epochs : {epochs}\n")
         file.write(f"Validation split : {validation_split}\n")
         file.write(f"Feats : {nb_feats}\n")
-
+        file.write(f"Res list : {str(liste_res)}\n")
+        file.write(f"Train size : {train_size}\n")
+        file.write(f"Val size : {val_size}\n")
+        file.write(f"Test size : {test_size}\n")
         """ file.write(f"Train : {chemin_train}\n")
         file.write(f"Chemin val : {chemin_val}\n")
         file.write(f"Chemin test : {chemin_test}\n") """
@@ -245,10 +281,10 @@ def main(type_model,report_name = None):
     plt.suptitle(f"Name = {report_name}, type = {type_model}, batch_size = {batch_size}, epochs = {epochs}, val_split = {validation_split}")
 
     plt.subplot(1, 2, 1)
-    plt.plot(epochs_range, acc, label='Training Accuracy')
-    plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+    plt.plot(epochs_range, acc, label='Training RMSE')
+    plt.plot(epochs_range, val_acc, label='Validation RMSE')
     plt.legend(loc='lower right')
-    plt.title('Training and Validation Accuracy')
+    plt.title('Training and Validation RMSE')
     plt.grid(True)
 
     plt.subplot(1, 2, 2)
@@ -276,6 +312,7 @@ if __name__ == "__main__":
         if args.naming == "n" :
             debut = datetime.now()
             file_name =str(debut)[:-7]
+            file_name = file_name.replace(":",".")
             file_name = file_name.replace("-",".")
             file_name = file_name.replace(" ",".")
             main(args.type,file_name)

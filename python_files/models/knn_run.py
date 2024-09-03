@@ -31,7 +31,7 @@ def run_random(test_size = 0.3):
     print(mean(rmse_list))
 
 def run_built():
-    X_train, X_test, y_train, y_test = build_test_train(norm = True)
+    X_train, X_test, y_train, y_test = build_test_train(normX = True, normY= True)
     knn_model = KNeighborsRegressor(n_neighbors=7)
     knn_model.fit(X_train, y_train)
     test_preds = knn_model.predict(X_test)
