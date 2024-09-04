@@ -19,20 +19,30 @@ from sklearn.metrics import confusion_matrix, f1_score
 import attributes as attrib
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from python_files.models.get_train_test_val import build_test_train,df_to_array
+from get_train_test_val import build_test_train,df_to_array,div_data_by_column,get_data
 STDOUT = sys.stdout
+
 #paramètres
-nb_feats = 12
-batch_size = 1000
-epochs = 400
+batch_size = 990
+epochs = 300
 validation_split = 0.2
+
+split_type = "dep"
+add_info = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
+
+#liste_feats = ["area","pop","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
+liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
+nb_feats = len(liste_feats)
+
 liste_res = ["er_idf"]
 #liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
-X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = True, liste_res=liste_res)
+#df_data = div_data_by_column()
+df_data = get_data()
+X_train, X_test, X_val, y_train, y_test, y_val, infos = build_test_train(df_data=df_data, split_type = split_type, split_arg= add_info,normX = True, normY = False, liste_res=liste_res)
 #X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False)
-X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
+#X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
 
 """ df_results = pd.read_csv(attrib.results_file,sep=";")
 df_data = pd.read_csv(attrib.data_file,sep=";")
@@ -142,12 +152,12 @@ def mo_ASY_model_() :
 def mo_ASY_model() :
     input_layer = Input(shape=(nb_feats,))
     #x = Dense(512, activation="tanh")(input_layer)
-    x = BatchNormalization()(input_layer)
-    x = Dense(50, activation="tanh")(x)
-    x = Dense(50, activation="tanh")(x)
+    #x = BatchNormalization()(input_layer)
+    x = Dense(512, activation="tanh")(input_layer)
+    x = Dense(256, activation="tanh")(x)
     outputs = []
     for i in range(nb_output):
-        outputs.append(Dense(1, name=liste_res[i])(Dense(50)(x)))
+        outputs.append(Dense(1, name=liste_res[i])(Dense(128)(x)))
     model = Model(inputs=input_layer, outputs=outputs)
     return model
 
@@ -237,8 +247,9 @@ def main(type_model,report_name = None):
     else :
         test_acc = list_all[1]
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
-    #if nb_output == 1 :
-        #print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
+    if nb_output == 1 :
+        df_results = pd.read_csv(attrib.results_file,sep=";")
+        print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
     print(f"Time : {time.time() - beginning}")
     model.save(f"outputs/anns/{report_name}/models.h5")
     model.save(f"outputs/anns/{report_name}/models.keras")
@@ -256,6 +267,8 @@ def main(type_model,report_name = None):
         file.write(f"Train size : {train_size}\n")
         file.write(f"Val size : {val_size}\n")
         file.write(f"Test size : {test_size}\n")
+        file.write(f"Split type : {split_type}\n")
+        file.write(f"Additional info : {add_info}\n")
         """ file.write(f"Train : {chemin_train}\n")
         file.write(f"Chemin val : {chemin_val}\n")
         file.write(f"Chemin test : {chemin_test}\n") """
@@ -263,6 +276,8 @@ def main(type_model,report_name = None):
 
         file.write(f"Test {str_metric} : {test_acc}\n")
         file.write(f"Test loss : {test_loss}\n\n")
+        if nb_output == 1 :
+            file.write(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
         file.write(f"Summary :\n\n")
         sys.stdout = file
         model.summary()
@@ -272,6 +287,10 @@ def main(type_model,report_name = None):
         file.write(f"Loss : {loss}\n\n")
         file.write(f"Validation {str_metric} : {val_acc}\n\n")
         file.write(f"Validation loss : {val_loss}\n\n")
+
+        file.write(f"Train : {str(infos[0])}\n\n")
+        file.write(f"Test  : {str(infos[1])}\n\n")
+        file.write(f"Val  : {str(infos[2])}\n\n")
 
     # Graphiques
 
@@ -295,6 +314,27 @@ def main(type_model,report_name = None):
     plt.grid(True)
 
     plt.savefig(f"outputs/anns/{report_name}/results.png")
+
+    epochs_range = range(epochs)
+
+    plt.figure(figsize=(8, 8))
+    plt.suptitle(f"Name = {report_name}, type = {type_model}, batch_size = {batch_size}, epochs = {epochs}, val_split = {validation_split}")
+
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs_range[100:], acc[100:], label='Training RMSE')
+    plt.plot(epochs_range[100:], val_acc[100:], label='Validation RMSE')
+    plt.legend(loc='lower right')
+    plt.title('Training and Validation RMSE')
+    plt.grid(True)
+
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs_range[100:], loss[100:], label='Training Loss')
+    plt.plot(epochs_range[100:], val_loss[100:], label='Validation Loss')
+    plt.legend(loc='upper right')
+    plt.title('Training and Validation Loss')
+    plt.grid(True)
+
+    plt.savefig(f"outputs/anns/{report_name}/results_after_100.png")
     #plt.show()
 
 if __name__ == "__main__":

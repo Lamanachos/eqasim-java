@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 from sklearn.multioutput import MultiOutputRegressor
 from statistics import mean
-from get_train_test_val import build_test_train
+from get_train_test_val import build_test_train,div_data_by_column
 
 def run_random(test_size = 0.3):
     df_data = pd.read_csv(attrib.data_file,sep=";")
@@ -31,7 +31,10 @@ def run_random(test_size = 0.3):
     print(mean(rmse_list))
 
 def run_built():
-    X_train, X_test, y_train, y_test = build_test_train(normX = True, normY= True)
+    split_type = "dep"
+    add_info = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
+    df_data = div_data_by_column(to_drop=["road","nb_pt","work_or_edu_fac","other_fac"])
+    X_train, X_test, X_val, y_train, y_test, y_val, info = build_test_train(liste_res = ["er_idf"],normX = True, normY= False, split_type=split_type, split_arg=add_info)
     knn_model = KNeighborsRegressor(n_neighbors=7)
     knn_model.fit(X_train, y_train)
     test_preds = knn_model.predict(X_test)
