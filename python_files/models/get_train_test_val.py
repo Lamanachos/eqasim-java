@@ -3,6 +3,7 @@ import json
 import numpy as np
 import random as r
 import pandas as pd
+from numpy import mean, median, std
 #Le but et de construire des corpus train, test et validation qui se ressemble à peu près (pas que le 92 dans un et le 93 dans l'autre)
 
 def sort_insees(no_block = False):
@@ -148,11 +149,10 @@ def build_test_train(df_data = get_data(), df_results = get_results(), split_typ
         str_insee = str(int(i[1].insee))
         for col in df_data.columns :
             if col in liste_feats :
-                val = i[1][col]
                 if normX :
-                    temp.append((val-means[col])/stds[col])
+                    temp.append((i[1][col]-means[col])/stds[col])
                 else : 
-                    temp.append(val)
+                    temp.append(i[1][col])
         if str_insee in train_insees :
             X_train.append(np.array(temp))
             train_size += 1
@@ -225,4 +225,9 @@ def sim_dep_counter():
             else :
                 dict_dep[dep] += tot
     return dict_dep
-            
+
+def get_means(df):
+    dict = {}
+    for i in df.columns :
+        dict[i] = mean(df[i])
+    return dict

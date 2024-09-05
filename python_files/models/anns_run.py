@@ -23,7 +23,7 @@ from get_train_test_val import build_test_train,df_to_array,div_data_by_column,g
 STDOUT = sys.stdout
 
 #paramètres
-batch_size = 990
+batch_size = 1000
 epochs = 300
 validation_split = 0.2
 
@@ -249,7 +249,7 @@ def main(type_model,report_name = None):
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
     if nb_output == 1 :
         df_results = pd.read_csv(attrib.results_file,sep=";")
-        print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
+        print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
     print(f"Time : {time.time() - beginning}")
     model.save(f"outputs/anns/{report_name}/models.h5")
     model.save(f"outputs/anns/{report_name}/models.keras")
