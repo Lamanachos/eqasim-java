@@ -32,9 +32,9 @@ def run_random(test_size = 0.3):
 
 def run_built():
     split_type = "dep"
-    add_info = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
+    add_info = [["92","75","9293","9394"],["93","7594","94","7592"],[]]
     df_data = div_data_by_column(to_drop=["road","nb_pt","work_or_edu_fac","other_fac"])
-    X_train, X_test, X_val, y_train, y_test, y_val, info = build_test_train(liste_res = ["er_idf"],normX = True, normY= False, split_type=split_type, split_arg=add_info)
+    X_train, X_test, X_val, y_train, y_test, y_val, info = build_test_train(normX = True, normY= False, split_type=split_type, split_arg=add_info)
     knn_model = KNeighborsRegressor(n_neighbors=7)
     knn_model.fit(X_train, y_train)
     test_preds = knn_model.predict(X_test)

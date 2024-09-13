@@ -22,7 +22,7 @@ model_linear = SVR(kernel="linear")
 model_sig = SVR(kernel="sigmoid")
 models = {"poly":model_poly,"rbf":model_rbf,"linear":model_linear,"sigmoid":model_sig}
 dict_means = gt.get_means(gt.get_results())
-
+dict_rmse = {}
 for res in liste_res:
     print(res,":")
     for model in models.keys():
@@ -31,5 +31,15 @@ for res in liste_res:
         test_preds = temp.predict(X_test)
         mean = dict_means[res]
         mse = mean_squared_error(df_ytest[res], test_preds)
-        rmse = sqrt(mse)/mean
+        rmse = sqrt(mse)
+        if res not in dict_rmse.keys():
+            dict_rmse[res] = {}
+        dict_rmse[res][model] = rmse
         print(model,":",abs(rmse))
+
+for model in models.keys():
+    tot = 0
+    for res in dict_rmse.keys():
+        tot += dict_rmse[res][model]
+    print(f"{model}:",tot/len(dict_rmse.keys()))
+

@@ -34,7 +34,7 @@ add_info = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
 liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 nb_feats = len(liste_feats)
 
-liste_res = ["er_idf"]
+liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 #liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
@@ -130,45 +130,28 @@ def perceptron_model():
 
     return model
 
-def mo_ASY_model_() :
-    input_layer = Input(shape=(nb_feats,))
-    d1 = Dense(50)(input_layer)
-    bn1 = BatchNormalization()(d1)
-    a1 = Activation("tanh")(bn1)
-    d2 = Dense(10)(a1)
-    """ d3 = Dense(50)(d2)
-    d4 = Dense(50)(d3)
-    d5 = Dense(50)(d4)
-    d6 = Dense(50)(d5)
-    d7 = Dense(50)(d6) """
-    bn2 = BatchNormalization()(a1)
-    a2 = Activation("tanh")(bn2)
-    outputs = []
-    for i in range(nb_output):
-        outputs.append(Dense(1, name=liste_res[i])(Dense(50)(a2)))
-    model = Model(inputs=input_layer, outputs=outputs)
-    return model
-
 def mo_ASY_model() :
     input_layer = Input(shape=(nb_feats,))
     #x = Dense(512, activation="tanh")(input_layer)
     #x = BatchNormalization()(input_layer)
-    x = Dense(512, activation="tanh")(input_layer)
-    x = Dense(256, activation="tanh")(x)
     outputs = []
-    for i in range(nb_output):
-        outputs.append(Dense(1, name=liste_res[i])(Dense(128)(x)))
+    x = Dense(64, activation="tanh")(input_layer)
+    x = Dense(64, activation="tanh")(x)
+    for i in range(int(nb_output)):
+        outputs.append(Dense(1, name=liste_res[i])(Dense(64)(x)))
     model = Model(inputs=input_layer, outputs=outputs)
     return model
 
 def do_multiple_simulations(nb_simulations, type_model):
+    liste = []
     for i in range(nb_simulations):
         debut = datetime.now()
         file_name =str(debut)[:-7]
         file_name = file_name.replace(":",".")
         file_name = file_name.replace("-",".")
         file_name = file_name.replace(" ",".")
-        main(type_model,file_name)
+        liste.append(main(type_model,file_name))
+    print(liste)
 
 def mean_cat_ac(y_true,y_pred):
     temp = tf.keras.metrics.CategoricalAccuracy()
@@ -239,6 +222,7 @@ def main(type_model,report_name = None):
     val_loss = history.history['val_loss']
 
     list_all = model.evaluate(X_test,  y_test, verbose=2)
+    dict_all = model.evaluate(X_test,  y_test, verbose=2, return_dict=True)
     test_loss = list_all[0]
     print(list_all)
     print(nb_output +1)
@@ -277,7 +261,11 @@ def main(type_model,report_name = None):
         file.write(f"Test {str_metric} : {test_acc}\n")
         file.write(f"Test loss : {test_loss}\n\n")
         if nb_output == 1 :
-            file.write(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}")
+            file.write(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
+        temp_dict = {}
+        for i in liste_res:
+            temp_dict[i] = dict_all[i+"_root_mean_squared_error"]
+        file.write(f"All outputs : {temp_dict}\n")
         file.write(f"Summary :\n\n")
         sys.stdout = file
         model.summary()
@@ -336,6 +324,7 @@ def main(type_model,report_name = None):
 
     plt.savefig(f"outputs/anns/{report_name}/results_after_100.png")
     #plt.show()
+    return(test_acc)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
