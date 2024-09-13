@@ -1,9 +1,9 @@
-import get_train_test_val as gt
+import attributes as attrib
 import matplotlib.pyplot as plt
 from math import ceil
 
-df_data = gt.get_data()
-df_results = gt.get_results()
+df_data = attrib.get_data()
+df_results = attrib.get_results()
 
 y_name = "er_idf"
 Y = df_results[y_name]
