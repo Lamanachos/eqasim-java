@@ -9,7 +9,8 @@ litt_types = ["Île de France","residents","commuters"]
 nom_graphe = "Comparative modal shares for 93032 DRZ"
 results_file = "python_files\\get_data\\res_drz.csv"
 data_file = "python_files\\get_data\\data_drz.csv"
-
+corpus_folder = "python_files\\models\\corpus"
+graphes_folder = "python_files\\get_graphes\\graphes"
 def get_data():
     return pd.read_csv(data_file,sep=";")
 
