@@ -6,3 +6,4 @@ ann_dep_split = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
 ml_dep_split = [["92","75","9293","9394"],["93","7594","94","7592"],[]]
 
 corpus_folder = "python_files\\models\\corpus"
+info_insees_folder = "python_files\\models\\info_insees"

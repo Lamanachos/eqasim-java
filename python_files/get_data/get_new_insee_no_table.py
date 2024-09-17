@@ -22,7 +22,7 @@ def main(argv):
             if len(i) == 6 :
                 list_existing_insee.append(int(i))
     if list_existing_insee == [] :
-        new_insee = "100169"
+        new_insee = "100200"
     else :
         new_insee = str(max(list_existing_insee)+1)
     liste_shapes = []
@@ -65,4 +65,4 @@ def main(argv):
     
 if __name__ == "__main__":
    #main(sys.argv[1:])
-    main(["75105","75106"])
+    main(["92076","92047","92033","92064","92073","92062","92050"])

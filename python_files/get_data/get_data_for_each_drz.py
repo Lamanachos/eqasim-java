@@ -64,7 +64,7 @@ for key in keys :
     lists[key] = []
 lists["insee"] = []
 for insee in dict_drz.keys() :
-    if insee in list_with_results :
+    if (insee in list_with_results) and (int(insee) not in attrib.skip_insees) :
         lists["insee"].append(insee)
         for key in keys :
             if key in dict_drz[insee].keys():

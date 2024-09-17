@@ -83,9 +83,9 @@ if __name__ == "__main__" :
 
     print("Emissions calculated in",t.time()-true_start,"seconds")
     
-    """ if not attrib.basecase :
+    if not attrib.basecase :
         list_dir = os.listdir(emissions_folder)
         for file in list_dir :
             os.remove(emissions_folder + "\\" + file)
-        os.rmdir(emissions_folder) """
+        os.rmdir(emissions_folder)
 
