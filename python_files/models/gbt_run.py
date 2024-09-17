@@ -18,7 +18,7 @@ df_results.drop(columns=["insee"],inplace=True)
 X = df_data.values
 y = df_results.values
 rmse_list = []
-X_train, X_test, y_train, y_test = build_test_train(normX = True)
+X_train, X_test, X_val, y_train, y_test, y_val, insees = build_test_train(normX = True, normY= True,split_arg=attrib.ml_dep_split,split_type="dep")
 clf = XGBRegressor().fit(X_train, y_train)
 test_preds = clf.predict(X_test)
 mse = mean_squared_error(y_test, test_preds)
@@ -26,7 +26,7 @@ rmse = sqrt(mse)
 rmse_list.append(rmse)
 print("XGB :",mean(rmse_list))
 rmse_list = []
-X_train, X_test, y_train, y_test = build_test_train(normX = True)
+X_train, X_test, X_val, y_train, y_test, y_val, insees = build_test_train(normX = True, normY= True,split_arg=attrib.ml_dep_split,split_type="dep")
 clf = MultiOutputRegressor(GradientBoostingRegressor()).fit(X_train, y_train)
 test_preds = clf.predict(X_test)
 mse = mean_squared_error(y_test, test_preds)

@@ -8,8 +8,10 @@ import pandas as pd
 split_type = "dep"
 add_info = add_info = [["92","75","9293","9394"],["93","7594","94","7592"],[]]
 liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
-liste_feats = ["nb_pt","er_bs","area","pop","road","big_road","work_or_edu_fac","other_fac"]
-X_train, X_test, X_val, y_train, y_test, y_val, infos = gt.build_test_train(split_type = split_type, split_arg= add_info,normX = True, normY = False,liste_res=liste_res)
+#liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
+#liste_feats = ["nb_pt","er_bs","area","pop","road","big_road","work_or_edu_fac","other_fac"]
+liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
+X_train, X_test, X_val, y_train, y_test, y_val, infos = gt.build_test_train(split_type = split_type, split_arg= add_info,normX = True, normY = True,liste_res=liste_res,liste_feats=liste_feats)
 
 df_ytrain = pd.DataFrame(y_train)
 df_ytrain.columns = liste_res
@@ -37,6 +39,7 @@ for res in liste_res:
         dict_rmse[res][model] = rmse
         print(model,":",abs(rmse))
 
+print("Mean RMSE :")
 for model in models.keys():
     tot = 0
     for res in dict_rmse.keys():

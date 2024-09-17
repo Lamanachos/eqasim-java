@@ -15,7 +15,7 @@ from keras.src.models import Model
 from keras.src.layers import Conv2D, Dense, Dropout, Flatten, LSTM, Reshape, Permute, BatchNormalization, Activation,Input
 import keras.src.losses
 from keras.src.models import Sequential
-from sklearn.metrics import confusion_matrix, f1_score
+from sklearn.metrics import confusion_matrix, f1_score, mean_absolute_error
 import attributes as attrib
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -24,7 +24,7 @@ STDOUT = sys.stdout
 
 #paramètres
 batch_size = 1000
-epochs = 300
+epochs = 200
 validation_split = 0.2
 
 split_type = "dep"
@@ -34,13 +34,14 @@ add_info = [["92","75","9293","9394"],["93","7594"],["94","7592"]]
 liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 nb_feats = len(liste_feats)
 
+liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
 liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 #liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
 #df_data = div_data_by_column()
 df_data = get_data()
-X_train, X_test, X_val, y_train, y_test, y_val, infos = build_test_train(df_data=df_data, split_type = split_type, split_arg= add_info,normX = True, normY = False, liste_res=liste_res)
+X_train, X_test, X_val, y_train, y_test, y_val, infos = build_test_train(df_data=df_data, split_type = split_type, split_arg= add_info,normX = True, normY = True, liste_res=liste_res)
 #X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False)
 #X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
 
@@ -135,10 +136,10 @@ def mo_ASY_model() :
     #x = Dense(512, activation="tanh")(input_layer)
     #x = BatchNormalization()(input_layer)
     outputs = []
-    x = Dense(64, activation="tanh")(input_layer)
-    x = Dense(64, activation="tanh")(x)
+    x = Dense(512, activation="tanh")(input_layer)
+    x = Dense(256, activation="tanh")(x)
     for i in range(int(nb_output)):
-        outputs.append(Dense(1, name=liste_res[i])(Dense(64)(x)))
+        outputs.append(Dense(1, name=liste_res[i])(Dense(128)(x)))
     model = Model(inputs=input_layer, outputs=outputs)
     return model
 
@@ -223,6 +224,10 @@ def main(type_model,report_name = None):
 
     list_all = model.evaluate(X_test,  y_test, verbose=2)
     dict_all = model.evaluate(X_test,  y_test, verbose=2, return_dict=True)
+    y_pred = model.predict(X_test)
+    print(y_pred)
+    exit()
+    mae = mean_absolute_error(y_test,y_pred)
     test_loss = list_all[0]
     print(list_all)
     print(nb_output +1)
@@ -260,6 +265,7 @@ def main(type_model,report_name = None):
 
         file.write(f"Test {str_metric} : {test_acc}\n")
         file.write(f"Test loss : {test_loss}\n\n")
+        file.write(f"Test MAE : {mae}\n")
         if nb_output == 1 :
             file.write(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
         temp_dict = {}

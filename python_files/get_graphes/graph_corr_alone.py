@@ -62,15 +62,15 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
             if size_is :
                 label += f"{str(size)} communes"
             if j_or_dj_is :
-                label += label_j[j_or_dj]
+                label += " " + label_j[j_or_dj]
             if label == "" :
                 label = None
             X = dict_x[j_or_dj][size]
             Y = dict_y[j_or_dj][size]
             if (X != []) and (Y != []):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
-    plt.xlabel(x)
-    plt.ylabel(y)
+    plt.xlabel(attrib.all_map[x])
+    plt.ylabel(attrib.all_map[y])
     plt.legend()
     figure = plt.gcf()
     figure.set_size_inches(11.7,8.3)
@@ -83,5 +83,5 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
         file_path += "_jdj"
     plt.savefig(file_path,dpi = 300)
 
-make_graph_corr(size_is=True)
+make_graph_corr(size_is=True, j_or_dj_is=True)
 
