@@ -24,7 +24,7 @@ STDOUT = sys.stdout
 
 #paramètres
 batch_size = 1000
-epochs = 200
+epochs = 75
 validation_split = 0.2
 
 split_type = "dep"
@@ -35,7 +35,7 @@ liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fa
 nb_feats = len(liste_feats)
 
 liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
-liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
+#liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 #liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
@@ -225,8 +225,14 @@ def main(type_model,report_name = None):
     list_all = model.evaluate(X_test,  y_test, verbose=2)
     dict_all = model.evaluate(X_test,  y_test, verbose=2, return_dict=True)
     y_pred = model.predict(X_test)
-    print(y_pred)
-    exit()
+    temp = []
+    for ar in y_pred :
+        new_ar = []
+        for i in ar :
+            new_ar.append(i[0])
+        new_ar = np.array(new_ar)
+        temp.append(new_ar)
+    y_pred = temp
     mae = mean_absolute_error(y_test,y_pred)
     test_loss = list_all[0]
     print(list_all)
@@ -236,6 +242,7 @@ def main(type_model,report_name = None):
     else :
         test_acc = list_all[1]
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
+    print(f"Test MAE : {mae}")
     if nb_output == 1 :
         df_results = pd.read_csv(attrib.results_file,sep=";")
         print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
