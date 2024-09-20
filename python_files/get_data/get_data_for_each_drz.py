@@ -2,8 +2,9 @@ import pandas as pd
 import attributes as attrib
 import os
 import json
-csv_data_communes_path = "python_files\\get_data\\data_communes.csv"
-file_l = "python_files\\get_data\\coeff_join.json"
+
+csv_data_communes_path = attrib.csv_data_communes_path
+file_l = attrib.file_l
 drz_composition_path = attrib.drz_composition_path
 
 df = pd.read_csv(csv_data_communes_path,sep=";")

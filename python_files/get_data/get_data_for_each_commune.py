@@ -2,6 +2,7 @@ import geopandas as gpd
 import pandas as pd
 import xml.etree.ElementTree as ET
 import json
+import attributes as attrib
 
 keys = []
 
@@ -154,6 +155,6 @@ for insee in dict_data.keys() :
             else : 
                 lists[key].append(0)
 df = pd.DataFrame.from_dict(lists)
-df.to_csv("python_files\\get_data\\data_communes.csv",index=False,sep=";")
+df.to_csv(attrib.csv_data_communes_path,index=False,sep=";")
 
     

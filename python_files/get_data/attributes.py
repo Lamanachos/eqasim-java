@@ -5,3 +5,5 @@ ms_folder = "MS_&_ATT_clean\\MS" #dossier ou sont rangés les modal shares
 att_folder = "MS_&_ATT_clean\\ATT" #dossier où sont rangés les average travel time
 er_folder = "ER_clean" #dossier où sont rnagés les émissions
 skip_insees = [100092,100083,100074,100065,100014,100028,100042,100056] #insees pour lesquelles on ne veut pas calculer les datas (par exemple les départements entiers car c'est des outliers)
+csv_data_communes_path = "python_files\\get_data\\data_communes.csv" #adresse ou les caractéristiques des communes seront stockées
+file_l = "python_files\\get_data\\coeff_join.json" #adresse où sont stockés les coeff de jointure de chaque drz
