@@ -69,8 +69,9 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
             Y = dict_y[j_or_dj][size]
             if (X != []) and (Y != []):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
-    plt.xlabel(attrib.all_map[x])
-    plt.ylabel(attrib.all_map[y])
+    plt.xlabel(attrib.all_map[x],fontsize = 15)
+    plt.ylabel(attrib.all_map[y],fontsize = 15)
+    plt.title(f"{attrib.all_map[y]} en fonction de {attrib.all_map[x]}")
     plt.legend()
     figure = plt.gcf()
     figure.set_size_inches(11.7,8.3)

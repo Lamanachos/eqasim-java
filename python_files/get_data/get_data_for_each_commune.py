@@ -5,7 +5,23 @@ import json
 
 keys = []
 
+#fichier contenant les formes de toutes les communes d'île de france
 shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
+#fichier contenant la population des communes d'île de France
+file_pop = "python_files\\get_data\\donnees-communales-sur-la-population-dile-de-france.csv"
+#fichier contenant pour chaque lien du réseau routier la commune dans laquelle il est contenu
+file_links_communes = "python_files\\emissions_calc_per_commune\\links_commune\\all_links.json"
+#fichier contenant les liens du réseau routiers (construit avec python_files\emissions_calc_per_commune\split_network.py)
+file_links = "python_files\\split_network\\output_network_links.xml"
+#fichier contenant les longueurs des liens du réseau routier (construit avec python_files\emissions_calc_per_commune\get_links_per_commune.py)
+file_links_len = "python_files\\emissions_calc_per_commune\\links_commune\\links_len.json"
+#fichier contenant les arrêts de transports en commun (dispo dans la sortie d'Eqasim avec la population synthétique)
+file_stops = "python_files\\split_network\\output_transitSchedule.xml"
+#fichier contenant les facilities (dispo dans la sortie d'Eqasim avec la population synthétique)
+file_facilities = "python_files\\split_network\\output_facilities.xml"
+#fichier contenant des informations sur les ménages d'île-de-france récupérée dans les entrées d'Eqasim
+file_car = "python_files\\get_data\\Menages_semaine.csv"
+
 gdf = gpd.read_file(shapefile_communes)
 dict_data = {}
 for i in gdf.iterrows():
@@ -16,7 +32,6 @@ for i in gdf.iterrows():
     dict_data[insee]["area"] = area/1000000
 keys.append("area")
 
-file_pop = "python_files\\get_data\\donnees-communales-sur-la-population-dile-de-france.csv"
 df = pd.read_csv(file_pop,sep=";")
 for i in df.iterrows() :
     pop = i[1].popmun2017
@@ -28,10 +43,8 @@ for i in df.iterrows() :
 keys.append("pop")
 keys.append("density")
 
-file_links_communes = "python_files\\emissions_calc_per_commune\\links_commune\\all_links.json"
 with open(file_links_communes) as json_file:
         dict_links = json.load(json_file)
-file_links = "python_files\\split_network\\output_network_links.xml"
 df_links = pd.read_xml(file_links)
 for i in df_links.iterrows() :
     id = i[1].id
@@ -45,10 +58,8 @@ for i in df_links.iterrows() :
         dict_data[insee]["road"] += length
 keys.append("road")
 
-file_links_len = "python_files\\emissions_calc_per_commune\\links_commune\\links_len.json"
 with open(file_links_len) as json_file:
         links_len = json.load(json_file)
-file_stops = "python_files\\split_network\\output_transitSchedule.xml"
 tree = ET.parse(file_stops)
 root = tree.getroot()
 count = 0
@@ -63,7 +74,6 @@ for child in root :
         dict_data[insee]["nb_pt"] += 1
 keys.append("nb_pt")
 
-file_facilities = "python_files\\split_network\\output_facilities.xml"
 tree = ET.parse(file_facilities)
 root = tree.getroot()
 for child in root :
@@ -86,7 +96,6 @@ for child in root :
 keys.append("work_or_edu_fac")
 keys.append("other_fac")
 
-file_car = "python_files\\get_data\\Menages_semaine.csv"
 df = pd.read_csv(file_car,sep=",")
 insee_changes_dict = {77028:77433,77166:77316,77299:77316,77399:77504,77491:77316,78251:78551,78524:78158,91182:91228,91222:91390,95259:95040}
 persons = {}
@@ -112,7 +121,6 @@ for insee in persons.keys():
         dict_data[insee]["cars_per_persons"] = "NA" 
 keys.append("cars_per_persons")
 
-file_links = "python_files\\split_network\\output_network_links.xml"
 tree = ET.parse(file_links)
 root = tree.getroot()
 for child in root :

@@ -3,10 +3,13 @@ import pandas as pd
 import sys
 import os
 
+#obtenir la shapefile de communes appartenant à certains départements
 shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
 dest_folder = "python_files\\petite_couronne\\"
 
 def get_in_zone(zone,dest):
+    # zone : liste de départements ex : ["92","93","94","75"]
+    # dest : nom du fichier ou sauver la shapefile, celui ci sera mis dans le dossier dest_folder
     dest = dest_folder + dest
     if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)

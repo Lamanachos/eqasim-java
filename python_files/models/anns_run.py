@@ -15,7 +15,7 @@ from keras.src.models import Model
 from keras.src.layers import Conv2D, Dense, Dropout, Flatten, LSTM, Reshape, Permute, BatchNormalization, Activation,Input
 import keras.src.losses
 from keras.src.models import Sequential
-from sklearn.metrics import confusion_matrix, f1_score, mean_absolute_error
+from sklearn.metrics import confusion_matrix, f1_score, mean_absolute_error, r2_score
 import attributes as attrib
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -234,6 +234,7 @@ def main(type_model,report_name = None):
         temp.append(new_ar)
     y_pred = temp
     mae = mean_absolute_error(y_test,y_pred)
+    r2 = r2_score(y_test,y_pred)
     test_loss = list_all[0]
     print(list_all)
     print(nb_output +1)
@@ -243,6 +244,7 @@ def main(type_model,report_name = None):
         test_acc = list_all[1]
     print(f"Test loss : {test_loss}\nTest {str_metric} : {test_acc}")
     print(f"Test MAE : {mae}")
+    print(f"Test R2 : {r2}")
     if nb_output == 1 :
         df_results = pd.read_csv(attrib.results_file,sep=";")
         print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
@@ -273,6 +275,7 @@ def main(type_model,report_name = None):
         file.write(f"Test {str_metric} : {test_acc}\n")
         file.write(f"Test loss : {test_loss}\n\n")
         file.write(f"Test MAE : {mae}\n")
+        file.write(f"Test R2 : {r2}\n\n")
         if nb_output == 1 :
             file.write(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
         temp_dict = {}

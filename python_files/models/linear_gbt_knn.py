@@ -2,7 +2,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
 import get_train_test_val as gt
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from math import sqrt
@@ -10,15 +10,15 @@ import pandas as pd
 
 split_type = "dep"
 add_info = add_info = [["92","75","9293","9394"],["93","7594","94","7592"],[]]
-liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
-#liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
+#liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
+liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 #liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 X_train, X_test, X_val, y_train, y_test, y_val, infos = gt.build_test_train(df_data=gt.get_data(),split_type = split_type, split_arg= add_info,normX = True, normY = True,liste_res=liste_res,liste_feats=liste_feats)
 
-#model = KNeighborsRegressor(n_neighbors=7)
+model = KNeighborsRegressor(n_neighbors=7)
 #model = MultiOutputRegressor(GradientBoostingRegressor())
-model = LinearRegression()
+#model = LinearRegression()
 model.fit(X_train, y_train)
 test_preds = model.predict(X_test)
 df_preds = pd.DataFrame(test_preds)
@@ -44,4 +44,6 @@ rmse = sqrt(mse)
 print("Normal RMSE :",rmse)
 mae = mean_absolute_error(y_test, test_preds)
 print("Normal MAE :",mae)
+r2 = r2_score(y_test, test_preds)
+print("Normal r2 :",r2)
 print("Mean_mean RMSE :",abs(rmse/mean_mean))
