@@ -5,12 +5,18 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from math import sqrt
 import pandas as pd
 
+#choix du mode de découpage
 split_type = "dep"
 add_info = add_info = [["92","75","9293","9394"],["93","7594","94","7592"],[]]
+
+#Choix des résultats à garder
 #liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
 liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
+
+#Choix des features à garder
 #liste_feats = ["nb_pt","er_bs","area","pop","road","big_road","work_or_edu_fac","other_fac"]
 liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
+
 X_train, X_test, X_val, y_train, y_test, y_val, infos = gt.build_test_train(split_type = split_type, split_arg= add_info,normX = True, normY = True,liste_res=liste_res,liste_feats=liste_feats)
 
 df_ytrain = pd.DataFrame(y_train)

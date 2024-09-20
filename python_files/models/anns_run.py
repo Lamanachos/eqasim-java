@@ -12,14 +12,12 @@ from sklearn import preprocessing
 
 from tensorflow import keras
 from keras.src.models import Model
-from keras.src.layers import Conv2D, Dense, Dropout, Flatten, LSTM, Reshape, Permute, BatchNormalization, Activation,Input
+from keras.src.layers import Dense, Input
 import keras.src.losses
-from keras.src.models import Sequential
-from sklearn.metrics import confusion_matrix, f1_score, mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score
 import attributes as attrib
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from get_train_test_val import build_test_train,df_to_array,div_data_by_column,get_data
+from get_train_test_val import build_test_train,get_data
 STDOUT = sys.stdout
 
 #paramètres
@@ -36,24 +34,10 @@ nb_feats = len(liste_feats)
 
 liste_res = ["car_ms_idf_nb","att_idf","er_idf"]
 #liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
-#liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 nb_output = len(liste_res)
 
-#df_data = div_data_by_column()
 df_data = get_data()
 X_train, X_test, X_val, y_train, y_test, y_val, infos = build_test_train(df_data=df_data, split_type = split_type, split_arg= add_info,normX = True, normY = True, liste_res=liste_res)
-#X_train, X_temp, y_train, y_temp = build_test_train(normX = True, normY = False)
-#X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=1)
-
-""" df_results = pd.read_csv(attrib.results_file,sep=";")
-df_data = pd.read_csv(attrib.data_file,sep=";")
-df_data.drop(columns=["insee"],inplace=True)
-df_results.drop(columns=["insee"],inplace=True)
-X = df_to_array(df_data, norm=True)
-Y = df_to_array(df_results) 
-
-X_train, X_temp, y_train, y_temp = train_test_split(X, Y, test_size=0.66666,random_state=1)
-X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5,random_state=2) """
 
 train_size = len(X_train)
 test_size = len(X_test)
@@ -107,39 +91,21 @@ def ask_for_model_name():
 
 # Modèles
 
-def dummy_model(): # Modèle très simple pour tester le code
-
-    model = Sequential(name="dummy")
-    
-    model.add(Dense(11,input_shape=[nb_feats]))
-
-    model.build()
-
-    return model
-
-def perceptron_model():
-
-    model = Sequential(name="perceptron")
-
-    model.add(Dense(512, activation="relu",input_shape=[nb_feats]))
-    model.add(Dense(256, activation="relu"))
-    model.add(Dense(128, activation="relu"))
-    model.add(Dense(64, activation="relu"))
-    model.add(Dense(4, activation="softmax"))
-
-    model.build()
-
-    return model
-
 def mo_ASY_model() :
     input_layer = Input(shape=(nb_feats,))
-    #x = Dense(512, activation="tanh")(input_layer)
-    #x = BatchNormalization()(input_layer)
     outputs = []
     x = Dense(512, activation="tanh")(input_layer)
     x = Dense(256, activation="tanh")(x)
     for i in range(int(nb_output)):
         outputs.append(Dense(1, name=liste_res[i])(Dense(128)(x)))
+    model = Model(inputs=input_layer, outputs=outputs)
+    return model
+
+def mo_ASY_model_alone() :
+    input_layer = Input(shape=(nb_feats,))
+    outputs = []
+    for i in range(int(nb_output)):
+        outputs.append(Dense(1, name=liste_res[i])(Dense(128)(Dense(256, activation="tanh")(Dense(512, activation="tanh")(input_layer)))))
     model = Model(inputs=input_layer, outputs=outputs)
     return model
 
@@ -154,20 +120,13 @@ def do_multiple_simulations(nb_simulations, type_model):
         liste.append(main(type_model,file_name))
     print(liste)
 
-def mean_cat_ac(y_true,y_pred):
-    temp = tf.keras.metrics.CategoricalAccuracy()
-    temp = temp(y_true,y_pred)
-    return tf.math.reduce_mean(temp)
-
 def main(type_model,report_name = None):
 
     print(f"Type model : {type_model}")
     
-    if type_model == "p":
-        model = perceptron_model()
-    elif type_model == "d":
-        model = dummy_model()
-    elif type_model == "mo_asy":
+    if type_model == "dense_alone":
+        model = mo_ASY_model_alone()
+    elif type_model == "dense_mix":
         model = mo_ASY_model()
     else:
         print("Wrong argument :\n'p' for perceptron\n'c' for convolutional (CNN)\n'd' for dummy (tests)\n'o' for ordonez-roggen\n'mo' for modified ordonez-roggen\n'do' for modified ordonez roggen with dropout")
@@ -344,15 +303,15 @@ def main(type_model,report_name = None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--type", type=str, default="p", help="Model type")
+    parser.add_argument("-t", "--type", type=str, default="dense_mix", help="Model type")
     parser.add_argument("-m", "--multiple", type=int, default=None, help="Multiple simulations")
     parser.add_argument("-n", "--naming", type=str, default="n", help="y if you want to name")
     args = parser.parse_args()
 
-    if args.multiple != None and args.type in ["p", "c", "mo_asy"]:
+    if args.multiple != None and args.type in ["dense_mix", "dense_alone"]:
         print("Multiple simulations")
         do_multiple_simulations(args.multiple, args.type)
-    elif args.type in ["p", "c", "mo_asy"]:
+    elif args.type in ["dense_mix", "dense_alone"]:
         print("One simualtion, with graph / report / conf. matrix")
         if args.naming == "n" :
             debut = datetime.now()

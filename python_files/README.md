@@ -1,30 +1,36 @@
 # Obtenir les DRZ et leurs caractéristiques
 
+Tous les fichiers utilisés dans cette partie siont dans le dossier python_files/get_data.
+
 Avant toutes choses, dans python_files/get_data/attributes.py modifier les valeurs des paramètres pour qu’elles pointent vers les différents endroits où sont stockés les sorties (plus de précisions dans le fichier attributes.py).
 
 ## Générer des DRZ
 
 ### Obtenir les matrices d'adjacences
 
-Lancer get_petite_couronne.py.
+Éxécuter get_petite_couronne.py.
 
-Lancer generate_neighbors_mat.py (peut prendre plus de 20 minutes).
+Éxécuter generate_neighbors_mat.py (peut prendre plus de 20 minutes).
 
-Lancer generates_extended_neighbors_mat.py (peut prendre plus de 7 minutes).
+Éxécuter generates_extended_neighbors_mat.py (peut prendre plus de 7 minutes).
 
 ### Générer un groupe de DRZ
 
 Dans le fichier generate_drz_list.py il faut éxécuter les fonctions create_shapefiles et create_shapefiles_again.
-create_shapefile crée des drz sur un département et create_shapefiles_again sur deux départements.
+
+create_shapefile crée des drz sur un seul département et create_shapefiles_again sur deux départements.
 
 #### create_shapefiles
 
 Explication des paramètres :
 
 departements : liste des départements ou créer des drz
+
 number_per_number : liste d'entier, pour chque indice il sera crée le nombre de drz inscrit à cet indice de taille l'indice plus un
+
 force_disjoint : si false quand on essaie de générer des drz disjointes, si elles ne le sont pas on ne réessaie pas
 disjoint_random : si false on construit les drz disjointes commune par commune (toujours mettre true)
+
 full_dep : si true on génére pour chaque département une drz contenant toutes ses communes 
 
 Exemple :
@@ -50,25 +56,78 @@ Va créer 2 DRZ de taille 2 jointes, 2 DRZ de taille 2 disjointes, 1 DRZ de tail
 ## Obtenir les caractéristiques des DRZ 
 
 ### Obtention des données nécessaires 
-Lancer get_existing_insees.py.
+Éxécuter get_existing_insees.py.
 
-Lancer get_joint_coeff_for_each_drz.py.
+Éxécuter get_joint_coeff_for_each_drz.py.
 
 S'assurer que les fichiers nécessaire pour le lancement de get_data_for_each_communes.py sont présents, si besoin modifier les chemins au début de get_data_for_each_communes.py (plus de précisions dans le fichier).
 
-Lancer get_data_for_each_communes.py.
+Éxécuter get_data_for_each_communes.py.
 
 ### Obtenir les caractéristiques des DRZ 
 
-Lancer get data_for_each_drz.py
+Éxécuter get data_for_each_drz.py
 
 Les données seront disponibles à l'adresse python_files\\get_data\\data_drz.csv.
 
 ## Obtenir les sorties (en %)
 
-Lancer get_results.py.
+Éxécuter get_results.py.
 
 Les données seront disponibles à l'adresse python_files\\get_data\\res_drz.csv.
 
 # Utiliser les modèles de machine learning
 
+Tous les fichiers utilisés dans cette partie siont dans le dossier python_files/models.
+
+Avant toutes choses, dans python_files/models/attributes.py modifier les valeurs des paramètres pour qu’elles pointent vers les différents endroits où sont stockés les sorties (plus de précisions dans le fichier attributes.py).
+
+## Utiliser le préparateur de corpus
+
+get_train_test_val.py contient du code permettant de préparer et mettre en forme les données.
+
+#### build_test_train
+
+build_test_train prend en entrée de multiples paramètres et retourne des données (presque) prêtes à l'emploi.
+
+Cette fonction permet aussi de normaliser les données.
+
+Explication des paramètres :
+
+df_data : dataframe des features
+
+df_results : dataframe des résultats
+
+split_type : random -> aléatoire, dep -> par département, classic -> une drz de chaque type dans train et le reste est séparé équitablement entre test et validation, old_school -> obsolete
+
+split_arg : varies with split_type  random -> [test ratio, validation ratio] dep -> [departments for training, departements for testing, ddepartements for validation], classic -> no_block si true ça va classer toutes les DRZ même celles dont on a pas calculé les résultats, old_school -> no_block même chose qu'avant
+
+normX : if true, the inputs will be normalized
+
+normY : if true, the outputs will be normalized
+
+list_res : list of the outputs you want to keep
+
+list_feats : list of the feats you want to keep
+
+## KNNs, linear regression et Gradient Boosted Trees
+
+Dans linear_gbt_knn.py choisir le mode de découpage du corpus, ses arguments, la liste des résultats et features à prendre en compte. Pour plus de précisions voir ci-dessus.
+
+Choisir si on veut normaliser les entrées et les sorties.
+
+Choisir le modèle (knn, linear, gbt).
+
+Exécuter linear_gbt_knn.py.
+
+Les sorties se font dans le terminal.
+
+## Spectral Vector Machines
+
+Dans svr.py faire les mêmes choix que ci-dessus.
+
+Exécuter linear_gbt_knn.py.
+
+Les sorties se font dans le terminal.
+
+## Artificial Neural Networks

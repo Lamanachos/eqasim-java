@@ -118,7 +118,14 @@ def get_results():
     return pd.read_csv(attrib.results_file,sep=";")
 
 def build_test_train(df_data = get_data(), df_results = get_results(), split_type = "random", split_arg = None, normX = False, normY = False, liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"],liste_feats = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]):  
+    #df_data : inputs dataframe
+    #df_results : outputs dataframe
     #split_type : random, dep, classic, old_school
+    #split_arg : varies with split_type  random -> [test ratio, validation ratio] dep -> [departments for training, departements for testing, ddepartements for validation], old_school -> old_school is obsolete
+    #normX : if true, the inputs will be normalized
+    #normY : if true, the outputs will be normalized
+    #list_res : list of the outputs you want to keep
+    #list_feats : list of the feats you want to keep
     if split_type == "random" :
         train_insees,test_insees,val_insees = build_random(split_arg)
     elif split_type == "dep" :
