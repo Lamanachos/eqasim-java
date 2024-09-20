@@ -66,12 +66,12 @@ y_val = output_form(y_val)
 beginning = time.time()
 
 #Setup
-if not os.path.exists(f"outputs/anns"):
-    os.makedirs(f"outputs/anns")
+if not os.path.exists(attrib.output_folder):
+    os.makedirs(attrib.output_folder)
 
 def ask_for_model_name():
 
-    already_chosen_reports_names = os.listdir("outputs/anns/")
+    already_chosen_reports_names = os.listdir("{attrib.output_folder}/")
     already_chosen_reports_names = [name for name in already_chosen_reports_names if name not in [".", ".."]]
     already_chosen_reports_names.sort()
     print("Already chosen names :\n")
@@ -193,6 +193,18 @@ def main(type_model,report_name = None):
         temp.append(new_ar)
     y_pred = temp
     mae = mean_absolute_error(y_test,y_pred)
+    temp1 = []
+    temp2 = []
+    for i in range(len(y_test[0])):
+        new_ar1 = []
+        new_ar2 = []
+        for j in range(len(y_test)):
+            new_ar1.append(y_test[j][i])
+            new_ar2.append(y_pred[j][i])
+        temp1.append(np.array(new_ar1))
+        temp2.append(np.array(new_ar2))
+    y_test = temp1
+    y_pred = temp2
     r2 = r2_score(y_test,y_pred)
     test_loss = list_all[0]
     print(list_all)
@@ -208,12 +220,12 @@ def main(type_model,report_name = None):
         df_results = pd.read_csv(attrib.results_file,sep=";")
         print(f"Test {str_metric} normalized : {test_acc/np.mean(df_results[liste_res[0]])}\n")
     print(f"Time : {time.time() - beginning}")
-    model.save(f"outputs/anns/{report_name}/models.h5")
-    model.save(f"outputs/anns/{report_name}/models.keras")
+    model.save(f"{attrib.output_folder}/{report_name}/models.h5")
+    model.save(f"{attrib.output_folder}/{report_name}/models.keras")
 
     # Rapport
 
-    with open(f"outputs/anns/{report_name}/report.txt", "w") as file:
+    with open(f"{attrib.output_folder}/{report_name}/report.txt", "w") as file:
         file.write(f"Name : {report_name}\n")
         file.write(f"Type : {type_model}\n\n")
         file.write(f"Batch size : {batch_size}\n")
@@ -276,7 +288,7 @@ def main(type_model,report_name = None):
     plt.title('Training and Validation Loss')
     plt.grid(True)
 
-    plt.savefig(f"outputs/anns/{report_name}/results.png")
+    plt.savefig(f"{attrib.output_folder}/{report_name}/results.png")
 
     epochs_range = range(epochs)
 
@@ -297,7 +309,7 @@ def main(type_model,report_name = None):
     plt.title('Training and Validation Loss')
     plt.grid(True)
 
-    plt.savefig(f"outputs/anns/{report_name}/results_after_100.png")
+    plt.savefig(f"{attrib.output_folder}/{report_name}/results_after_100.png")
     #plt.show()
     return(test_acc)
 

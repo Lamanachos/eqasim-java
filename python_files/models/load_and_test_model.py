@@ -6,6 +6,7 @@ from sklearn.metrics import mean_absolute_error,r2_score,mean_squared_error
 import attributes as attrib
 import pandas as pd
 from get_train_test_val import build_test_train,get_data
+from math import sqrt
 
 #model_path = "outputs\\cool\\3outputs2\\models.keras"
 model_path = "outputs\\cool\\all_mae_1\\models.keras"
@@ -72,7 +73,10 @@ for i in range(len(y_test[0])):
 y_test = temp1
 y_pred = temp2
 
+mse =  mean_squared_error(y_test,y_pred)
+rmse = sqrt(mse)
 mae = mean_absolute_error(y_test,y_pred)
 r2 = r2_score(y_test,y_pred)
-print(mae)
-print(r2)
+print("RMSE :",rmse)
+print("MAE :",mae)
+print("R2 :",r2)

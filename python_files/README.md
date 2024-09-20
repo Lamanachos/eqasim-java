@@ -131,3 +131,30 @@ Exécuter linear_gbt_knn.py.
 Les sorties se font dans le terminal.
 
 ## Artificial Neural Networks
+
+Dans anns_run.py faire les même choix que ci-dessus.
+
+
+Dans un terminal se rendre dans le dossier eqasim-java-pr puis éxécuter par exemple :
+```shell
+python python_files\\models\\anns_run.py -t dense_mix -m 1 -n bonjour
+```
+
+L'argument -t permet de choisir le type de modèle : dense_mix ou dense_alone, si il n'est pas précisé dense_mix sera choisi.
+
+L'argument -m permet de choisir le nombre de modèles que l'on veut entraîner, si il n'est pas précisé 1 sera choisi.
+
+L'argument -n permet de donner un nom au modèle pour le reconnaître dans les outputs, si il n'est pas précisé la date et l'heure seront utilisés comme noms.
+
+Les résultats seront disponibles dans un rapport situé à l'adresse précisée dans attributes.py.
+
+Les résultats contiennent un rapport qui contient diverses infos sur le modèle dont leur évaluation, une courbe de l'évaluation de la RMSE et de la perte en fonction des itérations, la même mais centrée sur les itérations supérieures à 100, et le modèle.
+
+### Réévaluer un ann
+
+load_and_test_model.py permet de réévaluer un modèle. 
+
+En changeant model_path pour l'adresse du modèle que l'on veut évaluer et en configurant le bon split de corpus, on a ensuite juste à éxécuter le fichier.
+
+Les sorties se font dans le terminal.
+
