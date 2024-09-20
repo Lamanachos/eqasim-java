@@ -4,7 +4,7 @@ import os
 import json
 
 csv_data_communes_path = attrib.csv_data_communes_path
-file_l = attrib.file_l
+file_l = attrib.file_coeff
 drz_composition_path = attrib.drz_composition_path
 
 df = pd.read_csv(csv_data_communes_path,sep=";")

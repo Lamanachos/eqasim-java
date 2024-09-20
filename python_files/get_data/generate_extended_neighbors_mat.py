@@ -2,14 +2,17 @@ import geopandas as gpd
 import random as r
 import json
 import time as t
+import attributes as attrib
 
-mat_file = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\links_commune\\mat.json"
+#Générer la matrice d'adjacence (selon le réseau routier) des communes de la petite couronne et une couche de communes supplémentaires
+
+mat_file = attrib.file_mat
 with open(mat_file) as json_file:
     mat = json.load(json_file)
-communes_idf_file = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
+communes_idf_file = attrib.communes_idf_file
 
 start = t.time()
-network_file = "python_files\\output_5pc\\output_file.shp"
+network_file = attrib.network_file
 network_shape = gpd.read_file(network_file)
 print("Open in :",t.time()-start)
 shape_communes = gpd.read_file(communes_idf_file)
@@ -53,7 +56,7 @@ for i in range(len(liste_communes_petite_couronne)) :
                 k += 1
 
 print("Neighbors in :",t.time()-start)
-file_l = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\links_commune\\mat_extended.json"
+file_l = attrib.file_mat_ext
 with open(file_l, "w") as outfile: 
     json.dump(mat, outfile)
 print("Total time taken :",t.time()-start)

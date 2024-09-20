@@ -10,7 +10,7 @@ def main():
         if os.path.isdir(gis_folder + "\\" + i):
             if len(i) == 6 :
                 list_existing_insees.append(int(i))
-    dest_file = "python_files\\get_data\\existing_insees.txt"
+    dest_file = attrib.drz_composition_path
     f = open(dest_file,"w")
     for i in list_existing_insees :
         f.write(str(i)+";")

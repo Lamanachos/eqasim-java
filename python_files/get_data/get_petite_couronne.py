@@ -1,11 +1,10 @@
 import geopandas as gpd
-import pandas as pd
-import sys
 import os
+import attributes as attrib
 
 #obtenir la shapefile de communes appartenant à certains départements
-shapefile_communes = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
-dest_folder = "python_files\\petite_couronne\\"
+shapefile_communes = attrib.communes_idf_file
+dest_folder = attrib.dest_folder_pc
 
 def get_in_zone(zone,dest):
     # zone : liste de départements ex : ["92","93","94","75"]

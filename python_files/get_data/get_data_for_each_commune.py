@@ -23,6 +23,7 @@ file_facilities = "python_files\\split_network\\output_facilities.xml"
 #fichier contenant des informations sur les ménages d'île-de-france récupérée dans les entrées d'Eqasim
 file_car = "python_files\\get_data\\Menages_semaine.csv"
 
+#area
 gdf = gpd.read_file(shapefile_communes)
 dict_data = {}
 for i in gdf.iterrows():
@@ -33,6 +34,7 @@ for i in gdf.iterrows():
     dict_data[insee]["area"] = area/1000000
 keys.append("area")
 
+#population
 df = pd.read_csv(file_pop,sep=";")
 for i in df.iterrows() :
     pop = i[1].popmun2017
@@ -44,6 +46,7 @@ for i in df.iterrows() :
 keys.append("pop")
 keys.append("density")
 
+#kms of road
 with open(file_links_communes) as json_file:
         dict_links = json.load(json_file)
 df_links = pd.read_xml(file_links)
@@ -59,6 +62,7 @@ for i in df_links.iterrows() :
         dict_data[insee]["road"] += length
 keys.append("road")
 
+#nb pt stations
 with open(file_links_len) as json_file:
         links_len = json.load(json_file)
 tree = ET.parse(file_stops)
@@ -75,6 +79,7 @@ for child in root :
         dict_data[insee]["nb_pt"] += 1
 keys.append("nb_pt")
 
+#nb work/study facilities
 tree = ET.parse(file_facilities)
 root = tree.getroot()
 for child in root :
@@ -97,6 +102,7 @@ for child in root :
 keys.append("work_or_edu_fac")
 keys.append("other_fac")
 
+#nb car per person
 df = pd.read_csv(file_car,sep=",")
 insee_changes_dict = {77028:77433,77166:77316,77299:77316,77399:77504,77491:77316,78251:78551,78524:78158,91182:91228,91222:91390,95259:95040}
 persons = {}
@@ -122,6 +128,7 @@ for insee in persons.keys():
         dict_data[insee]["cars_per_persons"] = "NA" 
 keys.append("cars_per_persons")
 
+#kms of big roads
 tree = ET.parse(file_links)
 root = tree.getroot()
 for child in root :

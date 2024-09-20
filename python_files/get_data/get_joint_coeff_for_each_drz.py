@@ -19,7 +19,7 @@ for i in os.listdir(gis_folder):
             coeff = (gdf.area/conv_pol.area).iloc[0]
             dict_drz[insee] = coeff
 print(dict_drz)
-file_l = attrib.file_l
+file_l = attrib.file_coeff
 with open(file_l, "w") as outfile: 
     json.dump(dict_drz, outfile)
 

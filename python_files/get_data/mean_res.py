@@ -8,8 +8,8 @@ for i in df.columns :
     if i != "insee":
         nb += 1
         print(i + " :")
-        print(median(df[i]))
-        print(mean(df[i]))
+        print("median :",median(df[i]))
+        print("mean :",mean(df[i]))
         tot += mean(df[i])
-        print(std(df[i]))
-print(tot/nb)
+        print("std :",std(df[i]))
+print("MEAN MEAN :",tot/nb)

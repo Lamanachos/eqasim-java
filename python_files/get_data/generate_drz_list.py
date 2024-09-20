@@ -4,11 +4,12 @@ import get_new_insee_no_table
 import json
 import time as t
 import get_existing_insees
+import attributes as attrib
 
 start = t.time()
-mat_file = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\links_commune\\mat.json"
-new_mat_file = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\python_files\\emissions_calc_per_commune\\links_commune\\mat_extended.json"
-folder_p = "python_files\\petite_couronne\\"
+mat_file = attrib.file_mat
+new_mat_file = attrib.file_mat_ext
+folder_p = attrib.dest_folder_pc
 
 with open(mat_file) as json_file:
     pc_mat = json.load(json_file)
@@ -56,7 +57,7 @@ for i in range(len(departements)) :
                         else :
                             frontiers[departements[i]][departements[j]][k].append(l)    
 
-all_file = "python_files\\communes-dile-de-france-au-01-janvier\\communes-dile-de-france-au-01-janvier.shp"
+all_file = attrib.communes_idf_file
 communes_all = gpd.read_file(all_file)
 liste_communes_all = []
 for i in communes_all["insee"] :
@@ -143,6 +144,11 @@ def number_of_parts(drz,mat=petite_couronne_mat):
     return list_parts
 
 def create_shapefiles(departements,number_per_number,force_disjoint = False, disjoint_random = False, full_dep = False):
+    #departements : liste des départements ou créer des drz
+    #number_per_number : liste d'entier, pour chque indice il sera crée le nombre de drz inscrit à cet indice de taille l'indice plus un
+    #force_disjoint : si false quand on essaie de générer des drz disjointes, si elles ne le sont pas on ne réessaie pas
+    #disjoint_random : si false on construit les drz disjointes commune par commune (toujours mettre true)
+    #full_dep : si true on génére pour chaque département une drz contenant toutes ses communes 
     for departement in departements :
         for i in range(len(number_per_number)) :
             for j in range(number_per_number[i]) :
