@@ -20,6 +20,20 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
         print("BAD Y NAME")
         exit()
 
+    make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y)
+
+    figure = plt.gcf()
+    figure.set_size_inches(11.7,8.3)
+    file_path = attrib.graphes_folder+"\\graph_corr_"+y+"_with_"+x
+    if size_is and j_or_dj_is:
+        file_path += "_size_and_jdj"
+    elif size_is :
+        file_path += "_size"
+    elif j_or_dj_is :
+        file_path += "_jdj"
+    plt.savefig(file_path,dpi = 300)
+
+def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, fontsize = 15):
     with open(attrib.dict_j_or_dj_path) as json_file:
         dict_j_or_dj = json.load(json_file)
     with open(attrib.dict_size_path) as json_file:
@@ -69,20 +83,10 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
             Y = dict_y[j_or_dj][size]
             if (X != []) and (Y != []):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
-    plt.xlabel(attrib.all_map[x],fontsize = 15)
-    plt.ylabel(attrib.all_map[y],fontsize = 15)
+    plt.xlabel(attrib.all_map[x],fontsize = fontsize)
+    plt.ylabel(attrib.all_map[y],fontsize = fontsize)
     plt.title(f"{attrib.all_map[y]} en fonction de {attrib.all_map[x]}")
     plt.legend()
-    figure = plt.gcf()
-    figure.set_size_inches(11.7,8.3)
-    file_path = attrib.graphes_folder+"\\graph_corr_"+y+"_with_"+x
-    if size_is and j_or_dj_is:
-        file_path += "_size_and_jdj"
-    elif size_is :
-        file_path += "_size"
-    elif j_or_dj_is :
-        file_path += "_jdj"
-    plt.savefig(file_path,dpi = 300)
+    
 
 make_graph_corr(size_is=True, j_or_dj_is=True)
-
