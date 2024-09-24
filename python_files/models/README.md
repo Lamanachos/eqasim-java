@@ -2,7 +2,7 @@
 
 ## Description, avantages et désavantages des modèles
 
-![Tableau modèles](.\tableau_article.png)
+![Tableau modèles](./tableau_article.png)
 
 https://doi.org/10.1371/journal.pone.0263150.t001 (from ANGIONE Claudio, SILVERMAN Eric et YANESKE Elisabeth. Using machine learning as a surrogate model for agent-based simulations. Plos one, 2022, vol. 17, no 2, p. e0263150.)
 
@@ -16,7 +16,7 @@ Les modèles qui nous intéressent sont :
 
 ## Commentaire du graphe 
 
-![Graphe évaluation modèles](..\get_graphes\graphes\models_eval_all.png)
+![Graphe évaluation modèles](../get_graphes/models_eval_all.png)
 
 On voit que les anns sont meilleurs pour les deux métriques et les deux choix de sorties.
 
