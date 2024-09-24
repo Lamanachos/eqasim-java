@@ -30,7 +30,7 @@ Le dossier div_area_graphes contient les même graphes que all_graphes sauf que 
 
 ### Matrice de corrélation
 
-![Matrice de corrélation](.\mat_corr.png)
+![Matrice de corrélation](./mat_corr.png)
 
 On peut voir que la plupart des sorties sont fortement corrélées à l'aire, sauf le gain de temps de trajet pour les résidents et les utilisateurs, ainsi que le gain d'émissions de CO2 dans la drz.
  
@@ -46,7 +46,7 @@ La matrice de corrélation avec les densité des entrées peut être aussi inté
 
 Les entrées ont été remplacées par leur densité sauf pour le nombre de voiture par personnes, la part modale de la marche dans le cas de base et le coefficient de jointure.
 
-![Matrice de corrélation des densités](.\mat_corr_div_area.png)
+![Matrice de corrélation des densités](./mat_corr_div_area.png)
 
 Les entrées qui étaient très fortement corrélées à l'aire ne le sont plus et donc ne sont plus corrélées aux même sorties.
 
