@@ -4,11 +4,12 @@ import pandas as pd
 import attributes as attrib
 
 def matrix(only_data = True):
+    plt.clf()
     df = pd.read_csv(attrib.data_file,sep=";")
     df.drop(columns = ["insee"],inplace=True)
     df.drop(columns = ["density"],inplace=True)
     new_df = pd.DataFrame()
-    col_div = "area"
+    col_div = None
     skip = ["density","cars_per_person","ms_walk_bs","coeff_join"]
 
     for col in df.columns :
@@ -27,6 +28,10 @@ def matrix(only_data = True):
 
     # plotting correlation matrix
     sns.heatmap(matrix, cmap="coolwarm", annot=True)
-    plt.show()
+    figure = plt.gcf()
+    figure.set_size_inches(11.7,8.3)
+    figure.tight_layout()
+    plt.savefig("python_files\\get_graphes\\mat_corr.png",dpi = 300)
+
 
 matrix(False)
