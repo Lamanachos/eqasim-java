@@ -14,12 +14,31 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
         exit()
     if y in attrib.all_res :
         df_y = attrib.get_results()
-    elif y in attrib.all_datal :
+    elif y in attrib.all_data :
         df_y = attrib.get_data()
     else :
         print("BAD Y NAME")
         exit()
 
+    make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y)
+
+    plt.xlabel(attrib.all_map[x],fontsize = 15)
+    plt.ylabel(attrib.all_map[y],fontsize = 15)
+    plt.title(f"{attrib.all_map[y]} en fonction de {attrib.all_map[x]}")
+    plt.legend()
+
+    figure = plt.gcf()
+    figure.set_size_inches(11.7,8.3)
+    file_path = attrib.graphes_folder+"\\graph_corr_"+y+"_with_"+x
+    if size_is and j_or_dj_is:
+        file_path += "_size_and_jdj"
+    elif size_is :
+        file_path += "_size"
+    elif j_or_dj_is :
+        file_path += "_jdj"
+    plt.savefig(file_path,dpi = 300)
+
+def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, legend = True):
     with open(attrib.dict_j_or_dj_path) as json_file:
         dict_j_or_dj = json.load(json_file)
     with open(attrib.dict_size_path) as json_file:
@@ -65,24 +84,13 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
                 label += " " + label_j[j_or_dj]
             if label == "" :
                 label = None
+            if not legend :
+                label = None
             X = dict_x[j_or_dj][size]
             Y = dict_y[j_or_dj][size]
             if (X != []) and (Y != []):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
-    plt.xlabel(attrib.all_map[x],fontsize = 15)
-    plt.ylabel(attrib.all_map[y],fontsize = 15)
-    plt.title(f"{attrib.all_map[y]} en fonction de {attrib.all_map[x]}")
-    plt.legend()
-    figure = plt.gcf()
-    figure.set_size_inches(11.7,8.3)
-    file_path = attrib.graphes_folder+"\\graph_corr_"+y+"_with_"+x
-    if size_is and j_or_dj_is:
-        file_path += "_size_and_jdj"
-    elif size_is :
-        file_path += "_size"
-    elif j_or_dj_is :
-        file_path += "_jdj"
-    plt.savefig(file_path,dpi = 300)
+    
+    
 
-make_graph_corr(size_is=True, j_or_dj_is=True)
-
+""" make_graph_corr(size_is=True, j_or_dj_is=True) """

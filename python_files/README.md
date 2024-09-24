@@ -1,12 +1,12 @@
 # Obtenir les DRZ et leurs caractéristiques
 
-Tous les fichiers utilisés dans cette partie siont dans le dossier python_files/get_data.
+Tous les fichiers utilisés dans cette partie sont dans le dossier python_files/get_data.
 
 Avant toutes choses, dans python_files/get_data/attributes.py modifier les valeurs des paramètres pour qu’elles pointent vers les différents endroits où sont stockés les sorties (plus de précisions dans le fichier attributes.py).
 
 ## Générer des DRZ
 
-### Obtenir les matrices d'adjacences
+### Obtenir les matrices d'adjacences des communes de la petite_couronne
 
 Éxécuter get_petite_couronne.py.
 
@@ -24,11 +24,12 @@ create_shapefile crée des drz sur un seul département et create_shapefiles_aga
 
 Explication des paramètres :
 
-departements : liste des départements ou créer des drz
+departements : liste des départements où créer des drz
 
-number_per_number : liste d'entier, pour chque indice il sera crée le nombre de drz inscrit à cet indice de taille l'indice plus un
+number_per_number : liste d'entiers, pour chaque indice il sera crée le nombre de drz inscrit à cet indice de taille l'indice plus un
 
 force_disjoint : si false quand on essaie de générer des drz disjointes, si elles ne le sont pas on ne réessaie pas
+
 disjoint_random : si false on construit les drz disjointes commune par commune (toujours mettre true)
 
 full_dep : si true on génére pour chaque département une drz contenant toutes ses communes 
@@ -70,7 +71,7 @@ S'assurer que les fichiers nécessaire pour le lancement de get_data_for_each_co
 
 Les données seront disponibles à l'adresse python_files\\get_data\\data_drz.csv.
 
-## Obtenir les sorties (en %)
+## Obtenir les sorties (comparaison des sorties de la simulation avec le cas de base)
 
 Éxécuter get_results.py.
 
