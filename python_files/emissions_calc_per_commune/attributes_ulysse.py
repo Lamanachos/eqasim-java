@@ -1,5 +1,6 @@
 import json
 import os.path
+#rename this attributes.py to use on personal computer
 origin_of_the_project = "C:\\Users\\ulysse.marcandella\\Desktop\\eqasim-java-pr\\"
 attributes_file = origin_of_the_project +"python_files\\emissions_calc_per_commune\\attributes\\attributes.txt"
 """ 
