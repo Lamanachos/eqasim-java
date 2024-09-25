@@ -190,8 +190,7 @@ def build_test_train(df_data = get_data(), df_results = get_results(), split_typ
     print("Val size :",val_size)
     return X_train,X_test,X_val,Y_train,Y_test,Y_val,[[train_insees],[test_insees],[val_insees]]
 
-def div_data_by_column(df = get_data(), to_drop = ["density"], col_div = "area", skip = ["insee","density","cars_per_person","ms_walk_bs","coeff_join"]):
-    df.drop(columns = to_drop,inplace=True)
+def div_data_by_column(df = get_data(), col_div = "area", skip = ["population","area","insee","density","cars_per_person","ms_walk_bs","coeff_join"]):
     new_df = pd.DataFrame()
     for col in df.columns :
         if (col != col_div) and (col not in skip) :

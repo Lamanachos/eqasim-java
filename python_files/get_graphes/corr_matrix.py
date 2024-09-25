@@ -7,10 +7,10 @@ def matrix(only_data = True):
     plt.clf()
     df = pd.read_csv(attrib.data_file,sep=";")
     df.drop(columns = ["insee"],inplace=True)
-    df.drop(columns = ["density"],inplace=True)
+    #df.drop(columns = ["density"],inplace=True)
     new_df = pd.DataFrame()
-    col_div = None
-    skip = ["density","cars_per_person","ms_walk_bs","coeff_join"]
+    col_div = "pop"
+    skip = ["area","density","cars_per_person","ms_walk_bs","coeff_join"]
 
     for col in df.columns :
         if (col != col_div) and (col not in skip) and (col_div != None):
@@ -31,7 +31,9 @@ def matrix(only_data = True):
     figure = plt.gcf()
     figure.set_size_inches(11.7,8.3)
     figure.tight_layout()
-    plt.savefig("python_files\\get_graphes\\mat_corr.png",dpi = 300)
-
+    if col_div == None :
+        plt.savefig("python_files\\get_graphes\\mat_corr.png",dpi = 300)
+    else : 
+        plt.savefig("python_files\\get_graphes\\mat_corr_div_"+col_div+".png",dpi = 300)
 
 matrix(False)

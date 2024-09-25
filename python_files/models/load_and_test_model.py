@@ -5,7 +5,7 @@ import tensorflow as tf
 from sklearn.metrics import mean_absolute_error,r2_score,mean_squared_error
 import attributes as attrib
 import pandas as pd
-from get_train_test_val import build_test_train,get_data
+from get_train_test_val import build_test_train,get_data,div_data_by_column
 from math import sqrt
 
 #model_path = "outputs\\cool\\3outputs2\\models.keras"
@@ -24,6 +24,8 @@ liste_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_in
 nb_output = len(liste_res)
 
 df_data = get_data()
+#df_data= div_data_by_column(df = df_data, col_div = "pop", skip = ["area","insee","density","cars_per_person","ms_walk_bs","coeff_join"])
+
 X_train, X_test, X_val, y_train, y_test, y_val, infos = build_test_train(df_data=df_data, split_type = split_type, split_arg= add_info,normX = True, normY = True, liste_res=liste_res)
 
 train_size = len(X_train)
