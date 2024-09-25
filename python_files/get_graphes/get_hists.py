@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import attributes as attrib
 import json
+import os
 
 def make_hist(drz_name = "data",file_name = None):
     plt.clf()
@@ -36,15 +37,20 @@ def make_hist(drz_name = "data",file_name = None):
         if col != "insee" : 
             if not all_in :
                 plt.subplot(3,int(ceil(nb_graphs/3)),ind)
-                plt.title(col,fontsize=8)
+                plt.title(attrib.all_map[col],fontsize=8)
             if divide_by != None :
                 temp = drz_df[col]/drz_df[divide_by]
             else :
                 temp = drz_df[col]
             plt.hist(temp,bins=30)
-            ind += 1
+            if drz_name == "results" and ((ind == 3) or (ind == 7)) :
+                ind += 2
+            else :
+                ind += 1
     figure = plt.gcf()
     figure.set_size_inches(11.7,8.3)
+    if not os.path.exists(attrib.graphes_folder):
+        os.makedirs(attrib.graphes_folder)
     plt.savefig(attrib.graphes_folder+"\\hist_"+drz_name+"_"+file_name,dpi = 300)
 
 
