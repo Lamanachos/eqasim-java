@@ -3,29 +3,19 @@ import seaborn as sns
 import pandas as pd
 import attributes as attrib
 
-def matrix(only_data = True):
+def matrix(only_data = True, col_div = None):
     plt.clf()
-    df = pd.read_csv(attrib.data_file,sep=";")
-    df.drop(columns = ["insee"],inplace=True)
-    #df.drop(columns = ["density"],inplace=True)
-    new_df = pd.DataFrame()
-    col_div = "pop"
-    skip = ["area","density","cars_per_person","ms_walk_bs","coeff_join"]
-
-    for col in df.columns :
-        if (col != col_div) and (col not in skip) and (col_div != None):
-            temp = df[col]/df[col_div]
-            new_df[col] = temp
-        else :
-            new_df[col] = df[col]
+    if col_div != None :
+        new_df = attrib.div_data_by_column(col_div=col_div)
+    else : 
+        new_df = attrib.get_data()
     if not only_data :
         temp_df = pd.read_csv(attrib.results_file,sep=";")
         temp_df.drop(columns = ["insee"],inplace=True)
         for col in temp_df.columns :
             new_df[col] = temp_df[col]
-    print(new_df)
+    new_df.drop(columns=["insee"],inplace=True)
     matrix = new_df.corr()
-
     # plotting correlation matrix
     sns.heatmap(matrix, cmap="coolwarm", annot=True)
     figure = plt.gcf()
@@ -36,4 +26,4 @@ def matrix(only_data = True):
     else : 
         plt.savefig("python_files\\get_graphes\\mat_corr_div_"+col_div+".png",dpi = 300)
 
-matrix(False)
+matrix(False, col_div=None)

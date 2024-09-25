@@ -10,7 +10,7 @@ nom_graphe = "Comparative modal shares for 93032 DRZ"
 results_file = "python_files\\get_data\\res_drz.csv"
 data_file = "python_files\\get_data\\data_drz.csv"
 corpus_folder = "python_files\\models\\corpus"
-graphes_folder = "python_files\\get_graphes\\graphes"
+graphes_folder = "python_files\\get_graphes\\div_pop_graphes"
 all_data = ["area","pop","density","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 all_res = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 dict_size_path = "python_files\\models\\info_insees\\dict_size.json"
@@ -21,7 +21,9 @@ def get_data():
 def get_results():
     return pd.read_csv(results_file,sep=";")
 
-def div_data_by_column(df = get_data(), to_drop = ["density"], col_div = "area", skip = ["insee","density","cars_per_persons","ms_walk_bs","coeff_join"]):
+base_skip = ["area", "population", "insee","density","cars_per_persons","ms_walk_bs","coeff_join","er_bs"]
+
+def div_data_by_column(df = get_data(), to_drop = ["density"], col_div = "area", skip = base_skip):
     for col in to_drop :
         if col in df.columns :
             df.drop(columns = [col],inplace=True)

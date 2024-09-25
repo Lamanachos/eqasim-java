@@ -22,9 +22,11 @@ Certains graphes n'ont pas de légende par manque de place.
 
 Tout les graphes partagent la même légende et elle peut donc être trouvée sur d'autres graphes.
 
-### div_area_graphes
+### div_area_graphes et div_pop_graphes
 
 Le dossier div_area_graphes contient les même graphes que all_graphes sauf que la plupart des entrées ont été remplacées par leur densité.
+
+Le dossier div_pop_graphes contient les même graphes que all_graphes sauf que la plupart des entrées ont été remplacées par leur valeur par habitants.
 
 ## Analyses sur les graphes
 
@@ -54,6 +56,7 @@ Elles sont maintenant corrélées au gain du temps de trajet moyen.
 
 Les autres relations semblent rester les mêmes même si elles sont parfois accentuées.
 
+Il pourrait être intéressant de réentraîner les modèles avec les entrées en densité.
 
 ### Matrice de corrélation avec certaines entrées divisées par la population
 
@@ -65,11 +68,13 @@ Les entrées sont beaucoup moins corrélées entre elles et chaque sortie est cl
 
 Il pourrait être intéressant de réentraîner les modèles avec les entrées en valeur par habitants.
 
+Si in rénetraîne la régression linéaire par exemple, on a une meilleure MAE et un meilleure R2 sur les entraînement avec tout le corpus.
+
 ## Graphes de relations entre les entrées et sorties
 
 ### Gain d'émissions de CO2 sur l'île de France en fonction du gain de temps de trajet moyen sur l'île de France
 
-![Graphe CO2 en fonction de att](./graph_corr_er_idf_with_att_idf_size_and_jdj.png)
+![Graphe CO2 en fonction de att](./graphes_readme/graph_corr_er_idf_with_att_idf_size_and_jdj.png)
 
 Ce graphe nous permet de calculer le coût qu'a la réduction des émissions et semble montrer qu'il existe un optimum à viser (ligne noire).
 
@@ -77,7 +82,7 @@ L'optimum à été dessiné à la main, son équation est y = 7/3 + (13/3)*x.
 
 ### Gain d'émissions de CO2 sur l'île de France en fonction de l'aire de la DRZ
 
-![Graphe CO2 en fonction de att](./graph_corr_er_idf_with_area_size_and_jdj.png)
+![Graphe CO2 en fonction de att](./graphes_readme/graph_corr_er_idf_with_area_size_and_jdj.png)
 
 On peut voir qu'il y a une relation entre l'aire de la DRZ et le gain d'émissions de CO2 en île de France. Cette relation confirme ce que l'on a observé sur la matrice de corrélation.
 
@@ -86,10 +91,8 @@ Néanmoins ce gain n'est pas strictement linéaire, pour une même aire il y a p
 ### Gain du temps de trajet moyen pour les résidents et les non-résidents en fonction de la densité de la DRZ
 
 Ci-dessous le graphe du gain du temps de trajet moyen pour les résidents en fonction de la densité de la DRZ
-![Graphe att_res en fonction de densité](./graph_corr_att_res_with_density_size_and_jdj.png)
+![Graphe att_res en fonction de densité](./graphes_readme/graph_corr_att_res_with_density_size_and_jdj.png)
 
-On peut voir qu'il y a une relation entre l'aire de la DRZ et le gain d'émissions de CO2 en île de France. Cette relation confirme ce que l'on a observé sur la matrice de corrélation.
+On peut voir qu'il y a une relation entre temps de trajet moyen pour les résidents et la densité de la DRZ. Cette relation confirme ce que l'on a observé sur la matrice de corrélation.
 
-Néanmoins ce gain n'est pas strictement linéaire, pour une même aire il y a plusieurs gains d'émissions possibles.
-python_files\get_graphes\graph_corr_att_res_with_density_size_and_jdj.png
-
+Cette relation n'a pas l'air linéaire mais plutôt hyperbolique, cela confirme que chaque sortiie peut avoir des relations de nature différente avec les entrées et donc qu'il pourrait être intéressant d'entraîner un modèle différent pour chaque sortie.

@@ -1,6 +1,7 @@
 import attributes as attrib
 import matplotlib.pyplot as plt
 from math import ceil
+import os
 import json
 
 def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = False):
@@ -38,6 +39,8 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
         file_path += "_jdj"
     
     #plt.axline((1, -2), (4, -15), color = "black" )
+    if not os.path.exists(attrib.graphes_folder):
+        os.makedirs(attrib.graphes_folder)
     plt.savefig(file_path,dpi = 300)
 
 def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, legend = True):
@@ -94,4 +97,4 @@ def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, legend = True):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
     
     
-make_graph_corr(x = "density", y = "att_res", size_is=True, j_or_dj_is=True)
+#make_graph_corr(x = "density", y = "att_res", size_is=True, j_or_dj_is=True)

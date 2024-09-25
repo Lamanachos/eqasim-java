@@ -2,14 +2,15 @@ import attributes as attrib
 import matplotlib.pyplot as plt
 from graph_corr_alone import make_the_graph
 from math import ceil
+import os
 
-def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div_area = False):
+def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div = None):
     plt.clf()
     if feature in attrib.all_res :
         df_features = attrib.get_results()
     elif feature in attrib.all_data:
-        if div_area :
-            df_features = attrib.div_data_by_column()
+        if div != None :
+            df_features = attrib.div_data_by_column(col_div=div)
         else :
             df_features = attrib.get_data()
     else :
@@ -18,8 +19,8 @@ def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div_area 
     if corpus == "results" :
         df_corpus = attrib.get_results()
     elif corpus == "data" :
-        if div_area :
-            df_corpus = attrib.div_data_by_column()
+        if div != None :
+            df_corpus = attrib.div_data_by_column(col_div=div)
         else :
             df_corpus = attrib.get_data()
     else :
@@ -48,11 +49,16 @@ def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div_area 
                 exit()
             col_label = attrib.all_map[col]
             feature_label = attrib.all_map[feature]
-            if div_area :
-                if col in attrib.all_data :
-                    col_label = "Densité "+col_label
-                if feature in attrib.all_data :
-                    feature_label = "Densité "+feature_label
+            if div == "area" :
+                if (col in attrib.all_data) and (col not in attrib.base_skip) :
+                    col_label = "Densité " + col_label
+                if feature in attrib.all_data and (feature not in attrib.base_skip):
+                    feature_label = "Densité " + feature_label
+            if div == "pop" :
+                if col in attrib.all_data and (col not in attrib.base_skip):
+                    col_label = col_label + " par habitants"
+                if feature in attrib.all_data and (feature not in attrib.base_skip):
+                    feature_label = feature_label + " par habitants"
             if x_or_y == "y" :
                 plt.xlabel(col_label, fontsize = 6)
                 plt.ylabel(feature_label, fontsize = 6)
@@ -67,6 +73,8 @@ def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div_area 
     figure.set_size_inches(11.7,8.3)
     figure.legend()
     figure.tight_layout()
+    if not os.path.exists(attrib.graphes_folder):
+        os.makedirs(attrib.graphes_folder)
     if x_or_y == "y" :
         plt.savefig(attrib.graphes_folder+"\\"+feature+"_with_"+corpus,dpi = 300)
     else :
@@ -75,10 +83,10 @@ def make_graph_corr(feature = "er_idf", corpus = "data", x_or_y = "y", div_area 
 y_names = ["car_ms_res_nb","car_ms_inout_nb","car_ms_idf_nb","att_res","att_inout","att_idf","er_0","er_10","er_20","er_idf"]
 x_names = ["area","pop","road","nb_pt","work_or_edu_fac","other_fac","cars_per_persons","big_road","er_bs","ms_walk_bs","coeff_join"]
 for feature in x_names :
-    make_graph_corr(feature,"data","x",True)
-    make_graph_corr(feature,"results","x",True)
+    make_graph_corr(feature,"data","x","pop")
+    make_graph_corr(feature,"results","x","pop")
 for feature in y_names :
-    make_graph_corr(feature,"data","y",True)
-    make_graph_corr(feature,"results","y",True)
+    make_graph_corr(feature,"data","y","pop")
+    make_graph_corr(feature,"results","y","pop")
 
 
