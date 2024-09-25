@@ -43,42 +43,38 @@ def make_graph_corr(x = "area", y = "er_idf", j_or_dj_is = False, size_is = Fals
         os.makedirs(attrib.graphes_folder)
     plt.savefig(file_path,dpi = 300)
 
+def get_dict_sizes_and_j_dj(df,value,j_or_dj_is = True,size_is = True):
+    with open(attrib.dict_j_or_dj_path) as json_file:
+        dict_j_or_dj = json.load(json_file)
+    with open(attrib.dict_size_path) as json_file:
+        dict_size = json.load(json_file)
+    dict_value = {"j":{1:[],2:[],5:[],10:[],20:[]},"dj":{1:[],2:[],5:[],10:[],20:[]}}
+    for row in df.iterrows():
+        insee = str(int(row[1]["insee"]))
+        if j_or_dj_is :
+            j_or_dj = dict_j_or_dj[insee]
+        else :
+            j_or_dj = "j"
+        if size_is :
+            size = dict_size[insee]
+        else :
+            size = 1
+        dict_value[j_or_dj][size].append(row[1][value])
+    return dict_value
+
+
 def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, legend = True):
     with open(attrib.dict_j_or_dj_path) as json_file:
         dict_j_or_dj = json.load(json_file)
     with open(attrib.dict_size_path) as json_file:
         dict_size = json.load(json_file)
 
-    dict_x = {"j":{1:[],2:[],5:[],10:[],20:[]},"dj":{1:[],2:[],5:[],10:[],20:[]}}
-    dict_y = {"j":{1:[],2:[],5:[],10:[],20:[]},"dj":{1:[],2:[],5:[],10:[],20:[]}}
-   
-    for row in df_x.iterrows():
-        insee = str(int(row[1]["insee"]))
-        if j_or_dj_is :
-            j_or_dj = dict_j_or_dj[insee]
-        else :
-            j_or_dj = "j"
-        if size_is :
-            size = dict_size[insee]
-        else :
-            size = 1
-        dict_x[j_or_dj][size].append(row[1][x])
-    for row in df_y.iterrows():
-        insee = str(int(row[1]["insee"]))
-        if j_or_dj_is :
-            j_or_dj = dict_j_or_dj[insee]
-        else :
-            j_or_dj = "j"
-        if size_is :
-            size = dict_size[insee]
-        else :
-            size = 1
-        dict_y[j_or_dj][size].append(row[1][y])
+    dict_x = get_dict_sizes_and_j_dj(df_x,x,j_or_dj_is,size_is)
+    dict_y = get_dict_sizes_and_j_dj(df_y,y,j_or_dj_is,size_is)
     
     signs = {"j":"o","dj":"x"}
     label_j = {"j":"jointes","dj":"disjointes"}
-    colors = {1:'#C8E6C9',2:'#80DEEA',5:'#FFECB3',10:'#ffcca2',20:'#FFAB91'}
-    colors = {1:'purple',2:'blue',5:'green',10:'orange',20:'red'}
+    colors = attrib.colors_sizes
         
     for j_or_dj in dict_x.keys():
         for size in dict_x[j_or_dj].keys():
