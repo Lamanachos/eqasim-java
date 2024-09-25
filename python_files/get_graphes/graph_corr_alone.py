@@ -92,5 +92,4 @@ def make_the_graph(x, y, j_or_dj_is, size_is, df_x, df_y, legend = True):
                 plt.scatter(X,Y,marker=signs[j_or_dj],c = colors[size],label = label)
     
     
-
-""" make_graph_corr(size_is=True, j_or_dj_is=True) """
+make_graph_corr(x = "att_idf", y = "er_idf", size_is=True, j_or_dj_is=True)
