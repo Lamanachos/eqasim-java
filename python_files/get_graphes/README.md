@@ -28,7 +28,7 @@ Le dossier div_area_graphes contient les même graphes que all_graphes sauf que 
 
 Le dossier div_pop_graphes contient les même graphes que all_graphes sauf que la plupart des entrées ont été remplacées par leur valeur par habitants.
 
-## Analyses sur les graphes
+## Analyses des matrices de corrélation
 
 ### Matrice de corrélation
 
@@ -70,7 +70,7 @@ Il pourrait être intéressant de réentraîner les modèles avec les entrées e
 
 Si in rénetraîne la régression linéaire par exemple, on a une meilleure MAE et un meilleure R2 sur les entraînement avec tout le corpus.
 
-## Graphes de relations entre les entrées et sorties
+## Analyse des graphes des sorties en fonction des entrées
 
 ### Gain d'émissions de CO2 sur l'île de France en fonction du gain de temps de trajet moyen sur l'île de France
 
@@ -95,4 +95,4 @@ Ci-dessous le graphe du gain du temps de trajet moyen pour les résidents en fon
 
 On peut voir qu'il y a une relation entre temps de trajet moyen pour les résidents et la densité de la DRZ. Cette relation confirme ce que l'on a observé sur la matrice de corrélation.
 
-Cette relation n'a pas l'air linéaire mais plutôt hyperbolique, cela confirme que chaque sortiie peut avoir des relations de nature différente avec les entrées et donc qu'il pourrait être intéressant d'entraîner un modèle différent pour chaque sortie.
+Cette relation n'a pas l'air linéaire mais plutôt hyperbolique, cela confirme que chaque sortie peut avoir des relations de nature différente avec les entrées et donc qu'il pourrait être intéressant d'entraîner un modèle différent pour chaque sortie.

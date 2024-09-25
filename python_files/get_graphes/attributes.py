@@ -21,9 +21,9 @@ def get_data():
 def get_results():
     return pd.read_csv(results_file,sep=";")
 
-base_skip = ["area", "population", "insee","density","cars_per_persons","ms_walk_bs","coeff_join","er_bs"]
+base_skip = ["area", "pop", "insee","density","cars_per_persons","ms_walk_bs","coeff_join","er_bs"]
 
-def div_data_by_column(df = get_data(), to_drop = ["density"], col_div = "area", skip = base_skip):
+def div_data_by_column(df = get_data(), to_drop = [], col_div = "area", skip = base_skip):
     for col in to_drop :
         if col in df.columns :
             df.drop(columns = [col],inplace=True)
