@@ -8,7 +8,9 @@ Chaque image regroupe un ensemble de graphes.
 
 Chaque image représente les relations des entrées ou des sorties avec une entréee ou sortie en particulier.
 
-### Nom des graphes
+Les graphes utilisés dans ce document sont disponibles dans le dossier graphes_readme.
+
+### Nom des graphes de corrélation
 
 Le nom des images est toujours construit de la même manière : a_with_b.png.
 
@@ -96,3 +98,20 @@ Ci-dessous le graphe du gain du temps de trajet moyen pour les résidents en fon
 On peut voir qu'il y a une relation entre temps de trajet moyen pour les résidents et la densité de la DRZ. Cette relation confirme ce que l'on a observé sur la matrice de corrélation.
 
 Cette relation n'a pas l'air linéaire mais plutôt hyperbolique, cela confirme que chaque sortie peut avoir des relations de nature différente avec les entrées et donc qu'il pourrait être intéressant d'entraîner un modèle différent pour chaque sortie.
+
+## Histogrammes
+
+### Histogramme des features
+
+Les couleurs correspondent au nombre de communes.
+
+![Histogramme entrées](./graphes_readme/hist_data_all.png)
+
+Je n'ai pas grand chose à dire sur ce graphe, il peut être trouvé, ainsi que les histogrammes par corpus (train/test/val) dans le dossier hists.
+
+### Histogramme des résultats
+
+Les couleurs correspondent au nombre de communes.
+
+![Histogramme sorties](./graphes_readme/hist_results_all.png)
+
