@@ -28,7 +28,11 @@ Le surrogate modeling est utilisé dans de nombreux domaines que ce soit dans la
 
 Dans le domaine qui nous intéresse, les transports, le surrogate modeling est souvent utilisé pour optimiser une politique, cela peut être les horaires des bus [15], le prix des péages [10], les DRZ [13].
 
-Il peut néanmoins être aussi utilisé juste pour obtenir des résultats plus rapidement, dans [11], le surrogate modeling est utilisé pour obtenir en temps réel des prédictions sur le trafic d'une route. Dans [15], il est développé un framework pour permettre d'optimiser les horaires de bus en temps réel.
+Il peut être aussi utilisé pour obtenir des résultats plus rapidement sans nécessairement qu'il y ait l'optimisation d'une politique, dans [11], le surrogate modeling est utilisé pour obtenir en temps réel des prédictions sur le trafic d'une route. 
+
+Dans [15], il est développé un framework pour permettre d'optimiser les horaires de bus en temps réel.
+
+Le surrogate modeling, en diminuant le temps nécessaire pour obtenir les résultats d'une simulation permet de mettre en place des systèmes en temps réel qu'il ne serait pas possible de mettre en place avec seulement des simulations classiques.
 
 Il y a de nombreuses manières de mettre en place un surrogate model [2,6]. 
 
@@ -36,11 +40,11 @@ Certaines sont très reliées à leur domaine, dans [4] est présenté des archi
 
 Dans la plupart des cas [6,9,10,11,12], lorsqu'on se trouve dans une situation précise, on met en place un grand nombre des méthodes de machine learning classiques, comme les random forest, les gradient boosted trees, différentes régressions... (plus de détails dans le fichier excel) et/ou des réseaux de neurones, puis ont les évalue afin de choisir la plus pertinente pour notre situation.
 
-Dans les cas avec un grand nombre de données, les anns sont généralement plus performants, mais au vu de la situation, comme on veut souvent remplacer des simulations très complexes, et donc pour lesquelles on va pouvoir faire peu de calculs, on est souvent obligés de se rabattre vers des méthodes nécéssitant moins de données [J'ai pas de source pour ça].
+Dans les cas avec un grand nombre de données, les anns sont généralement plus performants, mais au vu de la situation, comme on veut souvent remplacer des simulations très complexes, et donc pour lesquelles on va pouvoir faire peu de calculs, on est souvent obligés de se rabattre vers des méthodes nécéssitant moins de données.
 
 Comme dit plus haut de nombreux articles montrent que le surrogate modeling peut être utilisé pour la simulation de transports.
 L'article [12] montre que faire du surrogate modeling pour des modèles multi-agents est possible.
-L'article [11] utilise le surrogate modeling sur MATSIM pour pouvoir trouver la DRZ optimale à mettre en place à Bilbao. 
+L'article [11] utilise le surrogate modeling sur MATSIM pour pouvoir trouver la DRZ optimale à mettre en place à Bilbao ce qui est similaire à notre projet.
 
 Dans [13] est mis en place un Partially Observable Discrete Event Decision Process (PODEDP) pour remplacer MATSIM, ce qui à l'air très différent des autres méthodes mais j'ai du mal à comprendre si c'est vraiment le même type de processus. Se pencher plus de temps sur l'article pourrait être intéressant.
 
