@@ -10,7 +10,7 @@ Je n'ai pas eu le temps de faire une biblio propre, je référence les articles 
 
 Pour bien comprendre de quoi on parle il est nécéssaire de définir par avance ce que veut dire "surrogate modeling" (modèles de substitution) et "metamodeling" (mettre en place des métamodèles).
 
-Le "surrogate modeling" c'est créer des modèles simplifiés pour remplacer des simulations plus complexes, souvent dans un but d'efficacité. Le metamodeling se concentre sur la mise en place de modèles de différents niveaux de complexité et de fiabilité.[14].
+Le "surrogate modeling" c'est créer des modèles simplifiés pour remplacer des simulations plus complexes, souvent dans un but d'efficacité. Le metamodeling se concentre sur la mise en place de modèles de différents niveaux de complexité et de fiabilité [14].
 
 Le surrogate modeling est donc une partie du metamodeling.
 
@@ -28,11 +28,11 @@ Le surrogate modeling est utilisé dans de nombreux domaines que ce soit dans la
 
 Dans le domaine qui nous intéresse, les transports, le surrogate modeling est souvent utilisé pour optimiser une politique, cela peut être les horaires des bus [15], le prix des péages [10], les DRZ [13].
 
-Il peut néanmoins être aussi utilisé juste pour obtenir des résultats plus rapidement, dans [11], le surrogate modeling est utilisé pour obtenir en temps réel des prédictions sur le trafic d'une route. Dans [15], il est développé un framexork pour permettre d'optimiser les horaires de bus en temps réel.
+Il peut néanmoins être aussi utilisé juste pour obtenir des résultats plus rapidement, dans [11], le surrogate modeling est utilisé pour obtenir en temps réel des prédictions sur le trafic d'une route. Dans [15], il est développé un framework pour permettre d'optimiser les horaires de bus en temps réel.
 
 Il y a de nombreuses manières de mettre en place un surrogate model [2,6]. 
 
-Cerataines sont très reliées à leur domaine, dans [4] est présenté des architectures de neural networks dédiées à la simulation moléculaire et qui permettent de régler des problèmes uniques à ce domaine. 
+Certaines sont très reliées à leur domaine, dans [4] est présenté des architectures de neural networks dédiées à la simulation moléculaire et qui permettent de régler des problèmes uniques à ce domaine. 
 
 Dans la plupart des cas [6,9,10,11,12], lorsqu'on se trouve dans une situation précise, on met en place un grand nombre des méthodes de machine learning classiques, comme les random forest, les gradient boosted trees, différentes régressions... (plus de détails dans le fichier excel) et/ou des réseaux de neurones, puis ont les évalue afin de choisir la plus pertinente pour notre situation.
 
@@ -42,7 +42,7 @@ Comme dit plus haut de nombreux articles montrent que le surrogate modeling peut
 L'article [12] montre que faire du surrogate modeling pour des modèles multi-agents est possible.
 L'article [11] utilise le surrogate modeling sur MATSIM pour pouvoir trouver la DRZ optimale à mettre en place à Bilbao. 
 
-Dans [13] est mis en place un Partially Observable Discrete Event Decision Process (PODEDP) pour remplacer MATSIM, ce qui à l'air très différent des autres méthodes mais j'ai du mal à comprendre si c'est vraiment le même type de processus. Se penche rplus de temps sur l'article pourrait être intéressant.
+Dans [13] est mis en place un Partially Observable Discrete Event Decision Process (PODEDP) pour remplacer MATSIM, ce qui à l'air très différent des autres méthodes mais j'ai du mal à comprendre si c'est vraiment le même type de processus. Se pencher plus de temps sur l'article pourrait être intéressant.
 
 
 
