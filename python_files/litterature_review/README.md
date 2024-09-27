@@ -4,7 +4,7 @@ Tous les articles, sauf un auquel je n'avais pas accès, peuvent être trouvés 
 
 Le fichier excel articles.xlsx recense les articles ainsi que leurs caractéristiques (objectif, domaine d'études, méthodes utilisées...) et les commentaires que j'ai pu faire sur la pertinence de leur inclusion dans la litterature review.
 
-Je n'ai pas eu le temps de faire une biblio propre, je référence les articles avec le numéro que je leur ai donné.
+Je n'ai pas eu le temps de faire une biblio propre, je référence les articles avec le numéro que je leur ai donné dans le fichier excel.
 
 ## Définitions
 
