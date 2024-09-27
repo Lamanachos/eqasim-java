@@ -16,7 +16,7 @@ Les modèles qui nous intéressent sont :
 
 ## Commentaire du graphe 
 
-![Graphe évaluation modèles](../get_graphes/models_eval_all.png)
+![Graphe évaluation modèles](../get_graphes/graphes_readme/models_eval_all.png)
 
 On voit que les anns sont meilleurs pour les deux métriques et les deux choix de sorties.
 
