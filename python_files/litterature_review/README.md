@@ -46,7 +46,7 @@ Comme dit plus haut de nombreux articles montrent que le surrogate modeling peut
 L'article [[12]](#12) montre que faire du surrogate modeling pour des modèles multi-agents est possible.
 L'article [[11]](#11) utilise le surrogate modeling sur MATSIM pour pouvoir trouver la DRZ optimale à mettre en place à Bilbao ce qui est similaire à notre projet.
 
-Dans [[13]](#13) est mis en place un Partially Observable Discrete Event Decision Process (PODEDP) pour remplacer MATSIM, ce qui à l'air très différent des autres méthodes mais j'ai du mal à comprendre si c'est vraiment le même type de processus. Se pencher plus de temps sur l'article pourrait être intéressant.
+Dans [[13]](#13) est mis en place un Partially Observable Discrete Event Decision Process (PODEDP) pour remplacer MATSIM (ce qui a l'air très différent des autres méthodes mais j'ai du mal à comprendre si c'est vraiment le même type de processus, se pencher plus de temps sur l'article pourrait être intéressant).
 
 ## Bibliographie
 
