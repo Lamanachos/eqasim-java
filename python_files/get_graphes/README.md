@@ -6,7 +6,7 @@ Dans all_graphes on trouve les graphes de toutes les combinaisons d'entrées et 
 
 Chaque image regroupe un ensemble de graphes. 
 
-Chaque image représente les relations des entrées ou des sorties avec une entréee ou sortie en particulier.
+Chaque image représente les relations des entrées ou des sorties avec une entrée ou sortie en particulier.
 
 Les graphes utilisés dans ce document sont disponibles dans le dossier graphes_readme.
 
@@ -14,7 +14,7 @@ Les graphes utilisés dans ce document sont disponibles dans le dossier graphes_
 
 Le nom des images est toujours construit de la même manière : a_with_b.png.
 
-a représentes les ordonnées et b les abcisses.
+Le a représente les ordonnées et le b les abscisses.
 
 Par exemple results_with_pop.png va contenir les graphes de chaque sortie en fonction de la population.
 
@@ -22,7 +22,7 @@ Par exemple results_with_pop.png va contenir les graphes de chaque sortie en fon
 
 Certains graphes n'ont pas de légende par manque de place.
 
-Tout les graphes partagent la même légende et elle peut donc être trouvée sur d'autres graphes.
+Tous les graphes partagent la même légende et elle peut donc être trouvée sur d'autres graphes.
 
 ### div_area_graphes et div_pop_graphes
 
@@ -42,17 +42,17 @@ Les temps de trajets semblent être plutôt corrélés avec le nombre de voiture
 
 La seule des entrées qui est corrélée de manière non négligeable avec le gain d'émissions de CO2 dans la DRZ est le nombre de kilomètres d'autoroutes, ce qui était attendu.
 
-La plupart des entrées sont trés fortement corrélées à l'aire et donc ensemble.
+La plupart des entrées sont très fortement corrélées à l'aire et donc ensemble.
 
-La matrice de corrélation avec les densité des entrées peut être aussi intéressante.
+La matrice de corrélation avec les densités des entrées peut être aussi intéressante.
 
 ### Matrice de corrélation des densités
 
-Les entrées ont été remplacées par leur densité sauf pour le nombre de voiture par personnes, la part modale de la marche dans le cas de base et le coefficient de jointure.
+Les entrées ont été remplacées par leur densité sauf pour le nombre de voiture par personnes, la part modale de la marche dans le cas de base, le coefficient de jointure, la population, la densité de population et l'aire.
 
 ![Matrice de corrélation des densités](./mat_corr_div_area.png)
 
-Les entrées qui étaient très fortement corrélées à l'aire ne le sont plus et donc ne sont plus corrélées aux même sorties.
+Les entrées qui étaient très fortement corrélées à l'aire ne le sont plus et donc ne sont plus corrélées aux mêmes sorties.
 
 Elles sont maintenant corrélées au gain du temps de trajet moyen. 
 
@@ -70,7 +70,7 @@ Les entrées sont beaucoup moins corrélées entre elles et chaque sortie est cl
 
 Il pourrait être intéressant de réentraîner les modèles avec les entrées en valeur par habitants.
 
-Si in rénetraîne la régression linéaire par exemple, on a une meilleure MAE et un meilleure R2 sur les entraînement avec tout le corpus.
+Si on réentraîne la régression linéaire par exemple, on a une meilleure MAE et une meilleure R2 sur les entraînements avec tout le corpus.
 
 ## Analyse des graphes des sorties en fonction des entrées
 
@@ -107,7 +107,9 @@ Les couleurs correspondent au nombre de communes.
 
 ![Histogramme entrées](./graphes_readme/hist_data_all.png)
 
-Je n'ai pas grand chose à dire sur ce graphe, il peut être trouvé, ainsi que les histogrammes par corpus (train/test/val) dans le dossier hists.
+Je n'ai pas grand chose à dire sur ce graphe.
+
+Il peut être trouvé, ainsi que les histogrammes par corpus (train/test/val) dans le dossier hists.
 
 ### Histogramme des résultats
 
