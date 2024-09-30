@@ -36,7 +36,7 @@ full_dep : si true on génére pour chaque département une drz contenant toutes
 
 Exemple :
 ```python
-create_shapefiles(["92","93"],[2,0,0,1],force_disjoint = True, disjoint_random = True, full_dep = False):
+create_shapefiles(["92","93"],[2,0,0,1],force_disjoint = True, disjoint_random = True, full_dep = False)
 ```
 Va créer 2 DRZ de taille 1 jointes, 2 DRZ de taille 1 disjointes, 1 DRZ de taille 4 jointes, 1 DRZ de taille 4 disjointes dans le département 92, et faire de même pour le 93.
 
@@ -50,7 +50,7 @@ departements : les deux départments dans lequels vont se trouver les drz géné
 
 Exemple :
 ```python
-create_shapefiles(["92","93"],[0,2,0,1],force_disjoint = True, disjoint_random = True, full_dep = False):
+create_shapefiles(["92","93"],[0,2,0,1],force_disjoint = True, disjoint_random = True, full_dep = False)
 ```
 Va créer 2 DRZ de taille 2 jointes, 2 DRZ de taille 2 disjointes, 1 DRZ de taille 4 jointes, 1 DRZ de taille 4 disjointes qui ont toutes au moins une commune dans le 92 et au moins une commune dans le 93.
 

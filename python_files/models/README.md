@@ -25,10 +25,10 @@ On voit que le classement des modèles change entre les deux choix de sorties, c
 (Les résultats chiffrés complets avec rmse, mae et r2 sont dans le .csv et à la fin de ce document).
 
 ## Comment améliorer les modèles 
-- plus de simulations amènera quasi-certainement à de meilleurs résultats pour tout les modèles, et permettrait de faire des corpus train/test/val réellement équilibrés
+- plus de simulations amènera quasi-certainement à de meilleurs résultats pour tous les modèles, et permettrait de faire des corpus train/test/val réellement équilibrés
 - tester d'autres découpages du corpus (en s'assurant que le test reste assez représentatif), on pourrait aussi essayer le x-fold training (cf. Tatiana)
-- sélectionner les features pour les modèles hors anns (j'ai commencé mais j'avais toujours des résultatas moins bons) + étudier les conséquences de remplacer les données qui peuvent l'être par une densité (idem)
-- entraîner chaque modèle sur un petit nombre de sorties (voire une seule), de plus comme on a peu de données ça ne prends pas trop de temps
+- sélectionner les features pour les modèles hors anns (j'ai commencé mais j'avais toujours des résultats moins bons) + étudier les conséquences de remplacer les données qui peuvent l'être par une densité (idem)
+- entraîner chaque modèle sur un petit nombre de sorties (voire une seule), de plus comme on a peu de données ça ne prend pas trop de temps
 - tester méthodes d'optimisation des hyperparamètres pour les anns (cf. conférence pendant le séminaire), jusque là j'ai plutôt tatonné
 
 ## Résultats exacts
